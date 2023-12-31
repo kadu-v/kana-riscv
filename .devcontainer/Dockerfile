@@ -32,3 +32,10 @@ RUN	apt-get autoremove -y \
 RUN apt-get update \
     && apt-get install -y verilator \
     perl-doc
+
+# Install verible
+RUN wget https://github.com/chipsalliance/verible/releases/download/v0.0-3477-gf3814490/verible-v0.0-3477-gf3814490-linux-static-arm64.tar.gz \
+    && tar -xzf verible-v0.0-3477-gf3814490-linux-static-arm64.tar.gz \
+    && cp -r ./verible-v0.0-3477-gf3814490/bin/* /usr/local/bin/
+    && rm -rf verible-v0.0-3477-gf3814490-linux-static-arm64.tar.gz \
+    && rm -rf verible-v0.0-3477-gf3814490

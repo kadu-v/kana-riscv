@@ -18,7 +18,9 @@
                 "editor.formatOnSave": true
             },
             "extensions": [
-                "mshr-h.veriloghdl"
+                "mshr-h.veriloghdl",
+                "ms-vscode.cpptools-extension-pack",
+                "chipsalliance.verible"
             ]
         }
     },
