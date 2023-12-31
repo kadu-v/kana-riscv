@@ -1,17 +1,21 @@
 .PHONY: all clean build test sim
 
 SRCDIR    = ./src
-SRCS      = counter_4bit.sv
+SRCS      = counter_4bit.sv decoder.sv
 OBJDIR    = ./obj_dir
 OBJS      = 
 TBDIR     = ./test_bench
-TBBENCHES = $(subst ) 
+INCLUDE   = -I./src
 
-build: $(OBJDIR)/Vcounter_4bit
+TARGETS = $(patsubst %.sv, $(OBJDIR)/V%, $(SRCS))
+
+build: $(TARGETS)
 
 $(OBJDIR)/V%: $(SRCDIR)/%.sv $(TBDIR)/tb_%.cpp
-	verilator --cc $(word 1,$^) --exe $(word 2,$^)
+	verilator --cc $(word 1,$^) --exe $(word 2,$^) $(INCLUDE)
 	make -C $(OBJDIR) -f $(@F).mk
 
+%.sv: $(OBJDIR)/V%
+	
 clean: 
 	rm -rf ./obj_dir
