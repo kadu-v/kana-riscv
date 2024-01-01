@@ -74,8 +74,16 @@ int main(int argc, char** argv) {
 
   // Instantiate DUT
   Vriscv_top* dut = new Vriscv_top();
-  uint32_t inst = i_inst(OP_ADD, 1, 2, 3);
+  uint32_t inst = r_inst(OP_ADD, 1, 2, 3);
   set_register(dut, 1, 100);
-  set_register(dut, 1, 200);
-  test_instruction("add", dut, inst, 300);
+  set_register(dut, 2, 200);
+  test_instruction("[add] 100 + 200 = 300", dut, inst, 300);
+
+  inst = i_inst(OP_ADDI, 10, 2, 3);
+  set_register(dut, 2, 100);
+  test_instruction("[addi] 10 + 100 = 110", dut, inst, 110);
+
+  inst = i_inst(OP_ADDI, 0b100000000001, 2, 3);
+  set_register(dut, 2, 100);
+  test_instruction("[addi] -2047 + 100 = -1947", dut, inst, -1947);
 }

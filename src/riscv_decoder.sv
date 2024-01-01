@@ -2,7 +2,9 @@
 `include "riscv_constants.sv"
 
 module riscv_decoder (
+    /* input */
     input  logic    [31:0] inst,
+    /* output */
     output logic           invalid_o,
     output EXEC_FUN        exec_fun,
     output OP1_SEL         op1_sel,

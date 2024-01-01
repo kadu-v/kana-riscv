@@ -17,16 +17,14 @@ int main(int argc, char** argv) {
   // initiazlie decoder
   /* do nothing */
 
-  // set input instractions
-  // invalid instruction
-  dut->imm = 0b00000000000000000000100000000000;
+  dut->imm = 0b00000000000000000000000000000000;
   dut->eval();
-  uint32_t expexted = 0b11111111111111111111000000000000;
+  uint32_t expexted = 0;
   assert_eq("sign extend", dut->imm_i_sext, expexted);
 
-  dut->imm = 0b01010101010100000000100000000000;
+  dut->imm = 0b11010101010100000000000000000000;
   dut->eval();
-  expexted = 0b11111111111111111111010101010101;
+  expexted = 0b11111111111111111111110101010101;
   assert_eq("sign extend", dut->imm_i_sext, expexted);
 
   dut->imm = 0b01010101010100000000000000000000;

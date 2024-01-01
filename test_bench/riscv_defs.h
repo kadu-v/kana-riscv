@@ -40,8 +40,9 @@ uint32_t r_inst(uint32_t op, uint32_t rs2, uint32_t rs1, uint32_t rd) {
 #define INST_ADDI      0b0000000000000000000000000010011
 #define INST_ADDI_MASK 0b0000000000000000111000001111111
 #define OP_ADDI        0b0010011
+// clang-format on
 
-uint32_t i_inst(uint32_t op,uint32_t imm, uint32_t rs1, uint32_t rd) {
+uint32_t i_inst(uint32_t op, uint32_t imm, uint32_t rs1, uint32_t rd) {
   uint32_t inst = 0b0000000 << (32 - 7);
   inst += (imm << 20);
   inst += (rs1 << 15);

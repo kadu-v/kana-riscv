@@ -4,5 +4,6 @@ module riscv_extend (
     output logic [31:0] imm_i_sext
 );
   /* I type */
-  assign imm_i_sext = {{20{imm[11]}}, imm[31:20]};
+  logic [11:0] imm_i = imm[31:20];
+  assign imm_i_sext = {{20{imm_i[11]}}, imm_i};
 endmodule

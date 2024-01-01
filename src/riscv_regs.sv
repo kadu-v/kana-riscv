@@ -22,9 +22,4 @@ module riscv_regs #(
       regs[write_addr] <= data;
     end
   end
-
-  initial begin
-    regs[1] = 100;
-    regs[2] = 200;
-  end
 endmodule
