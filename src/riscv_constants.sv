@@ -16,4 +16,9 @@ typedef enum {
   OP2_RS2 = 1
 } OP2_SEL;
 
+typedef enum {
+  WB_ALU = 0,
+  WB_MEM = 1
+} WB_SEL;
+
 `endif

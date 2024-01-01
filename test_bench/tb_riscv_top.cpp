@@ -30,6 +30,8 @@ int main(int argc, char** argv) {
   // step 1
   dut->clk = 0;  // Low
   dut->write_en = 0;
+  dut->riscv_top__DOT__regs__DOT__regs[1] = 1;
+  dut->riscv_top__DOT__regs__DOT__regs[2] = 2;
   dut->eval();
   tfp->dump(time_counter);
   time_counter++;
@@ -43,7 +45,7 @@ int main(int argc, char** argv) {
   // step 3
   dut->clk = 0;  // Low
   dut->write_en = 1;
-  dut->inst = add(1, 2, 3);
+  dut->riscv_top__DOT__ram__DOT__mem[0] = add(1, 2, 3);
   dut->eval();
   tfp->dump(time_counter);
   time_counter++;
@@ -61,5 +63,5 @@ int main(int argc, char** argv) {
   time_counter++;
   dut->final();
   tfp->close();
-  assert_eq("add 1 2 3", dut->debug_out, 3);
+  assert_eq("add 100 200 3", dut->riscv_top__DOT__regs__DOT__regs[3], 300);
 }
