@@ -1,3 +1,6 @@
+`ifndef RISCV_CONSTANTS
+`define RISCV_CONSTANTS
+
 typedef enum {
   ALU_X   = 0,
   ALU_ADD = 1
@@ -12,3 +15,5 @@ typedef enum {
   OP2_X   = 0,
   OP2_RS2 = 1
 } OP2_SEL;
+
+`endif
