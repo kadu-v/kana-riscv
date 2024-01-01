@@ -9,4 +9,5 @@ Instructions
 
 /* I type--------------------------------------------*/
 // addi
-// `define INST_ADDI 
+`define INST_ADDI 32'b00000000000_00000_000_00000_0010011
+`define INST_ADDI_MASK 32'b00000000000_00000_111_00000_1111111

@@ -13,7 +13,8 @@ typedef enum {
 
 typedef enum {
   OP2_X   = 0,
-  OP2_RS2 = 1
+  OP2_RS2 = 1,
+  OP2_IMS = 2
 } OP2_SEL;
 
 typedef enum {

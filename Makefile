@@ -1,7 +1,7 @@
 .PHONY: all clean build test sim
 
 SRCDIR      = ./src
-SRCS        = counter_4bit.sv riscv_top.sv riscv_decoder.sv riscv_regs.sv riscv_alu.sv riscv_wb_mux.sv	
+SRCS        = counter_4bit.sv riscv_top.sv riscv_decoder.sv riscv_regs.sv riscv_alu.sv riscv_wb_mux.sv	riscv_extend.sv
 OBJDIR      = ./obj_dir
 OBJS        = 
 TBDIR       = ./test_bench

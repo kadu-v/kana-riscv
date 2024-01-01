@@ -10,7 +10,8 @@ module riscv_decoder (
     output WB_SEL          wb_sel
 );
   assign invalid_o = invalid_i;
-  logic invalid_i = (inst & `INST_ADD_MASK) == `INST_ADD;
+  logic invalid_i = ((inst & `INST_ADD_MASK) == `INST_ADD) ||
+                    ((inst & `INST_ADDI_MASK) == `INST_ADDI);
 
   // if statement for alu
   always_comb begin
@@ -18,6 +19,11 @@ module riscv_decoder (
       exec_fun = ALU_ADD;
       op1_sel  = OP1_RS1;
       op2_sel  = OP2_RS2;
+      wb_sel   = WB_ALU;
+    end else if ((inst & `INST_ADDI_MASK) == `INST_ADDI) begin
+      exec_fun = ALU_ADD;
+      op1_sel  = OP1_RS1;
+      op2_sel  = OP2_IMS;
       wb_sel   = WB_ALU;
     end else begin
       exec_fun = ALU_X;
