@@ -2,12 +2,13 @@
 #include <string>
 
 
-void assert_u32(std::string tname, uint32_t in, uint32_t expected) {
-    std::cout << tname;
+void assert_u32(std::string test_name, uint32_t in, uint32_t expected) {
+    std::cout << test_name;
     if (in != expected) {
-        printf("... fail\n");
-        printf("in:       %d\n", in);
-        printf("expected: %d\n", expected);
+        printf(" ...failed\n");
+        printf("    in:       %d\n", in);
+        printf("    expected: %d\n", expected);
+        exit(1);
     }
-    printf("... ok\n");
+    printf(" ...ok\n");
 }

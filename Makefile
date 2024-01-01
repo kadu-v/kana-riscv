@@ -1,7 +1,7 @@
 .PHONY: all clean build test sim
 
 SRCDIR     = ./src
-SRCS       = counter_4bit.sv decoder.sv
+SRCS       = counter_4bit.sv riscv_decoder.sv
 OBJDIR     = ./obj_dir
 OBJS       = 
 TBDIR      = ./test_bench
@@ -20,11 +20,8 @@ test: $(TARGETS)
 		$$executable; \
 	done
 
-
-
-
 %.sv: $(OBJDIR)/V%
-
+	./$<
 	
 clean: 
 	rm -rf ./obj_dir
