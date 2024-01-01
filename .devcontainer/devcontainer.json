@@ -19,8 +19,7 @@
             },
             "extensions": [
                 "mshr-h.veriloghdl",
-                "ms-vscode.cpptools-extension-pack",
-                "chipsalliance.verible"
+                "ms-vscode.cpptools-extension-pack"
             ]
         }
     },

@@ -33,9 +33,11 @@ RUN apt-get update \
     && apt-get install -y verilator \
     perl-doc
 
-# Install verible
-RUN wget https://github.com/chipsalliance/verible/releases/download/v0.0-3477-gf3814490/verible-v0.0-3477-gf3814490-linux-static-arm64.tar.gz \
-    && tar -xzf verible-v0.0-3477-gf3814490-linux-static-arm64.tar.gz \
-    && cp -r ./verible-v0.0-3477-gf3814490/bin/* /usr/local/bin/
-    && rm -rf verible-v0.0-3477-gf3814490-linux-static-arm64.tar.gz \
-    && rm -rf verible-v0.0-3477-gf3814490
+# g++-13
+RUN apt-get upate \
+    && apt-get install -y software-properties-common \
+    && add-apt-repository ppa:ubuntu-toolchain-r/test
+RUN apt-get update \
+    && apt-get install -y install gcc-13 g++-13 \
+    && ln -s /usr/bin/gcc-13 /usr/bin/gcc \
+    && ln -s /usr/bin/g++-13 /usr/bin/g++

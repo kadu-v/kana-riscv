@@ -1,7 +1,7 @@
 .PHONY: all clean build test sim
 
 SRCDIR     = ./src
-SRCS       = counter_4bit.sv riscv_decoder.sv
+SRCS       = counter_4bit.sv riscv_decoder.sv riscv_regs.sv
 OBJDIR     = ./obj_dir
 OBJS       = 
 TBDIR      = ./test_bench
@@ -11,7 +11,7 @@ TARGETS    = $(patsubst %.sv, $(OBJDIR)/V%, $(SRCS))
 build: $(TARGETS)
 
 $(OBJDIR)/V%: $(SRCDIR)/%.sv $(TBDIR)/tb_%.cpp
-	verilator --cc $(word 1,$^) --exe $(word 2,$^) $(INCLUDE)
+	verilator --cc $(word 1,$^) --exe $(word 2,$^) $(INCLUDE) -CFLAGS -std=c++2a
 	make -C $(OBJDIR) -f $(@F).mk
 
 test: $(TARGETS)
