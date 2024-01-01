@@ -1,7 +1,7 @@
 `include "riscv_defs.sv"
 `include "riscv_constants.sv"
 
-module decoder (
+module riscv_decoder (
     input logic [31:0] inst,
     output logic invalid_o,
     output EXEC_FUN exec_fun,

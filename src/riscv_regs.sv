@@ -1,4 +1,4 @@
-module regfile #(
+module riscv_regs #(
     parameter WORD_LENGTH = 32,
     parameter ADDR_LENGTH = 5,
     parameter NUM_REGS = 32

@@ -16,7 +16,7 @@ $(OBJDIR)/V%: $(SRCDIR)/%.sv $(TBDIR)/tb_%.cpp
 
 test: $(TARGETS)
 	@for executable in $^; do \
-		echo "Running $$executable"; \
+		echo "/*--------------------Running $$executable"--------------------*/; \
 		$$executable; \
 	done
 
