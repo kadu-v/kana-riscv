@@ -15,39 +15,51 @@ void printBinaryWithPadding32(int number) {
 /* --------------------------------------------------------------------- *
     R type
  * ---------------------------------------------------------------------*/
+uint32_t r_inst(uint32_t funct7, uint32_t rs2, uint32_t rs1, uint32_t funct3,
+                uint32_t rd, uint32_t opcode) {
+  uint32_t inst = funct7 << 25;
+  inst += (rs2 << 20);
+  inst += (rs1 << 15);
+  inst + (funct3 << 12);
+  inst += (rd << 7);
+  inst += opcode;
+  return inst;
+}
+
 /* add */
 // clang-format off
 #define INST_ADD      0b00000000000000000000000000110011
 #define INST_ADD_MASK 0b11111110000000000111000001111111
-#define OP_ADD        0b0110011
+#define FUNCT7_ADD    0b0000000
+#define FUNCT3_ADD    0b000
+#define OPCODE_ADD    0b0110011
 // clang-format on
 
-uint32_t r_inst(uint32_t op, uint32_t rs2, uint32_t rs1, uint32_t rd) {
-  uint32_t inst = 0b0000000 << (32 - 7);
-  inst += (rs2 << 20);
-  inst += (rs1 << 15);
-  inst + (0b000 << 12);
-  inst += (rd << 7);
-  inst += op;
-  return inst;
+uint32_t add(uint32_t rs2, uint32_t rs1, uint32_t rd) {
+  return r_inst(FUNCT7_ADD, rs2, rs1, FUNCT3_ADD, rd, OPCODE_ADD);
 }
 
 /* --------------------------------------------------------------------- *
     I type
  * ---------------------------------------------------------------------*/
-/* add */
+uint32_t i_inst(uint32_t imm, uint32_t rs1, uint32_t funct3, uint32_t rd,
+                uint32_t opcode) {
+  uint32_t inst = imm << 20;
+  inst += (rs1 << 15);
+  inst + (funct3 << 12);
+  inst += (rd << 7);
+  inst += opcode;
+  return inst;
+}
+
+/* addi */
 // clang-format off
 #define INST_ADDI      0b0000000000000000000000000010011
 #define INST_ADDI_MASK 0b0000000000000000111000001111111
-#define OP_ADDI        0b0010011
+#define FUNCT3_ADDI    0b000
+#define OPCODE_ADDI    0b0010011
 // clang-format on
 
-uint32_t i_inst(uint32_t op, uint32_t imm, uint32_t rs1, uint32_t rd) {
-  uint32_t inst = 0b0000000 << (32 - 7);
-  inst += (imm << 20);
-  inst += (rs1 << 15);
-  inst + (0b000 << 12);
-  inst += (rd << 7);
-  inst += op;
-  return inst;
+uint32_t addi(uint32_t imm, uint32_t rs1, uint32_t rd) {
+  return i_inst(imm, rs1, FUNCT3_ADDI, rd, OPCODE_ADDI);
 }

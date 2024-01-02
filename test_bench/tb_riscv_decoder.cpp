@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
   assert_eq("[invalid] check op2_sel", dut->op2_sel, 1 /* OP2_RS" */);
 
   // add instruction
-  dut->inst = r_inst(OP_ADD, 0b01 /* rs2 */, 0b10 /* rs1 */, 0b11 /* rd */);
+  dut->inst = add(0b01 /* rs2 */, 0b10 /* rs1 */, 0b11 /* rd */);
   dut->eval();
   assert_eq("[add] check validation of an instruction", dut->invalid_o,
             1 /* valid */);
@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
   assert_eq("[add] check op2_sel", dut->op2_sel, 1 /* OP2_RS" */);
 
   // addi instruction
-  dut->inst = i_inst(OP_ADDI, 0b01 /* imm */, 0b10 /* rs1 */, 0b11 /* rd */);
+  dut->inst = addi(0b01 /* imm */, 0b10 /* rs1 */, 0b11 /* rd */);
   dut->eval();
   assert_eq("[addi] check validation of an instruction", dut->invalid_o,
             1 /* valid */);
