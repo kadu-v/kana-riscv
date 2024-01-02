@@ -14,13 +14,13 @@ int main(int argc, char** argv) {
   // Instantiate DUT
   Vriscv_wb_mux* dut = new Vriscv_wb_mux();
 
-  dut->wb_sel = 0;  // WB_ALU
+  dut->wb_sel = 1;  // WB_ALU
   dut->alu_out = 100;
   dut->data = 200;
   dut->eval();
   assert_eq("[wb_mux] check WB_ALU", dut->dout, 100);
 
-  dut->wb_sel = 1;  // WB_MEM
+  dut->wb_sel = 2;  // WB_MEM
   dut->alu_out = 100;
   dut->data = 200;
   dut->eval();

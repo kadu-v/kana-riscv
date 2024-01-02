@@ -1,7 +1,7 @@
 module riscv_ram #(
     parameter WORD_LENGTH = 32,
     parameter ADDR_LENGTH = 5,
-    parameter NUM_MEM = 4096
+    parameter NUM_MEM = 32
 ) (
     input  logic                   clk,
     /* port for instruction */
@@ -23,6 +23,4 @@ module riscv_ram #(
       mem[addr] <= wdata;
     end
   end
-
-
 endmodule

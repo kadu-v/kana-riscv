@@ -9,81 +9,64 @@
 #include "Vriscv_top.h"
 #include "assert.h"
 #include "riscv_defs.h"
+#include "top_tester.h"
 
-// void set_instructions(Vriscv_top* dut, std::vector<uint32_t> insts) {
-//   int addr = 0;
-//   for (int i = 0; i < insts.size(); i++) {
-//     dut->riscv_top__DOT__ram__DOT__mem[i] = insts[i];
-//   }
-// }
+/* R type--------------------------------------------------------------------*/
+void test_add(std::string test_name) {
+  TopTester* tester = new TopTester(test_name);
+  tester->start();
 
-void set_register(Vriscv_top* dut, uint32_t addr, uint32_t val) {
-  dut->riscv_top__DOT__regs__DOT__regs[addr] = val;
+  // setup
+  uint32_t inst = add(1, 2, 3);
+  tester->set_ram(0, inst);
+  tester->set_reg(1, 100);
+  tester->set_reg(2, 200);
+  uint32_t expected = 100 + 200;
+
+  // Step 1
+  tester->dut_->clk = 0;
+  tester->dut_->write_en = 1;
+  tester->dut_->eval();
+
+  for (int i = 0; i < 10; i++) {
+    tester->dut_->clk = !tester->dut_->clk;
+    tester->dut_->write_en = 1;
+    tester->dut_->eval();
+  }
+
+  assert_eq(test_name, tester->get_reg(3), expected);
 }
 
-void test_instruction(std::string test_name, Vriscv_top* dut, uint32_t inst,
-                      uint32_t expected) {
-  int time_counter = 0;
+/* I type--------------------------------------------------------------------*/
+void test_addi(std::string test_name, uint32_t inst, uint32_t expected) {
+  TopTester* tester = new TopTester(test_name);
+  tester->start();
 
-  // initalize tracer
-  // Trace DUMP ON
-  Verilated::traceEverOn(true);
-  VerilatedVcdC* tfp = new VerilatedVcdC;
-  dut->trace(tfp, 100);  // Trace 100 levels of hierarchy
-  tfp->open(std::format("{}.vcd", test_name).c_str());
+  // setup
+  tester->set_ram(0, inst);
+  tester->set_reg(2, 100);
 
-  // step 1
-  dut->clk = 0;  // Low
-  dut->write_en = 0;
-  dut->eval();
-  tfp->dump(time_counter);
-  time_counter++;
+  // Step 1
+  tester->dut_->clk = 0;
+  tester->dut_->write_en = 1;
+  tester->dut_->eval();
 
-  // step 2
-  dut->clk = !dut->clk;  // High
-  dut->eval();
-  tfp->dump(time_counter);
-  time_counter++;
+  for (int i = 0; i < 10; i++) {
+    tester->dut_->clk = !tester->dut_->clk;
+    tester->dut_->write_en = 1;
+    tester->dut_->eval();
+  }
 
-  // step 3
-  dut->clk = !dut->clk;  // Low
-  dut->write_en = 1;
-  dut->riscv_top__DOT__ram__DOT__mem[0] = inst;
-  dut->eval();
-  tfp->dump(time_counter);
-  time_counter++;
-
-  // step 4
-  dut->clk = !dut->clk;  // High
-  dut->eval();
-  tfp->dump(time_counter);
-  time_counter++;
-
-  // step 5
-  dut->clk = !dut->clk;  // Low
-  dut->eval();
-  tfp->dump(time_counter);
-  time_counter++;
-  dut->final();
-  tfp->close();
-  assert_eq(test_name, dut->riscv_top__DOT__regs__DOT__regs[3], expected);
+  assert_eq(test_name, tester->get_reg(3), expected);
 }
 
 int main(int argc, char** argv) {
   Verilated::commandArgs(argc, argv);
 
-  // Instantiate DUT
-  Vriscv_top* dut = new Vriscv_top();
-  uint32_t inst = add(1, 2, 3);
-  set_register(dut, 1, 100);
-  set_register(dut, 2, 200);
-  test_instruction("[add] 100 + 200 = 300", dut, inst, 300);
+  /* R type*/
+  test_add("[add] 100 + 200 = 300");
 
-  inst = addi(10, 2, 3);
-  set_register(dut, 2, 100);
-  test_instruction("[addi] 10 + 100 = 110", dut, inst, 110);
-
-  inst = addi(0b100000000001, 2, 3);
-  set_register(dut, 2, 100);
-  test_instruction("[addi] -2047 + 100 = -1947", dut, inst, -1947);
+  /* I type */
+  test_addi("[addi] 10 + 100 = 110", addi(10, 2, 3), 110);
+  test_addi("[addi] -2047 + 100 = -1947", addi(0b100000000001, 2, 3), -1947);
 }

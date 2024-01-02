@@ -18,8 +18,24 @@ typedef enum {
 } OP2_SEL;
 
 typedef enum {
-  WB_ALU = 0,
-  WB_MEM = 1
+  WB_X   = 0,
+  WB_ALU = 1,
+  WB_MEM = 2
 } WB_SEL;
+
+typedef enum {
+  MEM_X     = 0,
+  MEM_WRITE = 1
+} MEM_WEN;
+
+typedef enum {
+  RF_X     = 0,
+  RF_WRITE = 1
+} RF_WEN;
+
+typedef enum {
+  PC_PLUS4  = 0,
+  PC_TARGET = 1
+} PC_SEL;
 
 `endif
