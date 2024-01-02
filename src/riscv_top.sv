@@ -2,6 +2,7 @@
 `include "riscv_alu.sv"
 `include "riscv_regs.sv"
 `include "riscv_constants.sv"
+`include "riscv_mux1.sv"
 `include "riscv_mux2.sv"
 
 module riscv_top (
@@ -34,6 +35,9 @@ module riscv_top (
   /* extend */
   logic    [ 31:0] imm_i_sext;
 
+  /* mux1 */
+  logic    [ 31:0] mux1_dout;
+
   /* mux2 */
   logic    [ 31:0] mux2_dout;
 
@@ -55,7 +59,6 @@ module riscv_top (
       /* output */
       .pc_out    (pc_out)
   );
-
 
   /* ram */
   riscv_ram ram (
@@ -91,7 +94,7 @@ module riscv_top (
       .write_en  (write_en),
       .read_addr1(rs1_addr),
       .read_addr2(rs2_addr),
-      .data      (alu_dout),
+      .data      (wb_mux_dout),
       .write_addr(rd_addr),
       /* output */
       .read_data1(rs1_data),
@@ -107,20 +110,30 @@ module riscv_top (
   );
 
   /* mux2 */
+  riscv_mux1 mux1 (
+      /* input */
+      .op1_sel (op1_sel),
+      .rs1_data(rs1_data),
+      /* output */
+      .dout    (mux1_dout)
+  );
+
+
+  /* mux2 */
   riscv_mux2 mux2 (
       /* input */
-      .op2_sel(op2_sel),
-      .rs2_data(rs2_data),
+      .op2_sel   (op2_sel),
+      .rs2_data  (rs2_data),
       .imm_i_sext(imm_i_sext),
       /* output */
-      .dout(mux2_dout)
+      .dout      (mux2_dout)
   );
 
   /* alu */
   riscv_alu alu (
       /* input */
       .exec_fun(exec_fun),
-      .data1   (rs1_data),
+      .data1   (mux1_dout),
       .data2   (mux2_dout),
       /* output */
       .alu_out (alu_dout)

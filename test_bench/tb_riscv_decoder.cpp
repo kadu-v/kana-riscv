@@ -30,7 +30,10 @@ int main(int argc, char** argv) {
   assert_eq("[invalid] check rf_wen", dut->rf_wen, 0 /* RF_X */);
   assert_eq("[invalid] check pc_sel", dut->pc_sel, 0 /* PC_PLUS4 */);
 
-  // add instruction
+  /* ---------------------------------------------------------------------
+    R type
+   ---------------------------------------------------------------------*/
+  // add
   dut->inst = add(0b01 /* rs2 */, 0b10 /* rs1 */, 0b11 /* rd */);
   dut->eval();
   assert_eq("[add] check validation of an instruction", dut->invalid_o,
@@ -42,7 +45,10 @@ int main(int argc, char** argv) {
   assert_eq("[add] check rf_wen", dut->rf_wen, 1 /* RF_WRITE */);
   assert_eq("[add] check pc_sel", dut->pc_sel, 0 /* PC_PLUS4 */);
 
-  // addi instruction
+  /* ---------------------------------------------------------------------
+    I type
+   ---------------------------------------------------------------------*/
+  // addi
   dut->inst = addi(0b01 /* imm */, 0b10 /* rs1 */, 0b11 /* rd */);
   dut->eval();
   assert_eq("[addi] check validation of an instruction", dut->invalid_o,
@@ -53,4 +59,16 @@ int main(int argc, char** argv) {
   assert_eq("[addi] check wb_sel", dut->wb_sel, 1 /* WB_ALU */);
   assert_eq("[addi] check rf_wen", dut->rf_wen, 1 /* RF_WRITE */);
   assert_eq("[addi] check pc_sel", dut->pc_sel, 0 /* PC_PLUS4 */);
+
+  // lw
+  dut->inst = lw(0b0 /* imm */, 0b0 /* rs1 */, 0b0 /* rd */);
+  dut->eval();
+  assert_eq("[lw] check validation of an instruction", dut->invalid_o,
+            1 /* valid */);
+  assert_eq("[lw] check exec_fun", dut->exec_fun, 1 /* ALU_ADD */);
+  assert_eq("[lw] check op1_sel", dut->op1_sel, 1 /* OP1_RS1 */);
+  assert_eq("[lw] check op2_sel", dut->op2_sel, 2 /* OP2_IMI */);
+  assert_eq("[lw] check wb_sel", dut->wb_sel, 2 /* WB_MEM */);
+  assert_eq("[lw] check rf_wen", dut->rf_wen, 1 /* RF_WRITE */);
+  assert_eq("[lw] check pc_sel", dut->pc_sel, 0 /* PC_PLUS4 */);
 }
