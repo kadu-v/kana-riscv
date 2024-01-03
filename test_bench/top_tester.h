@@ -2,6 +2,8 @@
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
+#include <algorithm>  // std::replace
+#include <iostream>
 #include <string>
 
 #include "Vriscv_top.h"
@@ -35,9 +37,10 @@ class TopTester {
     cnt_++;
   }
   void start() {
+    std::replace(test_name_.begin(), test_name_.end(), ' ', '_');
     Verilated::traceEverOn(true);
     dut_->trace(tfp_, 100);
-    tfp_->open(std::format("{}.vcd", test_name_).c_str());
+    tfp_->open(std::format("./vcds/{}.vcd", test_name_).c_str());
   }
   void finish() {
     dut_->final();
