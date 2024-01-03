@@ -17,7 +17,7 @@ void test_add(std::string test_name) {
   tester->start();
 
   // setup
-  uint32_t inst = add(1, 2, 3);
+  uint32_t inst = add(3, 2, 1);
   tester->set_ram(0, inst);
   tester->set_reg(1, 100);
   tester->set_reg(2, 200);
@@ -112,6 +112,35 @@ void test_sw(std::string test_name, uint32_t inst, uint32_t expected) {
   assert_eq(test_name, tester->get_ram(10), expected);
 }
 
+/* integration
+ * test --------------------------------------------------------------------*/
+// 0: addi 31, 0, 10
+// 1: addi 20, 0, 20
+// 2: add 1, 31, 20
+// 3: sw 8, 1, 2
+// 4: lw 2, 10, 0
+void integration_test1(std::string test_name) {
+  TopTester* tester = new TopTester(test_name);
+  tester->start();
+
+  // setup
+  tester->set_ram(0, addi(10, 0, 31));
+
+  // Step 1
+  tester->dut_->clk = 0;  // Low
+  tester->dut_->x_reset = 1;
+  tester->eval();
+
+  tester->dut_->clk = !tester->dut_->clk;  // High
+  tester->eval();
+
+  tester->dut_->clk = !tester->dut_->clk;  // Low
+  tester->eval();
+
+  tester->finish();
+  assert_eq(test_name, tester->get_ram(10), 10);
+}
+
 int main(int argc, char** argv) {
   Verilated::commandArgs(argc, argv);
 
@@ -121,23 +150,23 @@ int main(int argc, char** argv) {
 
   /* I type */
   // addi
-  test_addi("[addi] 10 + 100 = 110", addi(10, 2, 3), 110);
-  test_addi("[addi] -2047 + 100 = -1947", addi(0b100000000001, 2, 3), -1947);
+  test_addi("[addi] 10 + 100 = 110", addi(3, 2, 10), 110);
+  test_addi("[addi] -2047 + 100 = -1947", addi(3, 2, 0b100000000001), -1947);
   // lw
-  test_lw("[lw] x[3] = sext(M[ x[0] + sext(10) ])", lw(10, 0, 3), 20);
-  test_lw("[lw] x[3] = sext(M[ x[1] + sext(8) ])", lw(8, 1, 3), 20);
+  test_lw("[lw] x[3] = sext(M[ x[0] + sext(10) ])", lw(3, 0, 10), 20);
+  test_lw("[lw] x[3] = sext(M[ x[1] + sext(8) ])", lw(3, 1, 8), 20);
   test_lw("[lw] x[3] = sext(M[ x[2] + sext(-12) ])",
-          lw(0b111111110100 /* -12 */, 2, 3), 20);
+          lw(3, 2, 0b111111110100 /* -12 */), 20);
 
   /* S type */
   // sw
   test_sw("[sw] M[ x[1] + sext(10) ] = x[0]",
-          sw(10 /* imm */, 0 /* rs2 (source) */, 1 /* rs1 (destination) */),
+          sw(1 /* rs1 (destination) */, 0 /* rs2 (source) */, 10 /* imm */),
           11);
   test_sw("[sw] M[ x[2] + sext(2) ] = x[0]",
-          sw(2 /* imm */, 0 /* rs2 (source) */, 2 /* rs1 (destination) */), 12);
+          sw(2 /* rs1 (destination) */, 0 /* rs2 (source) */, 2 /* imm */), 12);
   test_sw("[sw] M[ x[3] + sext(2) ] = x[0]",
-          sw(0b111111111011 /* imm (-5) */, 0 /* rs2 (source) */,
-             3 /* rs1 (destination) */),
+          sw(3 /* rs1 (destination) */, 0 /* rs2 (source) */,
+             0b111111111011 /* imm (-5) */),
           13);
 }

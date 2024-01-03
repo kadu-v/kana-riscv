@@ -35,7 +35,7 @@ uint32_t r_inst(uint32_t funct7, uint32_t rs2, uint32_t rs1, uint32_t funct3,
 #define OPCODE_ADD    0b0110011
 // clang-format on
 
-uint32_t add(uint32_t rs2, uint32_t rs1, uint32_t rd) {
+uint32_t add(uint32_t rd, uint32_t rs1, uint32_t rs2) {
   return r_inst(FUNCT7_ADD, rs2, rs1, FUNCT3_ADD, rd, OPCODE_ADD);
 }
 
@@ -61,7 +61,7 @@ uint32_t i_inst(uint32_t imm, uint32_t rs1, uint32_t funct3, uint32_t rd,
 #define OPCODE_ADDI    0b0010011
 // clang-format on
 
-uint32_t addi(uint32_t imm, uint32_t rs1, uint32_t rd) {
+uint32_t addi(uint32_t rd, uint32_t rs1, uint32_t imm) {
   return i_inst(imm, rs1, FUNCT3_ADDI, rd, OPCODE_ADDI);
 }
 
@@ -72,7 +72,7 @@ uint32_t addi(uint32_t imm, uint32_t rs1, uint32_t rd) {
 #define OPCODE_LW    0b0000011
 // clang-format on
 
-uint32_t lw(uint32_t imm_i, uint32_t rs1, uint32_t rd) {
+uint32_t lw(uint32_t rd, uint32_t rs1, uint32_t imm_i) {
   return i_inst(imm_i, rs1, FUNCT3_LW, rd, OPCODE_LW);
 }
 
@@ -99,7 +99,7 @@ uint32_t s_inst(uint32_t imm_s2, uint32_t rs2, uint32_t rs1, uint32_t funct3,
 #define OPCODE_SW    0b0100011
 // clang-format on
 
-uint32_t sw(uint32_t imm_s, uint32_t rs2, uint32_t rs1) {
+uint32_t sw(uint32_t rs1, uint32_t rs2, uint32_t imm_s) {
   uint32_t imm_s2 = (imm_s) >> 5;
   uint32_t imm_s1 = (imm_s & 0b11111);
   return s_inst(imm_s2, rs2, rs1, FUNCT3_SW, imm_s1, OPCODE_SW);
