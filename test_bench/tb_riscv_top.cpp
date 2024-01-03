@@ -69,14 +69,16 @@ void test_lw(std::string test_name, uint32_t inst, uint32_t expected) {
   tester->set_reg(2, 22);
 
   // Step 1
-  tester->dut_->clk = 0;
+  tester->dut_->clk = 0;  // Low
   tester->dut_->x_reset = 1;
   tester->eval();
 
-  for (int i = 0; i < 10; i++) {
-    tester->dut_->clk = !tester->dut_->clk;
-    tester->eval();
-  }
+  tester->dut_->clk = !tester->dut_->clk;  // High
+  tester->eval();
+
+  tester->dut_->clk = !tester->dut_->clk;  // Low
+  tester->eval();
+
   tester->finish();
   assert_eq(test_name, tester->get_reg(3), expected);
 }
@@ -96,14 +98,15 @@ void test_sw(std::string test_name, uint32_t inst, uint32_t expected) {
   tester->set_reg(3, 15);
 
   // Step 1
-  tester->dut_->clk = 0;
+  tester->dut_->clk = 0;  // Low
   tester->dut_->x_reset = 1;
   tester->eval();
 
-  for (int i = 0; i < 10; i++) {
-    tester->dut_->clk = !tester->dut_->clk;
-    tester->eval();
-  }
+  tester->dut_->clk = !tester->dut_->clk;  // High
+  tester->eval();
+
+  tester->dut_->clk = !tester->dut_->clk;  // Low
+  tester->eval();
 
   tester->finish();
   assert_eq(test_name, tester->get_ram(10), expected);
@@ -132,9 +135,9 @@ int main(int argc, char** argv) {
           sw(10 /* imm */, 0 /* rs2 (source) */, 1 /* rs1 (destination) */),
           11);
   test_sw("[sw] M[ x[2] + sext(2) ] = x[0]",
-          sw(2 /* imm */, 0 /* rs2 (source) */, 2 /* rs1 (destination) */), 11);
+          sw(2 /* imm */, 0 /* rs2 (source) */, 2 /* rs1 (destination) */), 12);
   test_sw("[sw] M[ x[3] + sext(2) ] = x[0]",
           sw(0b111111111011 /* imm (-5) */, 0 /* rs2 (source) */,
              3 /* rs1 (destination) */),
-          11);
+          13);
 }
