@@ -19,5 +19,4 @@ module riscv_mux1 (
       end
     endcase
   end
-
 endmodule

@@ -7,8 +7,7 @@
 
 module riscv_top (
     input logic clk,
-    input logic x_reset,
-    input logic write_en
+    input logic x_reset
 );
 
   /* pc */
@@ -25,29 +24,35 @@ module riscv_top (
   OP2_SEL          op2_sel;
   WB_SEL           wb_sel;
   RF_WEN           rf_wen;
+  MEM_WEN          mem_wen;
   PC_SEL           pc_sel;
 
   /* register files */
-  logic    [  4:0] rs1_addr = inst[19:15];
-  logic    [24:20] rs2_addr = inst[24:20];
-  logic    [ 11:7] rd_addr = inst[11:7];
+  logic    [  4:0] rs1_addr;
+  logic    [24:20] rs2_addr;
+  logic    [ 11:7] rd_addr;
+  assign rs1_addr = inst[19:15];
+  assign rs2_addr = inst[24:20];
+  assign rd_addr  = inst[11:7];
+
 
   /* extend */
-  logic    [ 31:0] imm_i_sext;
+  logic [31:0] imm_i_sext;
+  logic [31:0] imm_s_sext;
 
   /* mux1 */
-  logic    [ 31:0] mux1_dout;
+  logic [31:0] mux1_dout;
 
   /* mux2 */
-  logic    [ 31:0] mux2_dout;
+  logic [31:0] mux2_dout;
 
   /* alu */
-  logic    [ 31:0] rs1_data;
-  logic    [ 31:0] rs2_data;
-  logic    [ 31:0] alu_dout;
+  logic [31:0] rs1_data;
+  logic [31:0] rs2_data;
+  logic [31:0] alu_dout;
 
   /* wb mux */
-  logic    [ 31:0] wb_mux_dout;
+  logic [31:0] wb_mux_dout;
 
   /* pc */
   riscv_pc pc (
@@ -68,7 +73,7 @@ module riscv_top (
       .inst    (inst),
       /* port for data */
       .addr    (alu_dout),
-      .write_en(0),
+      .write_en(mem_wen),
       .wdata   (rs2_data),
       .dout    (ram_dout)
   );
@@ -84,6 +89,7 @@ module riscv_top (
       .op2_sel  (op2_sel),
       .wb_sel   (wb_sel),
       .rf_wen   (rf_wen),
+      .mem_wen  (mem_wen),
       .pc_sel   (pc_sel)
   );
 
@@ -91,7 +97,7 @@ module riscv_top (
   riscv_regs regs (
       /* input */
       .clk       (clk),
-      .write_en  (write_en),
+      .write_en  (rf_wen),
       .read_addr1(rs1_addr),
       .read_addr2(rs2_addr),
       .data      (wb_mux_dout),
@@ -104,9 +110,10 @@ module riscv_top (
   /* extend */
   riscv_extend extend (
       /* input */
-      .imm(inst),
+      .inst(inst),
       /* output */
-      .imm_i_sext(imm_i_sext)
+      .imm_i_sext(imm_i_sext),
+      .imm_s_sext(imm_s_sext)
   );
 
   /* mux2 */
@@ -125,6 +132,7 @@ module riscv_top (
       .op2_sel   (op2_sel),
       .rs2_data  (rs2_data),
       .imm_i_sext(imm_i_sext),
+      .imm_s_sext(imm_s_sext),
       /* output */
       .dout      (mux2_dout)
   );

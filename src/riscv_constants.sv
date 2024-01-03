@@ -14,7 +14,8 @@ typedef enum {
 typedef enum {
   OP2_X   = 0,
   OP2_RS2 = 1,
-  OP2_IMI = 2
+  OP2_IMI = 2,  // I type
+  OP2_IMS = 3   // S type
 } OP2_SEL;
 
 typedef enum {
@@ -23,12 +24,12 @@ typedef enum {
   WB_MEM = 2
 } WB_SEL;
 
-typedef enum {
+typedef enum logic {
   MEM_X     = 0,
   MEM_WRITE = 1
 } MEM_WEN;
 
-typedef enum {
+typedef enum logic {
   RF_X     = 0,
   RF_WRITE = 1
 } RF_WEN;

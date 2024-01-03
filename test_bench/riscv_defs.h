@@ -72,6 +72,35 @@ uint32_t addi(uint32_t imm, uint32_t rs1, uint32_t rd) {
 #define OPCODE_LW    0b0000011
 // clang-format on
 
-uint32_t lw(uint32_t imm, uint32_t rs1, uint32_t rd) {
-  return i_inst(imm, rs1, FUNCT3_LW, rd, OPCODE_LW);
+uint32_t lw(uint32_t imm_i, uint32_t rs1, uint32_t rd) {
+  return i_inst(imm_i, rs1, FUNCT3_LW, rd, OPCODE_LW);
+}
+
+/* --------------------------------------------------------------------- *
+    S type
+ * ---------------------------------------------------------------------*/
+#define INST_S_MASK 0b00000000000000000111000001111111
+
+uint32_t s_inst(uint32_t imm_s2, uint32_t rs2, uint32_t rs1, uint32_t funct3,
+                uint32_t imm_s1, uint32_t opcode) {
+  uint32_t inst = (imm_s2 << 25);
+  inst += (rs2 << 20);
+  inst += (rs1 << 15);
+  inst += (funct3 << 12);
+  inst += (imm_s1 << 7);
+  inst += opcode;
+  return inst;
+}
+
+/* sw */
+// clang-format off
+#define INST_SW      0b0000000000000000010000000000011
+#define FUNCT3_SW    0b010
+#define OPCODE_SW    0b0100011
+// clang-format on
+
+uint32_t sw(uint32_t imm_s, uint32_t rs2, uint32_t rs1) {
+  uint32_t imm_s2 = (imm_s) >> 5;
+  uint32_t imm_s1 = (imm_s & 0b11111);
+  return s_inst(imm_s2, rs2, rs1, FUNCT3_SW, imm_s1, OPCODE_SW);
 }
