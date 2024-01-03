@@ -104,3 +104,30 @@ uint32_t sw(uint32_t rs1, uint32_t rs2, uint32_t imm_s) {
   uint32_t imm_s1 = (imm_s & 0b11111);
   return s_inst(imm_s2, rs2, rs1, FUNCT3_SW, imm_s1, OPCODE_SW);
 }
+
+/* --------------------------------------------------------------------- *
+    J type
+ * ---------------------------------------------------------------------*/
+#define INST_J_MASK 0b00000000000000000000000001111111
+
+uint32_t j_inst(uint32_t imm, uint32_t rd, uint32_t opcode) {
+  uint32_t imm_j0 = ((imm & 0b100000000000000000000) >> 20);  // imm[20]
+  uint32_t imm_j1 = ((imm & 0b000000000011111111110) >> 1);   // imm[10:1]
+  uint32_t imm_j2 = ((imm & 0b000000000100000000000) >> 11);  // imm[11]
+  uint32_t imm_j3 = ((imm & 0b011111111000000000000) >> 12);  // imm[19:12]
+  uint32_t inst = (imm_j0 << 31);
+  inst += (imm_j1 << 21);
+  inst += (imm_j2 << 20);
+  inst += (imm_j3 << 12);
+  inst += (rd << 7);
+  inst += opcode;
+  return inst;
+}
+
+/* sw */
+// clang-format off
+#define INST_JAL      0b00000000000000000000000001101111
+#define OPCODE_JAL    0b1101111
+// clang-format on
+
+uint32_t jal(uint32_t rd, uint32_t imm) { return j_inst(imm, rd, OPCODE_JAL); }

@@ -91,4 +91,20 @@ int main(int argc, char** argv) {
   assert_eq("[sw] check rf_wen", dut->rf_wen, 0 /* RF_X */);
   assert_eq("[sw] check mem_wen", dut->mem_wen, 1 /* MEM_WRITE */);
   assert_eq("[sw] check pc_sel", dut->pc_sel, 0 /* PC_PLUS4 */);
+
+  /* ---------------------------------------------------------------------
+  J type
+  ---------------------------------------------------------------------*/
+  // jal
+  dut->inst = jal(0b0 /* rd */, 0b01 /* imm */);
+  dut->eval();
+  assert_eq("[jal] check validation of an instruction", dut->invalid_o,
+            1 /* valid */);
+  assert_eq("[jal] check exec_fun", dut->exec_fun, 1 /* ALU_ADD */);
+  assert_eq("[jal] check op1_sel", dut->op1_sel, 1 /* OP1_RS1 */);
+  assert_eq("[jal] check op2_sel", dut->op2_sel, 4 /* OP2_IMJ */);
+  assert_eq("[jal] check wb_sel", dut->wb_sel, 3 /* WB_PC */);
+  assert_eq("[jal] check rf_wen", dut->rf_wen, 1 /* RF_WRITE */);
+  assert_eq("[jal] check mem_wen", dut->mem_wen, 0 /* MEM_X */);
+  assert_eq("[jal] check pc_sel", dut->pc_sel, 1 /* PC_J_TARGET */);
 }

@@ -18,7 +18,8 @@ module riscv_decoder (
   logic invalid_i = ((inst & `INST_R_MASK) == `INST_ADD) || 
                   ((inst & `INST_I_MASK) == `INST_ADDI) ||
                   ((inst & `INST_I_MASK) == `INST_LW) ||
-                  ((inst & `INST_S_MASK) == `INST_SW) ;
+                  ((inst & `INST_S_MASK) == `INST_SW) ||
+                  ((inst & `INST_J_MASK) == `INST_JAL);
 
   // if statement for alu
   always_comb begin
@@ -55,6 +56,14 @@ module riscv_decoder (
       rf_wen   = RF_X;
       mem_wen  = MEM_WRITE;
       pc_sel   = PC_PLUS4;
+    end else if ((inst & `INST_J_MASK) == `INST_JAL) begin  /* J type */
+      exec_fun = ALU_ADD;
+      op1_sel  = OP1_RS1;
+      op2_sel  = OP2_IMJ;
+      wb_sel   = WB_PC;
+      rf_wen   = RF_WRITE;
+      mem_wen  = MEM_X;
+      pc_sel   = PC_J_TARGET;
     end else begin
       exec_fun = ALU_X;
       op1_sel  = OP1_X;

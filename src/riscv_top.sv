@@ -11,6 +11,7 @@ module riscv_top (
 );
 
   /* pc */
+  logic    [ 31:0] pc_plus4;
   logic    [ 31:0] pc_out;
 
   /* ram */
@@ -39,6 +40,7 @@ module riscv_top (
   /* extend */
   logic [31:0] imm_i_sext;
   logic [31:0] imm_s_sext;
+  logic [31:0] imm_j_sext;
 
   /* mux1 */
   logic [31:0] mux1_dout;
@@ -60,8 +62,9 @@ module riscv_top (
       .clk       (clk),
       .x_reset   (x_reset),
       .pc_sel    (pc_sel),
-      .imm_i_sext(imm_i_sext),
+      .imm_j_sext(imm_j_sext),
       /* output */
+      .pc_plus4  (pc_plus4),
       .pc_out    (pc_out)
   );
 
@@ -113,7 +116,8 @@ module riscv_top (
       .inst(inst),
       /* output */
       .imm_i_sext(imm_i_sext),
-      .imm_s_sext(imm_s_sext)
+      .imm_s_sext(imm_s_sext),
+      .imm_j_sext(imm_j_sext)
   );
 
   /* mux2 */
@@ -150,10 +154,11 @@ module riscv_top (
   /* wb mux */
   riscv_wb_mux wb_mux (
       /* input */
-      .wb_sel (wb_sel),
-      .alu_out(alu_dout),
-      .data   (ram_dout),
+      .wb_sel  (wb_sel),
+      .alu_out (alu_dout),
+      .data    (ram_dout),
+      .pc_plus4(pc_plus4),
       /* output */
-      .dout   (wb_mux_dout)
+      .dout    (wb_mux_dout)
   );
 endmodule

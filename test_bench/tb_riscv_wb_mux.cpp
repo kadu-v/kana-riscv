@@ -17,12 +17,21 @@ int main(int argc, char** argv) {
   dut->wb_sel = 1;  // WB_ALU
   dut->alu_out = 100;
   dut->data = 200;
+  dut->pc_plus4 = 300;
   dut->eval();
   assert_eq("[wb_mux] check WB_ALU", dut->dout, 100);
 
   dut->wb_sel = 2;  // WB_MEM
   dut->alu_out = 100;
   dut->data = 200;
+  dut->pc_plus4 = 300;
   dut->eval();
   assert_eq("[wb_mux] check WB_MEM", dut->dout, 200);
+
+  dut->wb_sel = 3;  // WB_PC
+  dut->alu_out = 100;
+  dut->data = 200;
+  dut->pc_plus4 = 300;
+  dut->eval();
+  assert_eq("[wb_mux] check WB_PC", dut->dout, 300);
 }

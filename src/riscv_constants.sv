@@ -15,13 +15,15 @@ typedef enum {
   OP2_X   = 0,
   OP2_RS2 = 1,
   OP2_IMI = 2,  // I type
-  OP2_IMS = 3   // S type
+  OP2_IMS = 3,  // S type
+  OP2_IMJ = 4   // J type
 } OP2_SEL;
 
 typedef enum {
   WB_X   = 0,
   WB_ALU = 1,
-  WB_MEM = 2
+  WB_MEM = 2,
+  WB_PC  = 3
 } WB_SEL;
 
 typedef enum logic {
@@ -35,8 +37,8 @@ typedef enum logic {
 } RF_WEN;
 
 typedef enum {
-  PC_PLUS4  = 0,
-  PC_TARGET = 1
+  PC_PLUS4 = 0,
+  PC_J_TARGET = 1
 } PC_SEL;
 
 `endif

@@ -12,7 +12,7 @@ TRACE_FLAGS = --trace --trace-params --trace-structs --trace-underscore
 build: $(TARGETS)
 
 $(OBJDIR)/V%: $(SRCDIR)/%.sv $(TBDIR)/tb_%.cpp
-	mkdir -p j./vcds
+	mkdir -p ./vcds
 	verilator --cc $(word 1,$^) --exe $(word 2,$^) $(INCLUDE) -CFLAGS -std=c++2a $(TRACE_FLAGS)
 	make -C $(OBJDIR) -f $(@F).mk
 
