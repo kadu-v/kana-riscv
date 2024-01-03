@@ -124,10 +124,43 @@ uint32_t j_inst(uint32_t imm, uint32_t rd, uint32_t opcode) {
   return inst;
 }
 
-/* sw */
+/* jal */
 // clang-format off
 #define INST_JAL      0b00000000000000000000000001101111
 #define OPCODE_JAL    0b1101111
 // clang-format on
 
 uint32_t jal(uint32_t rd, uint32_t imm) { return j_inst(imm, rd, OPCODE_JAL); }
+
+/* --------------------------------------------------------------------- *
+    B type
+ * ---------------------------------------------------------------------*/
+#define INST_B_MASK 0b00000000000000000000000001111111
+
+uint32_t b_inst(uint32_t imm, uint32_t rs2, uint32_t rs1, uint32_t funct3,
+                uint32_t opcode) {
+  uint32_t imm_b0 = ((imm & 0b100000000000) >> 11);  // imm[12]
+  uint32_t imm_b1 = ((imm & 0b001111110000) >> 4);   // imm[10:5]
+  uint32_t imm_b2 = ((imm & 0b000000001110) >> 1);   // imm[4:1]
+  uint32_t imm_b3 = ((imm & 0b010000000000) >> 10);  // imm[11]
+  uint32_t inst = (imm_b0 << 31);
+  inst += (imm_b1 << 25);
+  inst += (rs2 << 20);
+  inst += (rs1 << 15);
+  inst += (funct3 << 12);
+  inst += (imm_b2 << 8);
+  inst += (imm_b3 << 7);
+  inst += opcode;
+  return inst;
+}
+
+/* beq */
+// clang-format off
+#define INST_BEQ      0b00000000000000000000000001100011
+#define FUNCT3_BEQ    0b000
+#define OPCODE_BEQ    0b1100011
+// clang-format on
+
+uint32_t beq(uint32_t rs1, uint32_t rs2, uint32_t imm) {
+  return b_inst(imm, rs2, rs1, FUNCT3_BEQ, OPCODE_BEQ);
+}

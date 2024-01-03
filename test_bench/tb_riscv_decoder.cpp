@@ -107,4 +107,20 @@ int main(int argc, char** argv) {
   assert_eq("[jal] check rf_wen", dut->rf_wen, 1 /* RF_WRITE */);
   assert_eq("[jal] check mem_wen", dut->mem_wen, 0 /* MEM_X */);
   assert_eq("[jal] check pc_sel", dut->pc_sel, 1 /* PC_J_TARGET */);
+
+  /* ---------------------------------------------------------------------
+  B type
+  ---------------------------------------------------------------------*/
+  // beq
+  dut->inst = beq(0b0 /* rs1 */, 0b01 /* rs2 */, 0b10 /* imm */);
+  dut->eval();
+  assert_eq("[beq] check validation of an instruction", dut->invalid_o,
+            1 /* valid */);
+  assert_eq("[beq] check exec_fun", dut->exec_fun, 0 /* ALU_X */);
+  assert_eq("[beq] check op1_sel", dut->op1_sel, 1 /* OP1_RS1 */);
+  assert_eq("[beq] check op2_sel", dut->op2_sel, 1 /* OP2_RS2 */);
+  assert_eq("[beq] check wb_sel", dut->wb_sel, 0 /* WB_X */);
+  assert_eq("[beq] check rf_wen", dut->rf_wen, 0 /* RF_X */);
+  assert_eq("[beq] check mem_wen", dut->mem_wen, 0 /* MEM_X */);
+  assert_eq("[beq] check pc_sel", dut->pc_sel, 2 /* PC_B_TARGET */);
 }

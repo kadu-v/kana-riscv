@@ -36,11 +36,11 @@ module riscv_top (
   assign rs2_addr = inst[24:20];
   assign rd_addr  = inst[11:7];
 
-
   /* extend */
   logic [31:0] imm_i_sext;
   logic [31:0] imm_s_sext;
   logic [31:0] imm_j_sext;
+  logic [31:0] imm_b_sext;
 
   /* mux1 */
   logic [31:0] mux1_dout;
@@ -52,6 +52,7 @@ module riscv_top (
   logic [31:0] rs1_data;
   logic [31:0] rs2_data;
   logic [31:0] alu_dout;
+  logic        br_flag;
 
   /* wb mux */
   logic [31:0] wb_mux_dout;
@@ -63,6 +64,8 @@ module riscv_top (
       .x_reset   (x_reset),
       .pc_sel    (pc_sel),
       .imm_j_sext(imm_j_sext),
+      .imm_b_sext(imm_b_sext),
+      .br_flag   (br_flag),
       /* output */
       .pc_plus4  (pc_plus4),
       .pc_out    (pc_out)
@@ -117,7 +120,8 @@ module riscv_top (
       /* output */
       .imm_i_sext(imm_i_sext),
       .imm_s_sext(imm_s_sext),
-      .imm_j_sext(imm_j_sext)
+      .imm_j_sext(imm_j_sext),
+      .imm_b_sext(imm_b_sext)
   );
 
   /* mux2 */
@@ -148,7 +152,8 @@ module riscv_top (
       .data1   (mux1_dout),
       .data2   (mux2_dout),
       /* output */
-      .alu_out (alu_dout)
+      .alu_out (alu_dout),
+      .br_flag  (br_flag)
   );
 
   /* wb mux */

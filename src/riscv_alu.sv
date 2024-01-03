@@ -8,7 +8,8 @@ module riscv_alu #(
     input  logic    [WORD_LENGTH-1:0] data1,
     input  logic    [WORD_LENGTH-1:0] data2,
     /* output */
-    output logic    [WORD_LENGTH-1:0] alu_out
+    output logic    [WORD_LENGTH-1:0] alu_out,
+    output logic                      br_flag
 );
 
   always_comb begin
@@ -22,4 +23,11 @@ module riscv_alu #(
     endcase
   end
 
+  always_comb begin
+    if (data1 == data2) begin
+      br_flag = 1;
+    end else begin
+      br_flag = 0;
+    end
+  end
 endmodule

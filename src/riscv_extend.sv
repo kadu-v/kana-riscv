@@ -4,7 +4,8 @@ module riscv_extend (
     /* output */
     output logic [31:0] imm_i_sext,
     output logic [31:0] imm_s_sext,
-    output logic [31:0] imm_j_sext
+    output logic [31:0] imm_j_sext,
+    output logic [31:0] imm_b_sext
 );
 
   /* I type */
@@ -23,4 +24,9 @@ module riscv_extend (
   // RISC-V ISA does not define the first bit of imm,
   // so the first bit have to be 0.
   assign imm_j_sext = {{11{imm_j[19]}}, imm_j, 1'b0};
+
+  /* B type */
+  logic [11:0] imm_b;
+  assign imm_b = {inst[31], inst[7], inst[30:25], inst[11:8]};
+  assign imm_b_sext = {{19{imm_b[11]}}, imm_b, 1'b0};
 endmodule

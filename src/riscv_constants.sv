@@ -38,7 +38,8 @@ typedef enum logic {
 
 typedef enum {
   PC_PLUS4 = 0,
-  PC_J_TARGET = 1
+  PC_J_TARGET = 1,
+  PC_B_TARGET = 2
 } PC_SEL;
 
 `endif

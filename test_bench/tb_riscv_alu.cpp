@@ -25,9 +25,23 @@ int main(int argc, char** argv) {
   dut->eval();
 
   // check add instruction
-  dut->exec_fun = 1; /* add */
+  dut->exec_fun = 1; /* ALU_ADD */
   dut->data1 = 1;
   dut->data2 = 2;
   dut->eval();
   assert_eq("[alu] ALU_ADD 1 2", dut->alu_out, 3);
+
+  // check branch flag
+  dut->exec_fun = 0; /* ALU_X */
+  dut->data1 = 1;
+  dut->data2 = 1;
+  dut->eval();
+  assert_eq("[alu] x[rs1] == x[rs2]", dut->br_flag, 1);
+
+  // check branch flag
+  dut->exec_fun = 0; /* ALU_X */
+  dut->data1 = 1;
+  dut->data2 = 2;
+  dut->eval();
+  assert_eq("[alu] x[rs1] != x[rs2]", dut->br_flag, 0);
 }

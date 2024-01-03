@@ -48,4 +48,8 @@ int main(int argc, char** argv) {
   dut->eval();
   expected = 0b010101011111;
   assert_eq("[S type] positive value check", dut->imm_s_sext, expected);
+
+  /* J type */
+
+  /* B type*/
 }

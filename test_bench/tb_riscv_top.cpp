@@ -143,6 +143,36 @@ void test_jal(std::string test_name) {
   assert_eq("[jal] check x[1] = pc + 4", tester->get_reg(1), 4);
 }
 
+/* B type--------------------------------------------------------------------*/
+// 0: beq 1, 2, 2
+// 1: addi 2, 0, 10
+// 2: addi 3, 0, 20
+void test_beq(std::string test_name) {
+  TopTester* tester = new TopTester(test_name);
+  tester->start();
+
+  // setup
+  tester->set_ram(0, beq(1, 2, 2));
+  tester->set_ram(1, addi(2, 0, 10));
+  tester->set_ram(2, addi(3, 0, 20));
+
+  // Step 1
+  tester->dut_->clk = 0;  // Low
+  tester->dut_->x_reset = 1;
+  tester->eval();
+
+  for (int i = 0; i < 3; i++) {
+    tester->dut_->clk = !tester->dut_->clk;  // High
+    tester->eval();
+
+    tester->dut_->clk = !tester->dut_->clk;  // Low
+    tester->eval();
+  }
+
+  tester->finish();
+  assert_eq(test_name, tester->get_reg(3), 20);
+}
+
 /* integration
  * test --------------------------------------------------------------------*/
 // 0: addi 31, 0, 10 // x[31] = x[0] + sext(10) == x[31] = 0 + 10
@@ -206,9 +236,13 @@ int main(int argc, char** argv) {
           sw(3 /* rs1 (destination) */, 0 /* rs2 (source) */,
              0b111111111011 /* imm (-5) */),
           13);
+
   /* S type */
   // jal
   test_jal("[jal] jal 1, 2; addi 2, 0, 10; addi 3, 0, 20");
+
+  /* B type */
+  test_beq("[beq] beq 1, 2, 2; addi 2, 0, 10; addi 3, 0, 20");
 
   /* integration test */
   integration_test1("[integration test] add, addi, lw, sw");
