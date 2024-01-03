@@ -114,31 +114,37 @@ void test_sw(std::string test_name, uint32_t inst, uint32_t expected) {
 
 /* integration
  * test --------------------------------------------------------------------*/
-// 0: addi 31, 0, 10
-// 1: addi 20, 0, 20
-// 2: add 1, 31, 20
-// 3: sw 8, 1, 2
-// 4: lw 2, 10, 0
+// 0: addi 31, 0, 10 // x[31] = x[0] + sext(10) == x[31] = 0 + 10
+// 1: addi 20, 0, 20 // x[20] = x[0] + sext(10) == x[20] = 0 + 20
+// 2: add 1, 31, 20  // x[1] = x[31] + x[20]    == x[1]  = 10 + 20
+// 3: sw 0, 1, 10    // M[ x[0] + sext(10) ] = x[1] == M[10] = 30
+// 4: lw 2, 0, 10    // x[2] = M[ x[0] + sext(10) ] == x[2] = M[ 10 ]
 void integration_test1(std::string test_name) {
   TopTester* tester = new TopTester(test_name);
   tester->start();
 
   // setup
-  tester->set_ram(0, addi(10, 0, 31));
+  tester->set_ram(0, addi(31, 0, 10));
+  tester->set_ram(1, addi(20, 0, 20));
+  tester->set_ram(2, add(1, 31, 20));
+  tester->set_ram(3, sw(0, 1, 10));
+  tester->set_ram(4, lw(2, 0, 10));
 
   // Step 1
   tester->dut_->clk = 0;  // Low
   tester->dut_->x_reset = 1;
   tester->eval();
 
-  tester->dut_->clk = !tester->dut_->clk;  // High
-  tester->eval();
+  for (int i = 0; i < 10; i++) {
+    tester->dut_->clk = !tester->dut_->clk;  // High
+    tester->eval();
 
-  tester->dut_->clk = !tester->dut_->clk;  // Low
-  tester->eval();
+    tester->dut_->clk = !tester->dut_->clk;  // Low
+    tester->eval();
+  }
 
   tester->finish();
-  assert_eq(test_name, tester->get_ram(10), 10);
+  assert_eq(test_name, tester->get_reg(2), 30);
 }
 
 int main(int argc, char** argv) {
@@ -169,4 +175,7 @@ int main(int argc, char** argv) {
           sw(3 /* rs1 (destination) */, 0 /* rs2 (source) */,
              0b111111111011 /* imm (-5) */),
           13);
+
+  /* integration test */
+  integration_test1("[integration test] add, addi, lw, sw");
 }
