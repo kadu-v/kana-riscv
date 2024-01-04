@@ -1,20 +1,23 @@
 `include "riscv_constants.sv"
 
-module riscv_pc (
+module riscv_pc #(
+    parameter WORD_LENGTH = 32,
+    parameter PC_OFFSET   = 4
+) (
     /* input */
-    input  logic         clk,
-    input  logic         x_reset,
-    input  PC_SEL        pc_sel,
-    input  logic  [31:0] imm_j_sext,
-    input  logic  [31:0] imm_b_sext,
-    input  logic         br_flag,
+    input  logic                    clk,
+    input  logic                    x_reset,
+    input  PC_SEL                   pc_sel,
+    input  logic  [WORD_LENGTH-1:0] imm_j_sext,
+    input  logic  [WORD_LENGTH-1:0] imm_b_sext,
+    input  logic                    br_flag,
     /* output */
-    output logic  [31:0] pc_plus4,
-    output logic  [31:0] pc_out
+    output logic  [WORD_LENGTH-1:0] pc_plus4,
+    output logic  [WORD_LENGTH-1:0] pc_out
 );
   logic [31:0] pc;
   assign pc_out   = pc;
-  assign pc_plus4 = pc + 4;
+  assign pc_plus4 = pc + PC_OFFSET;
 
   always_ff @(posedge clk) begin
     if (!x_reset) begin
@@ -24,7 +27,7 @@ module riscv_pc (
     end else if (pc_sel == PC_B_TARGET && br_flag) begin
       pc <= pc + imm_b_sext;
     end else begin
-      pc <= pc + 1;
+      pc <= pc + PC_OFFSET;
     end
   end
 endmodule

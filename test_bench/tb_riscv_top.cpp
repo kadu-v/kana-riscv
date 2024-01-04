@@ -209,17 +209,17 @@ void test_sw(std::string test_name, uint32_t inst, uint32_t expected) {
 }
 
 /* J type--------------------------------------------------------------------*/
-// 0: jal 1, 2
-// 1: addi 2, 0, 10
-// 2: addi 3, 0, 20
+// 0: jal 1, 8
+// 4: addi 2, 0, 10
+// 8: addi 3, 0, 20
 void test_jal(std::string test_name) {
   TopTester* tester = new TopTester(test_name);
   tester->start();
 
   // setup
-  tester->set_ram(0, jal(1, 2));
-  tester->set_ram(1, addi(2, 0, 10));
-  tester->set_ram(2, addi(3, 0, 20));
+  tester->set_ram(0, jal(1, 8));
+  tester->set_ram(4, addi(2, 0, 10));
+  tester->set_ram(8, addi(3, 0, 20));
 
   // Step 1
   tester->dut_->clk = 0;  // Low
@@ -240,17 +240,17 @@ void test_jal(std::string test_name) {
 }
 
 /* B type--------------------------------------------------------------------*/
-// 0: beq 1, 2, 2
-// 1: addi 2, 0, 10
-// 2: addi 3, 0, 20
+// 0: beq 1, 2, 8
+// 4: addi 2, 0, 10
+// 8: addi 3, 0, 20
 void test_beq(std::string test_name) {
   TopTester* tester = new TopTester(test_name);
   tester->start();
 
   // setup
-  tester->set_ram(0, beq(1, 2, 2));
-  tester->set_ram(1, addi(2, 0, 10));
-  tester->set_ram(2, addi(3, 0, 20));
+  tester->set_ram(0, beq(1, 2, 8));
+  tester->set_ram(4, addi(2, 0, 10));
+  tester->set_ram(8, addi(3, 0, 20));
 
   // Step 1
   tester->dut_->clk = 0;  // Low
@@ -271,20 +271,20 @@ void test_beq(std::string test_name) {
 
 /* integration　test 1 -------------------------------------------------------*/
 // 0: addi 31, 0, 10 // x[31] = x[0] + sext(10) == x[31] = 0 + 10
-// 1: addi 20, 0, 20 // x[20] = x[0] + sext(10) == x[20] = 0 + 20
-// 2: add 1, 31, 20  // x[1] = x[31] + x[20]    == x[1]  = 10 + 20
-// 3: sw 0, 1, 10    // M[ x[0] + sext(10) ] = x[1] == M[10] = 30
-// 4: lw 2, 0, 10    // x[2] = M[ x[0] + sext(10) ] == x[2] = M[ 10 ]
+// 4: addi 20, 0, 20 // x[20] = x[0] + sext(10) == x[20] = 0 + 20
+// 8: add 1, 31, 20  // x[1] = x[31] + x[20]    == x[1]  = 10 + 20
+// 12: sw 0, 1, 10    // M[ x[0] + sext(10) ] = x[1] == M[10] = 30
+// 16: lw 2, 0, 10    // x[2] = M[ x[0] + sext(10) ] == x[2] = M[ 10 ]
 void integration_test1(std::string test_name) {
   TopTester* tester = new TopTester(test_name);
   tester->start();
 
   // setup
   tester->set_ram(0, addi(31, 0, 10));
-  tester->set_ram(1, addi(20, 0, 20));
-  tester->set_ram(2, add(1, 31, 20));
-  tester->set_ram(3, sw(0, 1, 10));
-  tester->set_ram(4, lw(2, 0, 10));
+  tester->set_ram(4, addi(20, 0, 20));
+  tester->set_ram(8, add(1, 31, 20));
+  tester->set_ram(12, sw(0, 1, 10));
+  tester->set_ram(16, lw(2, 0, 10));
 
   // Step 1
   tester->dut_->clk = 0;  // Low
@@ -305,20 +305,20 @@ void integration_test1(std::string test_name) {
 
 /* integration　test 2 -------------------------------------------------------*/
 // 0: addi 31, 0, 10 // x[31] = x[0] + sext(10) == x[31] = 0 + 10
-// 1: addi 20, 0, 10 // x[20] = x[0] + sext(10) == x[20] = 0 + 10
-// 2: beq 31, 20, 2  // if (x[31] == x[20]) then pc += sext(2)
-// 3: addi 1, 0, 100
-// 4: addi 2, 0, 200
+// 4: addi 20, 0, 10 // x[20] = x[0] + sext(10) == x[20] = 0 + 10
+// 8: beq 31, 20, 8  // if (x[31] == x[20]) then pc += sext(8)
+// 12: addi 1, 0, 100
+// 16: addi 2, 0, 200
 void integration_test2(std::string test_name) {
   TopTester* tester = new TopTester(test_name);
   tester->start();
 
   // setup
   tester->set_ram(0, addi(31, 0, 10));
-  tester->set_ram(1, addi(20, 0, 10));
-  tester->set_ram(2, beq(31, 20, 2));
-  tester->set_ram(3, addi(1, 0, 100));
-  tester->set_ram(4, addi(2, 0, 200));
+  tester->set_ram(4, addi(20, 0, 10));
+  tester->set_ram(8, beq(31, 20, 8));
+  tester->set_ram(12, addi(1, 0, 100));
+  tester->set_ram(16, addi(2, 0, 200));
 
   // Step 1
   tester->dut_->clk = 0;  // Low
@@ -336,6 +336,74 @@ void integration_test2(std::string test_name) {
   tester->finish();
   assert_eq(test_name, tester->get_reg(1), 0);
   assert_eq(test_name, tester->get_reg(2), 200);
+}
+
+/* integration　test 3 -------------------------------------------------------*/
+//  0: main:   addi x2, x0, 5
+//  4:         addi x3, x0, 12
+//  8:         addi x7, x3, -9
+// 12:         or x4, x7, x2
+// 16:         and x5, x3, x4
+// 20:         add x5, x5, x4
+// 24:         beq x5, x7, end    // imm = 28
+// 28:         slt x4, x3, x4
+// 32:         beq x4, x0, around // imm = 8
+// 36:         addi x5, x0, 0
+// 40: around: slt x4, x7, x2　
+// 44:         add x7, x4, x5
+// 48:         sub x7, x7, x2
+// 52:         sw x7, 84(x3)      // sw rs2, offset(rs1)
+// 56:         lw x2, 96(x0)      // lw rd, offset(rs1)
+// 60:         add x9, x2, x5
+// 64:         jal x3, end        // imm = 8
+// 68:         addi x2, x0, 1
+// 72: end:    add x2, x2, x9
+// 76:         sw x2, 0x20(x3)   // imm = 0x20 = 32
+// 80: done:   beq x2, x2, done  // imm = 0
+void integration_test3(std::string test_name) {
+  TopTester* tester = new TopTester(test_name);
+  tester->start();
+
+  // setup
+  tester->set_ram(0, addi(2, 0, 5));
+  tester->set_ram(4, addi(3, 0, 12));
+  // 0b000000001001 == 9
+  // 0b111111110111 == -9
+  tester->set_ram(8, addi(7, 3, 0b111111110111));  // imm = -9
+  tester->set_ram(12, ior(4, 7, 2));
+  tester->set_ram(16, iand(5, 3, 4));
+  tester->set_ram(20, add(5, 5, 4));
+  tester->set_ram(24, beq(5, 7, 28));
+  tester->set_ram(28, slt(4, 3, 4));
+  tester->set_ram(32, beq(4, 0, 8));
+  tester->set_ram(36, addi(5, 0, 0));
+  tester->set_ram(40, slt(4, 7, 2));
+  tester->set_ram(44, add(7, 4, 5));
+  tester->set_ram(48, sub(7, 7, 2));
+  tester->set_ram(52, sw(3, 7, 84));
+  tester->set_ram(56, lw(2, 0, 96));
+  tester->set_ram(60, add(9, 2, 5));
+  tester->set_ram(64, jal(3, 8));
+  tester->set_ram(68, addi(2, 0, 1));
+  tester->set_ram(72, add(2, 2, 9));
+  tester->set_ram(76, sw(3, 2, 32));
+  tester->set_ram(80, beq(2, 2, 0));
+
+  // Step 1
+  tester->dut_->clk = 0;  // Low
+  tester->dut_->x_reset = 1;
+  tester->eval();
+
+  for (int i = 0; i < 20; i++) {
+    tester->dut_->clk = !tester->dut_->clk;  // High
+    tester->eval();
+
+    tester->dut_->clk = !tester->dut_->clk;  // Low
+    tester->eval();
+  }
+
+  tester->finish();
+  assert_eq(test_name, tester->get_ram(100), 25);
 }
 
 int main(int argc, char** argv) {
@@ -380,4 +448,6 @@ int main(int argc, char** argv) {
   /* integration test */
   integration_test1("[integration test1] add, addi, lw, sw");
   integration_test2("[integration test2] addi, addi, beq, addi, addi");
+  integration_test3(
+      "[integration test] add, sub, slt, or, and, addi, lw, sw, jal, beq");
 }
