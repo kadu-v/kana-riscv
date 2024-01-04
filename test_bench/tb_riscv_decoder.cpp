@@ -135,8 +135,8 @@ int main(int argc, char** argv) {
   dut->inst = jal(0b0 /* rd */, 0b01 /* imm */);
   dut->eval();
   std::vector<uint32_t> jal_expected{
-      1 /* valid */, 1 /* ALU_ADD */,  1 /* OP1_RS1 */, 4 /* OP2_IMJ */,
-      3 /* WB_PC */, 1 /* RF_WRITE */, 0 /* MEM_X */,   1 /* PC_J_TARGET */
+      1 /* valid */, 1 /* ALU_ADD */,  2 /* OP1_PC */, 4 /* OP2_IMJ */,
+      3 /* WB_PC */, 1 /* RF_WRITE */, 0 /* MEM_X */,  1 /* PC_ALU */
   };
   test_decode("jal", dut, jal_expected);
 

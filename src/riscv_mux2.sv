@@ -7,6 +7,7 @@ module riscv_mux2 (
     input  logic   [31:0] rs2_data,
     input  logic   [31:0] imm_i_sext,
     input  logic   [31:0] imm_s_sext,
+    input  logic   [31:0] imm_j_sext,
     /* output */
     output logic   [31:0] dout
 );
@@ -21,6 +22,9 @@ module riscv_mux2 (
       end
       OP2_IMS: begin
         dout = imm_s_sext;
+      end
+      OP2_IMJ: begin
+        dout = imm_j_sext;
       end
       default: begin
         dout = 0;

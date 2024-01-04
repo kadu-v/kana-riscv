@@ -12,7 +12,8 @@ typedef enum {
 
 typedef enum {
   OP1_X   = 0,
-  OP1_RS1 = 1
+  OP1_RS1 = 1,
+  OP1_PC  = 2
 } OP1_SEL;
 
 typedef enum {
@@ -41,8 +42,8 @@ typedef enum logic {
 } RF_WEN;
 
 typedef enum {
-  PC_PLUS4 = 0,
-  PC_J_TARGET = 1,
+  PC_PLUS4    = 0,
+  PC_ALU      = 1,
   PC_B_TARGET = 2
 } PC_SEL;
 

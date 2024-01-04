@@ -94,12 +94,12 @@ module riscv_decoder (
       pc_sel   = PC_PLUS4;
     end else if ((inst & `INST_J_MASK) == `INST_JAL) begin  /* J type */
       exec_fun = ALU_ADD;
-      op1_sel  = OP1_RS1;
+      op1_sel  = OP1_PC;
       op2_sel  = OP2_IMJ;
       wb_sel   = WB_PC;
       rf_wen   = RF_WRITE;
       mem_wen  = MEM_X;
-      pc_sel   = PC_J_TARGET;
+      pc_sel   = PC_ALU;
     end else if ((inst & `INST_B_MASK) == `INST_BEQ) begin  /* B type*/
       exec_fun = ALU_X;
       op1_sel  = OP1_RS1;

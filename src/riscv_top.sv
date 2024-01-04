@@ -63,7 +63,7 @@ module riscv_top (
       .clk       (clk),
       .x_reset   (x_reset),
       .pc_sel    (pc_sel),
-      .imm_j_sext(imm_j_sext),
+      .alu_out   (alu_dout),
       .imm_b_sext(imm_b_sext),
       .br_flag   (br_flag),
       /* output */
@@ -129,6 +129,7 @@ module riscv_top (
       /* input */
       .op1_sel (op1_sel),
       .rs1_data(rs1_data),
+      .pc      (pc_out),
       /* output */
       .dout    (mux1_dout)
   );
@@ -141,6 +142,7 @@ module riscv_top (
       .rs2_data  (rs2_data),
       .imm_i_sext(imm_i_sext),
       .imm_s_sext(imm_s_sext),
+      .imm_j_sext(imm_j_sext),
       /* output */
       .dout      (mux2_dout)
   );

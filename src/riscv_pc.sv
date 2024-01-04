@@ -8,7 +8,7 @@ module riscv_pc #(
     input  logic                    clk,
     input  logic                    x_reset,
     input  PC_SEL                   pc_sel,
-    input  logic  [WORD_LENGTH-1:0] imm_j_sext,
+    input  logic  [WORD_LENGTH-1:0] alu_out,
     input  logic  [WORD_LENGTH-1:0] imm_b_sext,
     input  logic                    br_flag,
     /* output */
@@ -22,8 +22,8 @@ module riscv_pc #(
   always_ff @(posedge clk) begin
     if (!x_reset) begin
       pc <= 0;
-    end else if (pc_sel == PC_J_TARGET) begin
-      pc <= pc + imm_j_sext;
+    end else if (pc_sel == PC_ALU) begin
+      pc <= alu_out;
     end else if (pc_sel == PC_B_TARGET && br_flag) begin
       pc <= pc + imm_b_sext;
     end else begin
