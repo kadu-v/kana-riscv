@@ -36,6 +36,30 @@ void test_add(std::string test_name) {
   assert_eq(test_name, tester->get_reg(3), expected);
 }
 
+void test_slt(std::string test_name) {
+  TopTester* tester = new TopTester(test_name);
+  tester->start();
+
+  // setup
+  uint32_t inst = slt(3, 1, 2);
+  tester->set_ram(0, inst);
+  tester->set_reg(1, -100);
+  tester->set_reg(2, 200);
+  uint32_t expected = 1;
+
+  // Step 1
+  tester->dut_->clk = 0;
+  tester->dut_->x_reset = 1;
+  tester->eval();
+
+  for (int i = 0; i < 10; i++) {
+    tester->dut_->clk = !tester->dut_->clk;
+    tester->eval();
+  }
+  tester->finish();
+  assert_eq(test_name, tester->get_reg(3), expected);
+}
+
 /* I type--------------------------------------------------------------------*/
 void test_addi(std::string test_name, uint32_t inst, uint32_t expected) {
   TopTester* tester = new TopTester(test_name);
@@ -173,8 +197,7 @@ void test_beq(std::string test_name) {
   assert_eq(test_name, tester->get_reg(3), 20);
 }
 
-/* integration
- * test --------------------------------------------------------------------*/
+/* integration　test 1 -------------------------------------------------------*/
 // 0: addi 31, 0, 10 // x[31] = x[0] + sext(10) == x[31] = 0 + 10
 // 1: addi 20, 0, 20 // x[20] = x[0] + sext(10) == x[20] = 0 + 20
 // 2: add 1, 31, 20  // x[1] = x[31] + x[20]    == x[1]  = 10 + 20
@@ -208,12 +231,48 @@ void integration_test1(std::string test_name) {
   assert_eq(test_name, tester->get_reg(2), 30);
 }
 
+/* integration　test 2 -------------------------------------------------------*/
+// 0: addi 31, 0, 10 // x[31] = x[0] + sext(10) == x[31] = 0 + 10
+// 1: addi 20, 0, 10 // x[20] = x[0] + sext(10) == x[20] = 0 + 10
+// 2: beq 31, 20, 2  // if (x[31] == x[20]) then pc += sext(2)
+// 3: addi 1, 0, 100
+// 4: addi 2, 0, 200
+void integration_test2(std::string test_name) {
+  TopTester* tester = new TopTester(test_name);
+  tester->start();
+
+  // setup
+  tester->set_ram(0, addi(31, 0, 10));
+  tester->set_ram(1, addi(20, 0, 10));
+  tester->set_ram(2, beq(31, 20, 2));
+  tester->set_ram(3, addi(1, 0, 100));
+  tester->set_ram(4, addi(2, 0, 200));
+
+  // Step 1
+  tester->dut_->clk = 0;  // Low
+  tester->dut_->x_reset = 1;
+  tester->eval();
+
+  for (int i = 0; i < 10; i++) {
+    tester->dut_->clk = !tester->dut_->clk;  // High
+    tester->eval();
+
+    tester->dut_->clk = !tester->dut_->clk;  // Low
+    tester->eval();
+  }
+
+  tester->finish();
+  assert_eq(test_name, tester->get_reg(1), 0);
+  assert_eq(test_name, tester->get_reg(2), 200);
+}
+
 int main(int argc, char** argv) {
   Verilated::commandArgs(argc, argv);
 
   /* R type*/
   // add
   test_add("[add] 100 + 200 = 300");
+  test_slt("[slt] x[3] = -100 <s 200");
 
   /* I type */
   // addi
@@ -245,5 +304,6 @@ int main(int argc, char** argv) {
   test_beq("[beq] beq 1, 2, 2; addi 2, 0, 10; addi 3, 0, 20");
 
   /* integration test */
-  integration_test1("[integration test] add, addi, lw, sw");
+  integration_test1("[integration test1] add, addi, lw, sw");
+  integration_test2("[integration test2] addi, addi, beq, addi, addi");
 }

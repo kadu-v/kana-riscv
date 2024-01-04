@@ -19,12 +19,12 @@ module riscv_pc (
   always_ff @(posedge clk) begin
     if (!x_reset) begin
       pc <= 0;
-    end else if (pc_sel == PC_PLUS4) begin
-      pc <= pc + 1;
     end else if (pc_sel == PC_J_TARGET) begin
       pc <= pc + imm_j_sext;
     end else if (pc_sel == PC_B_TARGET && br_flag) begin
       pc <= pc + imm_b_sext;
+    end else begin
+      pc <= pc + 1;
     end
   end
 endmodule

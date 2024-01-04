@@ -31,6 +31,37 @@ int main(int argc, char** argv) {
   dut->eval();
   assert_eq("[alu] ALU_ADD 1 2", dut->alu_out, 3);
 
+  // check slt instruction
+  dut->exec_fun = 2; /* ALU_SLT */
+  dut->data1 = 100;
+  dut->data2 = 100;
+  dut->eval();
+  assert_eq("[alu] ALU_SLT 100 <s 100 == 0", dut->alu_out, 0);
+
+  dut->exec_fun = 2; /* ALU_SLT */
+  dut->data1 = 200;
+  dut->data2 = 100;
+  dut->eval();
+  assert_eq("[alu] ALU_SLT 200 <s 100 == 0", dut->alu_out, 0);
+
+  dut->exec_fun = 2; /* ALU_SLT */
+  dut->data1 = 100;
+  dut->data2 = -200;
+  dut->eval();
+  assert_eq("[alu] ALU_SLT 100 <s -200 == 1", dut->alu_out, 0);
+
+  dut->exec_fun = 2; /* ALU_SLT */
+  dut->data1 = 100;
+  dut->data2 = 200;
+  dut->eval();
+  assert_eq("[alu] ALU_SLT 100 <s 200 == 1", dut->alu_out, 1);
+
+  dut->exec_fun = 2; /* ALU_SLT */
+  dut->data1 = -100;
+  dut->data2 = 200;
+  dut->eval();
+  assert_eq("[alu] ALU_SLT -100 <s 200 == 1", dut->alu_out, 1);
+
   // check branch flag
   dut->exec_fun = 0; /* ALU_X */
   dut->data1 = 1;

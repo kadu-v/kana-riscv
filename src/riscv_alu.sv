@@ -12,10 +12,18 @@ module riscv_alu #(
     output logic                      br_flag
 );
 
+  logic signed [WORD_LENGTH-1:0] signed_data1;
+  logic signed [WORD_LENGTH-1:0] signed_data2;
+  assign signed_data1 = data1;
+  assign signed_data2 = data2;
+
   always_comb begin
     case (exec_fun)
       ALU_ADD: begin
         alu_out = data1 + data2;
+      end
+      ALU_SLT: begin
+        alu_out = {{31{1'b0}}, signed_data1 < signed_data2};
       end
       default: begin
         alu_out = 0;

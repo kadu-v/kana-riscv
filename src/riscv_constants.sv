@@ -3,7 +3,8 @@
 
 typedef enum {
   ALU_X   = 0,
-  ALU_ADD = 1
+  ALU_ADD = 1,
+  ALU_SLT = 2
 } EXEC_FUN;
 
 typedef enum {
