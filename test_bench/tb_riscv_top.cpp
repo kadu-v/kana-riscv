@@ -36,6 +36,30 @@ void test_add(std::string test_name) {
   assert_eq(test_name, tester->get_reg(3), expected);
 }
 
+void test_sub(std::string test_name) {
+  TopTester* tester = new TopTester(test_name);
+  tester->start();
+
+  // setup
+  uint32_t inst = sub(3, 1, 2);
+  tester->set_ram(0, inst);
+  tester->set_reg(1, 100);
+  tester->set_reg(2, 200);
+  uint32_t expected = 100 - 200;
+
+  // Step 1
+  tester->dut_->clk = 0;
+  tester->dut_->x_reset = 1;
+  tester->eval();
+
+  for (int i = 0; i < 10; i++) {
+    tester->dut_->clk = !tester->dut_->clk;
+    tester->eval();
+  }
+  tester->finish();
+  assert_eq(test_name, tester->get_reg(3), expected);
+}
+
 void test_slt(std::string test_name) {
   TopTester* tester = new TopTester(test_name);
   tester->start();
@@ -271,7 +295,8 @@ int main(int argc, char** argv) {
 
   /* R type*/
   // add
-  test_add("[add] 100 + 200 = 300");
+  test_add("[add] x[3] = 100 + 200");
+  test_sub("[sub] x[3] = 100 - 200");
   test_slt("[slt] x[3] = -100 <s 200");
 
   /* I type */

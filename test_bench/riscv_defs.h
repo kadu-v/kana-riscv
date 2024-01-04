@@ -42,6 +42,20 @@ uint32_t add(uint32_t rd, uint32_t rs1, uint32_t rs2) {
   return r_inst(FUNCT7_ADD, rs2, rs1, FUNCT3_ADD, rd, OPCODE_ADD);
 }
 
+/* sub */
+// clang-format off
+#define INST_SUB      0b01000000000000000000000000110011
+#define FUNCT7_SUB    0b0100000
+#define FUNCT3_SUB    0b000
+#define OPCODE_SUB    0b0110011
+// clang-format on
+
+// sub rd, rs1, rs2
+// x[rd] = x[rs1] - x[rs2]
+uint32_t sub(uint32_t rd, uint32_t rs1, uint32_t rs2) {
+  return r_inst(FUNCT7_SUB, rs2, rs1, FUNCT3_SUB, rd, OPCODE_SUB);
+}
+
 /* slt */
 // clang-format off
 #define INST_SLT      0b00000000000000000010000000111011

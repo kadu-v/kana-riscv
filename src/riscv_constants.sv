@@ -4,7 +4,8 @@
 typedef enum {
   ALU_X   = 0,
   ALU_ADD = 1,
-  ALU_SLT = 2
+  ALU_SUB = 2,
+  ALU_SLT = 3
 } EXEC_FUN;
 
 typedef enum {

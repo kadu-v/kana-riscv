@@ -29,34 +29,41 @@ int main(int argc, char** argv) {
   dut->data1 = 1;
   dut->data2 = 2;
   dut->eval();
-  assert_eq("[alu] ALU_ADD 1 2", dut->alu_out, 3);
+  assert_eq("[alu] ALU_ADD 1 2 == 3", dut->alu_out, 3);
+
+  // check sub instruction
+  dut->exec_fun = 2; /* ALU_SUB */
+  dut->data1 = 1;
+  dut->data2 = 2;
+  dut->eval();
+  assert_eq("[alu] ALU_SUB 1 2 == -1", dut->alu_out, -1);
 
   // check slt instruction
-  dut->exec_fun = 2; /* ALU_SLT */
+  dut->exec_fun = 3; /* ALU_SLT */
   dut->data1 = 100;
   dut->data2 = 100;
   dut->eval();
   assert_eq("[alu] ALU_SLT 100 <s 100 == 0", dut->alu_out, 0);
 
-  dut->exec_fun = 2; /* ALU_SLT */
+  dut->exec_fun = 3; /* ALU_SLT */
   dut->data1 = 200;
   dut->data2 = 100;
   dut->eval();
   assert_eq("[alu] ALU_SLT 200 <s 100 == 0", dut->alu_out, 0);
 
-  dut->exec_fun = 2; /* ALU_SLT */
+  dut->exec_fun = 3; /* ALU_SLT */
   dut->data1 = 100;
   dut->data2 = -200;
   dut->eval();
-  assert_eq("[alu] ALU_SLT 100 <s -200 == 1", dut->alu_out, 0);
+  assert_eq("[alu] ALU_SLT 100 <s -200 == 0", dut->alu_out, 0);
 
-  dut->exec_fun = 2; /* ALU_SLT */
+  dut->exec_fun = 3; /* ALU_SLT */
   dut->data1 = 100;
   dut->data2 = 200;
   dut->eval();
   assert_eq("[alu] ALU_SLT 100 <s 200 == 1", dut->alu_out, 1);
 
-  dut->exec_fun = 2; /* ALU_SLT */
+  dut->exec_fun = 3; /* ALU_SLT */
   dut->data1 = -100;
   dut->data2 = 200;
   dut->eval();

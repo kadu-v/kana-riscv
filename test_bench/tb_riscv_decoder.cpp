@@ -59,11 +59,20 @@ int main(int argc, char** argv) {
   };
   test_decode("add", dut, add_expected);
 
+  // sub
+  dut->inst = sub(0b01 /* rs2 */, 0b10 /* rs1 */, 0b11 /* rd */);
+  dut->eval();
+  std::vector<uint32_t> sub_expected{
+      1 /* valid */,  2 /* ALU_SUB */,  1 /* OP1_RS1 */, 1 /* OP2_RS2 */,
+      1 /* WB_ALU */, 1 /* RF_WRITE */, 0 /* MEM_X */,   0 /* PC_PLUS4 */
+  };
+  test_decode("sub", dut, sub_expected);
+
   // slt
   dut->inst = slt(0b01 /* rs2 */, 0b10 /* rs1 */, 0b11 /* rd */);
   dut->eval();
   std::vector<uint32_t> slt_expected{
-      1 /* valid */,  2 /* ALU_SLT */,  1 /* OP1_RS1 */, 1 /* OP2_RS2 */,
+      1 /* valid */,  3 /* ALU_SLT */,  1 /* OP1_RS1 */, 1 /* OP2_RS2 */,
       1 /* WB_ALU */, 1 /* RF_WRITE */, 0 /* MEM_X */,   0 /* PC_PLUS4 */
   };
   test_decode("slt", dut, slt_expected);

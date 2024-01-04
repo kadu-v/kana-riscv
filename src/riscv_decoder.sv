@@ -16,6 +16,7 @@ module riscv_decoder (
 );
   assign invalid_o = invalid_i;
   logic invalid_i = ((inst & `INST_R_MASK) == `INST_ADD) || 
+                  ((inst & `INST_R_MASK) == `INST_SUB) || 
                   ((inst &`INST_R_MASK) == `INST_SLT) ||
                   ((inst & `INST_I_MASK) == `INST_ADDI) ||
                   ((inst & `INST_I_MASK) == `INST_LW) ||
@@ -27,6 +28,14 @@ module riscv_decoder (
   always_comb begin
     if ((inst & `INST_R_MASK) == `INST_ADD) begin  /* R type */
       exec_fun = ALU_ADD;
+      op1_sel  = OP1_RS1;
+      op2_sel  = OP2_RS2;
+      wb_sel   = WB_ALU;
+      rf_wen   = RF_WRITE;
+      mem_wen  = MEM_X;
+      pc_sel   = PC_PLUS4;
+    end else if ((inst & `INST_R_MASK) == `INST_SUB) begin
+      exec_fun = ALU_SUB;
       op1_sel  = OP1_RS1;
       op2_sel  = OP2_RS2;
       wb_sel   = WB_ALU;
