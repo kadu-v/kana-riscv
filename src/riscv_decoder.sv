@@ -18,6 +18,8 @@ module riscv_decoder (
   logic invalid_i = ((inst & `INST_R_MASK) == `INST_ADD) || 
                   ((inst & `INST_R_MASK) == `INST_SUB) || 
                   ((inst &`INST_R_MASK) == `INST_SLT) ||
+                  ((inst &`INST_R_MASK) == `INST_OR) ||
+                  ((inst &`INST_R_MASK) == `INST_AND) ||
                   ((inst & `INST_I_MASK) == `INST_ADDI) ||
                   ((inst & `INST_I_MASK) == `INST_LW) ||
                   ((inst & `INST_S_MASK) == `INST_SW) ||
@@ -44,6 +46,22 @@ module riscv_decoder (
       pc_sel   = PC_PLUS4;
     end else if ((inst & `INST_R_MASK) == `INST_SLT) begin
       exec_fun = ALU_SLT;
+      op1_sel  = OP1_RS1;
+      op2_sel  = OP2_RS2;
+      wb_sel   = WB_ALU;
+      rf_wen   = RF_WRITE;
+      mem_wen  = MEM_X;
+      pc_sel   = PC_PLUS4;
+    end else if ((inst & `INST_R_MASK) == `INST_OR) begin
+      exec_fun = ALU_OR;
+      op1_sel  = OP1_RS1;
+      op2_sel  = OP2_RS2;
+      wb_sel   = WB_ALU;
+      rf_wen   = RF_WRITE;
+      mem_wen  = MEM_X;
+      pc_sel   = PC_PLUS4;
+    end else if ((inst & `INST_R_MASK) == `INST_AND) begin
+      exec_fun = ALU_AND;
       op1_sel  = OP1_RS1;
       op2_sel  = OP2_RS2;
       wb_sel   = WB_ALU;

@@ -61,13 +61,41 @@ uint32_t sub(uint32_t rd, uint32_t rs1, uint32_t rs2) {
 #define INST_SLT      0b00000000000000000010000000111011
 #define FUNCT7_SLT    0b0000000
 #define FUNCT3_SLT    0b010
-#define OPCODE_SLT    0b0111011
+#define OPCODE_SLT    0b0110011
 // clang-format on
 
 // slt rd, rs1, rs2
 // x[rd] = x[rs1] <s x[rs2]
 uint32_t slt(uint32_t rd, uint32_t rs1, uint32_t rs2) {
   return r_inst(FUNCT7_SLT, rs2, rs1, FUNCT3_SLT, rd, OPCODE_SLT);
+}
+
+/* or */
+// clang-format off
+#define INST_OR      0b00000000000000000010000000111011
+#define FUNCT7_OR    0b0000000
+#define FUNCT3_OR    0b110
+#define OPCODE_OR    0b0110011
+// clang-format on
+
+// or rd, rs1, rs2
+// x[rd] = x[rs1] | x[rs2]
+uint32_t ior(uint32_t rd, uint32_t rs1, uint32_t rs2) {
+  return r_inst(FUNCT7_OR, rs2, rs1, FUNCT3_OR, rd, OPCODE_OR);
+}
+
+/* and */
+// clang-format off
+#define INST_AND      0b00000000000000000010000000111011
+#define FUNCT7_AND    0b0000000
+#define FUNCT3_AND    0b111
+#define OPCODE_AND    0b0110011
+// clang-format on
+
+// and rd, rs1, rs2
+// x[rd] = x[rs1] & x[rs2]
+uint32_t iand(uint32_t rd, uint32_t rs1, uint32_t rs2) {
+  return r_inst(FUNCT7_AND, rs2, rs1, FUNCT3_AND, rd, OPCODE_AND);
 }
 
 /* --------------------------------------------------------------------- *

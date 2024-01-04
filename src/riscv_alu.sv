@@ -28,6 +28,12 @@ module riscv_alu #(
       ALU_SLT: begin
         alu_out = {{31{1'b0}}, signed_data1 < signed_data2};
       end
+      ALU_OR: begin
+        alu_out = data1 | data2;
+      end
+      ALU_AND: begin
+        alu_out = data1 & data2;
+      end
       default: begin
         alu_out = 0;
       end

@@ -69,6 +69,22 @@ int main(int argc, char** argv) {
   dut->eval();
   assert_eq("[alu] ALU_SLT -100 <s 200 == 1", dut->alu_out, 1);
 
+  // check or instruction
+  dut->exec_fun = 4; /* ALU_OR */
+  dut->data1 = 0b1010101010;
+  dut->data2 = 0b0101010101;
+  dut->eval();
+  assert_eq("[alu] ALU_OR 0b1010101010 | 0b0101010101 == 0b1111111111",
+            dut->alu_out, 0b1111111111);
+
+  // check and instruction
+  dut->exec_fun = 5; /* ALU_AND */
+  dut->data1 = 0b1110101010;
+  dut->data2 = 0b0101010101;
+  dut->eval();
+  assert_eq("[alu] ALU_AND 0b1110101010 | 0b0101010101 == 0b0100000000",
+            dut->alu_out, 0b0100000000);
+
   // check branch flag
   dut->exec_fun = 0; /* ALU_X */
   dut->data1 = 1;
