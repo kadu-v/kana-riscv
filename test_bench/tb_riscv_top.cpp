@@ -12,112 +12,31 @@
 #include "top_tester.h"
 
 /* R type--------------------------------------------------------------------*/
-void test_add(std::string test_name) {
+// x[4] = 100
+// x[5] = 200
+// x[6] = -100
+// x[7] = 0b1010101010
+// x[8] = 0b0101010101
+// x[9] = 0b1110101010
+// x[10] = 1
+// x[11] = 10
+// x[12] = 0b10000000000
+void test_r_type_instruction(std::string test_name, uint32_t inst,
+                             uint32_t expected) {
   TopTester* tester = new TopTester(test_name);
   tester->start();
 
   // setup
-  uint32_t inst = add(3, 2, 1);
   tester->set_ram(0, inst);
-  tester->set_reg(1, 100);
-  tester->set_reg(2, 200);
-  uint32_t expected = 100 + 200;
-
-  // Step 1
-  tester->dut_->clk = 0;
-  tester->dut_->x_reset = 1;
-  tester->eval();
-
-  for (int i = 0; i < 10; i++) {
-    tester->dut_->clk = !tester->dut_->clk;
-    tester->eval();
-  }
-  tester->finish();
-  assert_eq(test_name, tester->get_reg(3), expected);
-}
-
-void test_sub(std::string test_name) {
-  TopTester* tester = new TopTester(test_name);
-  tester->start();
-
-  // setup
-  uint32_t inst = sub(3, 1, 2);
-  tester->set_ram(0, inst);
-  tester->set_reg(1, 100);
-  tester->set_reg(2, 200);
-  uint32_t expected = 100 - 200;
-
-  // Step 1
-  tester->dut_->clk = 0;
-  tester->dut_->x_reset = 1;
-  tester->eval();
-
-  for (int i = 0; i < 10; i++) {
-    tester->dut_->clk = !tester->dut_->clk;
-    tester->eval();
-  }
-  tester->finish();
-  assert_eq(test_name, tester->get_reg(3), expected);
-}
-
-void test_slt(std::string test_name) {
-  TopTester* tester = new TopTester(test_name);
-  tester->start();
-
-  // setup
-  uint32_t inst = slt(3, 1, 2);
-  tester->set_ram(0, inst);
-  tester->set_reg(1, -100);
-  tester->set_reg(2, 200);
-  uint32_t expected = 1;
-
-  // Step 1
-  tester->dut_->clk = 0;
-  tester->dut_->x_reset = 1;
-  tester->eval();
-
-  for (int i = 0; i < 10; i++) {
-    tester->dut_->clk = !tester->dut_->clk;
-    tester->eval();
-  }
-  tester->finish();
-  assert_eq(test_name, tester->get_reg(3), expected);
-}
-
-void test_or(std::string test_name) {
-  TopTester* tester = new TopTester(test_name);
-  tester->start();
-
-  // setup
-  uint32_t inst = ior(3, 1, 2);
-  tester->set_ram(0, inst);
-  tester->set_reg(1, 0b1010101010);
-  tester->set_reg(2, 0b0101010101);
-  uint32_t expected = 0b1111111111;
-
-  // Step 1
-  tester->dut_->clk = 0;
-  tester->dut_->x_reset = 1;
-  tester->eval();
-
-  for (int i = 0; i < 10; i++) {
-    tester->dut_->clk = !tester->dut_->clk;
-    tester->eval();
-  }
-  tester->finish();
-  assert_eq(test_name, tester->get_reg(3), expected);
-}
-
-void test_and(std::string test_name) {
-  TopTester* tester = new TopTester(test_name);
-  tester->start();
-
-  // setup
-  uint32_t inst = iand(3, 1, 2);
-  tester->set_ram(0, inst);
-  tester->set_reg(1, 0b1110101010);
-  tester->set_reg(2, 0b0101010101);
-  uint32_t expected = 0b0100000000;
+  tester->set_reg(4, 100);
+  tester->set_reg(5, 200);
+  tester->set_reg(6, -100);
+  tester->set_reg(7, 0b1010101010);
+  tester->set_reg(8, 0b0101010101);
+  tester->set_reg(9, 0b1110101010);
+  tester->set_reg(10, 0b1);
+  tester->set_reg(11, 10);
+  tester->set_reg(12, 0b10000000000);
 
   // Step 1
   tester->dut_->clk = 0;
@@ -410,11 +329,22 @@ int main(int argc, char** argv) {
   Verilated::commandArgs(argc, argv);
 
   /* R type*/
-  test_add("[add] x[3] = 100 + 200");                    // add
-  test_sub("[sub] x[3] = 100 - 200");                    // sub
-  test_slt("[slt] x[3] = -100 <s 200");                  // slt
-  test_or("[or] x[3] = 0b1010101010 | 0b0101010101");    // or
-  test_and("[and] x[3] = 0b1110101010 | 0b0101010101");  // and
+  test_r_type_instruction("[add] x[3] = 100 + 200", add(3, 4, 5), 300);
+  test_r_type_instruction("[sub] x[3] = 100 - 200", sub(3, 4, 5), -100);
+  test_r_type_instruction("[sll] x[3] = 0b1 << 10", sll(3, 10, 11),
+                          0b10000000000);
+  test_r_type_instruction("[slt] x[3] = -100 <s 200", slt(3, 6, 5), 1);
+  test_r_type_instruction("[sltu] x[3] = 100 <u 200", sltu(3, 4, 5), 1);
+  test_r_type_instruction("[xor] x[3] = 0b0101010101 ^ 0b1110101010",
+                          ixor(3, 8, 9), 0b1011111111);
+  test_r_type_instruction("[srl] x[3] = 0b10000000000 >>u 10", srl(3, 12, 11),
+                          0b1);
+  test_r_type_instruction("[sra] x[3] = 0b10000000000 >>s 10", srl(3, 12, 11),
+                          0b1);
+  test_r_type_instruction("[or] x[3] = 0b1010101010 | 0b0101010101",
+                          ior(3, 7, 8), 0b1111111111);
+  test_r_type_instruction("[and] x[3] = 0b1110101010 | 0b0101010101",
+                          iand(3, 9, 8), 0b0100000000);
 
   /* I type */
   // addi

@@ -2,12 +2,17 @@
 `define RISCV_CONSTANTS
 
 typedef enum {
-  ALU_X   = 0,
-  ALU_ADD = 1,
-  ALU_SUB = 2,
-  ALU_SLT = 3,
-  ALU_OR  = 4,
-  ALU_AND = 5
+  ALU_X    = 0,
+  ALU_ADD  = 1,
+  ALU_SUB  = 2,
+  ALU_SLL  = 3,
+  ALU_SLT  = 4,
+  ALU_SLTU = 5,
+  ALU_XOR  = 6,
+  ALU_SRL  = 7,
+  ALU_SRA  = 8,
+  ALU_OR   = 9,
+  ALU_AND  = 10
 } EXEC_FUN;
 
 typedef enum {

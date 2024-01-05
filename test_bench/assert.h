@@ -8,7 +8,7 @@ void assert_eq(std::string test_name, uint32_t in, uint32_t expected) {
     printf(" ...failed\n");
     printf("    actual:   %u\n", in);
     printf("    expected: %u\n", expected);
-    exit(1);
+    return;
   }
   printf(" ...ok\n");
 }

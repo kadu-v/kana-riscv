@@ -25,8 +25,23 @@ module riscv_alu #(
       ALU_SUB: begin
         alu_out = data1 - data2;
       end
+      ALU_SLL: begin
+        alu_out = (data1 << data2[4:0]);
+      end
       ALU_SLT: begin
         alu_out = {{31{1'b0}}, signed_data1 < signed_data2};
+      end
+      ALU_SLTU: begin
+        alu_out = {{31{1'b0}}, data1 < data2};
+      end
+      ALU_XOR: begin
+        alu_out = data1 ^ data2;
+      end
+      ALU_SRL: begin
+        alu_out = (data1 >> data2[4:0]);
+      end
+      ALU_SRA: begin
+        alu_out = (signed_data1 >> data2[4:0]);
       end
       ALU_OR: begin
         alu_out = data1 | data2;

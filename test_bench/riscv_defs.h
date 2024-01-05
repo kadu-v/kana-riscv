@@ -56,9 +56,23 @@ uint32_t sub(uint32_t rd, uint32_t rs1, uint32_t rs2) {
   return r_inst(FUNCT7_SUB, rs2, rs1, FUNCT3_SUB, rd, OPCODE_SUB);
 }
 
+/* sll */
+// clang-format off
+#define INST_SLL      0b00000000000000000001000000110011
+#define FUNCT7_SLL    0b0000000
+#define FUNCT3_SLL    0b001
+#define OPCODE_SLL    0b0110011
+// clang-format on
+
+// sll rd, rs1, rs2
+// x[rd] = x[rs1] << x[rs2]
+uint32_t sll(uint32_t rd, uint32_t rs1, uint32_t rs2) {
+  return r_inst(FUNCT7_SLL, rs2, rs1, FUNCT3_SLL, rd, OPCODE_SLL);
+}
+
 /* slt */
 // clang-format off
-#define INST_SLT      0b00000000000000000010000000111011
+#define INST_SLT      0b00000000000000000010000000110011
 #define FUNCT7_SLT    0b0000000
 #define FUNCT3_SLT    0b010
 #define OPCODE_SLT    0b0110011
@@ -70,9 +84,65 @@ uint32_t slt(uint32_t rd, uint32_t rs1, uint32_t rs2) {
   return r_inst(FUNCT7_SLT, rs2, rs1, FUNCT3_SLT, rd, OPCODE_SLT);
 }
 
+/* sltu */
+// clang-format off
+#define INST_SLTU      0b00000000000000000011000000110011
+#define FUNCT7_SLTU    0b0000000
+#define FUNCT3_SLTU    0b011
+#define OPCODE_SLTU    0b0110011
+// clang-format on
+
+// sltu rd, rs1, rs2
+// x[rd] = x[rs1] <u x[rs2]
+uint32_t sltu(uint32_t rd, uint32_t rs1, uint32_t rs2) {
+  return r_inst(FUNCT7_SLTU, rs2, rs1, FUNCT3_SLTU, rd, OPCODE_SLTU);
+}
+
+/* xor */
+// clang-format off
+#define INST_XOR      0b00000000000000000100000000110011
+#define FUNCT7_XOR    0b0000000
+#define FUNCT3_XOR    0b100
+#define OPCODE_XOR    0b0110011
+// clang-format on
+
+// xor rd, rs1, rs2
+// x[rd] = x[rs1] ^ x[rs2]
+uint32_t ixor(uint32_t rd, uint32_t rs1, uint32_t rs2) {
+  return r_inst(FUNCT7_XOR, rs2, rs1, FUNCT3_XOR, rd, OPCODE_XOR);
+}
+
+/* srl */
+// clang-format off
+#define INST_SRL      0b00000000000000000101000000110011
+#define FUNCT7_SRL    0b0000000
+#define FUNCT3_SRL    0b101
+#define OPCODE_SRL    0b0110011
+// clang-format on
+
+// srl rd, rs1, rs2
+// x[rd] = x[rs1] >>u x[rs2]
+uint32_t srl(uint32_t rd, uint32_t rs1, uint32_t rs2) {
+  return r_inst(FUNCT7_SRL, rs2, rs1, FUNCT3_SRL, rd, OPCODE_SRL);
+}
+
+/* sra */
+// clang-format off
+#define INST_SRA      0b01000000000000000101000000110011
+#define FUNCT7_SRA    0b0100000
+#define FUNCT3_SRA    0b101
+#define OPCODE_SRA    0b0110011
+// clang-format on
+
+// sra rd, rs1, rs2
+// x[rd] = x[rs1] >>s x[rs2]
+uint32_t sra(uint32_t rd, uint32_t rs1, uint32_t rs2) {
+  return r_inst(FUNCT7_SRA, rs2, rs1, FUNCT3_SRA, rd, OPCODE_SRA);
+}
+
 /* or */
 // clang-format off
-#define INST_OR      0b00000000000000000010000000111011
+#define INST_OR      0b00000000000000000110000000110011
 #define FUNCT7_OR    0b0000000
 #define FUNCT3_OR    0b110
 #define OPCODE_OR    0b0110011
@@ -86,7 +156,7 @@ uint32_t ior(uint32_t rd, uint32_t rs1, uint32_t rs2) {
 
 /* and */
 // clang-format off
-#define INST_AND      0b00000000000000000010000000111011
+#define INST_AND      0b00000000000000000111000000110011
 #define FUNCT7_AND    0b0000000
 #define FUNCT3_AND    0b111
 #define OPCODE_AND    0b0110011

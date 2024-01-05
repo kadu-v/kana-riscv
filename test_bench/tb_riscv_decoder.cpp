@@ -68,20 +68,65 @@ int main(int argc, char** argv) {
   };
   test_decode("sub", dut, sub_expected);
 
+  // sll
+  dut->inst = sll(0b01 /* rs2 */, 0b10 /* rs1 */, 0b11 /* rd */);
+  dut->eval();
+  std::vector<uint32_t> sll_expected{
+      1 /* valid */,  3 /* ALU_SLL */,  1 /* OP1_RS1 */, 1 /* OP2_RS2 */,
+      1 /* WB_ALU */, 1 /* RF_WRITE */, 0 /* MEM_X */,   0 /* PC_PLUS4 */
+  };
+  test_decode("sll", dut, sll_expected);
+
   // slt
   dut->inst = slt(0b01 /* rs2 */, 0b10 /* rs1 */, 0b11 /* rd */);
   dut->eval();
   std::vector<uint32_t> slt_expected{
-      1 /* valid */,  3 /* ALU_SLT */,  1 /* OP1_RS1 */, 1 /* OP2_RS2 */,
+      1 /* valid */,  4 /* ALU_SLT */,  1 /* OP1_RS1 */, 1 /* OP2_RS2 */,
       1 /* WB_ALU */, 1 /* RF_WRITE */, 0 /* MEM_X */,   0 /* PC_PLUS4 */
   };
   test_decode("slt", dut, slt_expected);
+
+  // sltu
+  dut->inst = sltu(0b01 /* rs2 */, 0b10 /* rs1 */, 0b11 /* rd */);
+  dut->eval();
+  std::vector<uint32_t> sltu_expected{
+      1 /* valid */,  5 /* ALU_SLTU */, 1 /* OP1_RS1 */, 1 /* OP2_RS2 */,
+      1 /* WB_ALU */, 1 /* RF_WRITE */, 0 /* MEM_X */,   0 /* PC_PLUS4 */
+  };
+  test_decode("sltu", dut, sltu_expected);
+
+  // xor
+  dut->inst = ixor(0b01 /* rs2 */, 0b10 /* rs1 */, 0b11 /* rd */);
+  dut->eval();
+  std::vector<uint32_t> xor_expected{
+      1 /* valid */,  6 /* ALU_SLTU */, 1 /* OP1_RS1 */, 1 /* OP2_RS2 */,
+      1 /* WB_ALU */, 1 /* RF_WRITE */, 0 /* MEM_X */,   0 /* PC_PLUS4 */
+  };
+  test_decode("xor", dut, xor_expected);
+
+  // srl
+  dut->inst = srl(0b01 /* rs2 */, 0b10 /* rs1 */, 0b11 /* rd */);
+  dut->eval();
+  std::vector<uint32_t> srl_expected{
+      1 /* valid */,  7 /* ALU_SRL */,  1 /* OP1_RS1 */, 1 /* OP2_RS2 */,
+      1 /* WB_ALU */, 1 /* RF_WRITE */, 0 /* MEM_X */,   0 /* PC_PLUS4 */
+  };
+  test_decode("srl", dut, srl_expected);
+
+  // sra
+  dut->inst = sra(0b01 /* rs2 */, 0b10 /* rs1 */, 0b11 /* rd */);
+  dut->eval();
+  std::vector<uint32_t> sra_expected{
+      1 /* valid */,  8 /* ALU_SRA */,  1 /* OP1_RS1 */, 1 /* OP2_RS2 */,
+      1 /* WB_ALU */, 1 /* RF_WRITE */, 0 /* MEM_X */,   0 /* PC_PLUS4 */
+  };
+  test_decode("sra", dut, sra_expected);
 
   // or
   dut->inst = ior(0b01 /* rs2 */, 0b10 /* rs1 */, 0b11 /* rd */);
   dut->eval();
   std::vector<uint32_t> or_expected{
-      1 /* valid */,  4 /* ALU_OR */,   1 /* OP1_RS1 */, 1 /* OP2_RS2 */,
+      1 /* valid */,  9 /* ALU_OR */,   1 /* OP1_RS1 */, 1 /* OP2_RS2 */,
       1 /* WB_ALU */, 1 /* RF_WRITE */, 0 /* MEM_X */,   0 /* PC_PLUS4 */
   };
   test_decode("or", dut, or_expected);
@@ -90,7 +135,7 @@ int main(int argc, char** argv) {
   dut->inst = iand(0b01 /* rs2 */, 0b10 /* rs1 */, 0b11 /* rd */);
   dut->eval();
   std::vector<uint32_t> and_expected{
-      1 /* valid */,  5 /* ALU_AND */,  1 /* OP1_RS1 */, 1 /* OP2_RS2 */,
+      1 /* valid */,  10 /* ALU_AND */, 1 /* OP1_RS1 */, 1 /* OP2_RS2 */,
       1 /* WB_ALU */, 1 /* RF_WRITE */, 0 /* MEM_X */,   0 /* PC_PLUS4 */
   };
   test_decode("and", dut, and_expected);
