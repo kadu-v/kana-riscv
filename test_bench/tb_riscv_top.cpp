@@ -117,12 +117,13 @@ void test_sw(std::string test_name, uint32_t inst, uint32_t expected) {
   tester->dut_->x_reset = 1;
   tester->eval();
 
-  tester->dut_->clk = !tester->dut_->clk;  // High
-  tester->eval();
+  for (int i = 0; i < 10; i++) {
+    tester->dut_->clk = !tester->dut_->clk;  // High
+    tester->eval();
 
-  tester->dut_->clk = !tester->dut_->clk;  // Low
-  tester->eval();
-
+    tester->dut_->clk = !tester->dut_->clk;  // Low
+    tester->eval();
+  }
   tester->finish();
   assert_eq(test_name, tester->get_ram(10), expected);
 }
@@ -313,7 +314,7 @@ void integration_test3(std::string test_name) {
   tester->dut_->x_reset = 1;
   tester->eval();
 
-  for (int i = 0; i < 20; i++) {
+  for (int i = 0; i < 30; i++) {
     tester->dut_->clk = !tester->dut_->clk;  // High
     tester->eval();
 

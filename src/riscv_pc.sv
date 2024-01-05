@@ -19,7 +19,7 @@ module riscv_pc #(
   assign pc_out   = pc;
   assign pc_plus4 = pc + PC_OFFSET;
 
-  always_ff @(posedge clk) begin
+  always_ff @(negedge clk) begin
     if (!x_reset) begin
       pc <= 0;
     end else if (pc_sel == PC_ALU) begin
