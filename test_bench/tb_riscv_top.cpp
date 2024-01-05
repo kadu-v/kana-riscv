@@ -91,27 +91,6 @@ void test_i_type_instruction(std::string test_name, uint32_t inst,
   assert_eq(test_name, tester->get_reg(3), expected);
 }
 
-void test_addi(std::string test_name, uint32_t inst, uint32_t expected) {
-  TopTester* tester = new TopTester(test_name);
-  tester->start();
-
-  // setup
-  tester->set_ram(0, inst);
-  tester->set_reg(2, 100);
-
-  // Step 1
-  tester->dut_->clk = 0;
-  tester->dut_->x_reset = 1;
-  tester->eval();
-
-  for (int i = 0; i < 10; i++) {
-    tester->dut_->clk = !tester->dut_->clk;
-    tester->eval();
-  }
-  tester->finish();
-  assert_eq(test_name, tester->get_reg(3), expected);
-}
-
 void test_lw(std::string test_name, uint32_t inst, uint32_t expected) {
   TopTester* tester = new TopTester(test_name);
   tester->start();
@@ -199,17 +178,23 @@ void test_jal(std::string test_name) {
 }
 
 /* B type--------------------------------------------------------------------*/
-// 0: beq 1, 2, 8
-// 4: addi 2, 0, 10
+// x[1] = 100
+// x[2] = 100
+// x[3] = 200
+// 0: inst
+// 4: jal 10, 8
 // 8: addi 3, 0, 20
-void test_beq(std::string test_name) {
+void test_b_type_instruction(std::string test_name, uint32_t inst) {
   TopTester* tester = new TopTester(test_name);
   tester->start();
 
   // setup
-  tester->set_ram(0, beq(1, 2, 8));
-  tester->set_ram(4, addi(2, 0, 10));
-  tester->set_ram(8, addi(3, 0, 20));
+  tester->set_reg(1, 100);
+  tester->set_reg(2, 100);
+  tester->set_reg(3, 200);
+  tester->set_ram(0, inst);
+  tester->set_ram(4, jal(10, 8));
+  tester->set_ram(8, addi(5, 0, 20));
 
   // Step 1
   tester->dut_->clk = 0;  // Low
@@ -225,7 +210,7 @@ void test_beq(std::string test_name) {
   }
 
   tester->finish();
-  assert_eq(test_name, tester->get_reg(3), 20);
+  assert_eq(test_name, tester->get_reg(5), 20);
 }
 
 /* integration　test 1 -------------------------------------------------------*/
@@ -427,8 +412,20 @@ int main(int argc, char** argv) {
   test_jal("[jal] jal 1, 2; addi 2, 0, 10; addi 3, 0, 20");
 
   /* B type */
-  test_beq("[beq] beq 1, 2, 2; addi 2, 0, 10; addi 3, 0, 20");
-
+  test_b_type_instruction("[beq] beq 1, 2, 8; jal 10, 8; addi 3, 0, 20",
+                          beq(1, 2, 8));
+  test_b_type_instruction("[bne] bne 1, 3, 8; jal 10, 8; addi 3, 0, 20",
+                          bne(1, 3, 8));
+  test_b_type_instruction("[blt] blt 1, 3, 8; jal 10, 8; addi 3, 0, 20",
+                          blt(1, 3, 8));
+  test_b_type_instruction("[bge] bge 3, 1, 8; jal 10, 8; addi 3, 0, 20",
+                          bge(3, 1, 8));
+  test_b_type_instruction("[bge] bge 2, 1, 8; jal 10, 8; addi 3, 0, 20",
+                          bge(2, 1, 8));
+  test_b_type_instruction("[bltu] bltu 1, 3, 8; jal 10, 8; addi 3, 0, 20",
+                          bltu(1, 3, 8));
+  test_b_type_instruction("[bgeu] bgeu 3, 2, 8; jal 10, 8; addi 3, 0, 20",
+                          bgeu(3, 2, 8));
   /* integration test */
   integration_test1("[integration test1] add, addi, lw, sw");
   integration_test2("[integration test2] addi, addi, beq, addi, addi");

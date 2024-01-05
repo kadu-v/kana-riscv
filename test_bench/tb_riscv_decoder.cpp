@@ -264,8 +264,53 @@ int main(int argc, char** argv) {
   dut->inst = beq(0b0 /* rs1 */, 0b01 /* rs2 */, 0b10 /* imm */);
   dut->eval();
   std::vector<uint32_t> beq_expected{
-      1 /* valid */, 0 /* ALU_X*/, 1 /* OP1_RS1 */, 1 /* OP2_RS2 */,
-      0 /* WB_X */,  0 /* RF_X */, 0 /* MEM_X */,   2 /* PC_B_TARGET */
+      1 /* valid */, 11 /* ALU_BEQ */, 1 /* OP1_RS1 */, 1 /* OP2_RS2 */,
+      0 /* WB_X */,  0 /* RF_X */,     0 /* MEM_X */,   2 /* PC_B_TARGET */
   };
   test_decode("beq", dut, beq_expected);
+
+  // bne
+  dut->inst = bne(0b0 /* rs1 */, 0b01 /* rs2 */, 0b10 /* imm */);
+  dut->eval();
+  std::vector<uint32_t> bne_expected{
+      1 /* valid */, 12 /* ALU_BNE */, 1 /* OP1_RS1 */, 1 /* OP2_RS2 */,
+      0 /* WB_X */,  0 /* RF_X */,     0 /* MEM_X */,   2 /* PC_B_TARGET */
+  };
+  test_decode("bne", dut, bne_expected);
+
+  // blt
+  dut->inst = blt(0b0 /* rs1 */, 0b01 /* rs2 */, 0b10 /* imm */);
+  dut->eval();
+  std::vector<uint32_t> blt_expected{
+      1 /* valid */, 13 /* ALU_BLT */, 1 /* OP1_RS1 */, 1 /* OP2_RS2 */,
+      0 /* WB_X */,  0 /* RF_X */,     0 /* MEM_X */,   2 /* PC_B_TARGET */
+  };
+  test_decode("blt", dut, blt_expected);
+
+  // bge
+  dut->inst = bge(0b0 /* rs1 */, 0b01 /* rs2 */, 0b10 /* imm */);
+  dut->eval();
+  std::vector<uint32_t> bge_expected{
+      1 /* valid */, 14 /* ALU_BGE */, 1 /* OP1_RS1 */, 1 /* OP2_RS2 */,
+      0 /* WB_X */,  0 /* RF_X */,     0 /* MEM_X */,   2 /* PC_B_TARGET */
+  };
+  test_decode("bge", dut, bge_expected);
+
+  // bltu
+  dut->inst = bltu(0b0 /* rs1 */, 0b01 /* rs2 */, 0b10 /* imm */);
+  dut->eval();
+  std::vector<uint32_t> bltu_expected{
+      1 /* valid */, 15 /* ALU_BLTU */, 1 /* OP1_RS1 */, 1 /* OP2_RS2 */,
+      0 /* WB_X */,  0 /* RF_X */,      0 /* MEM_X */,   2 /* PC_B_TARGET */
+  };
+  test_decode("bltu", dut, bltu_expected);
+
+  // bgeu
+  dut->inst = bgeu(0b0 /* rs1 */, 0b01 /* rs2 */, 0b10 /* imm */);
+  dut->eval();
+  std::vector<uint32_t> bgeu_expected{
+      1 /* valid */, 16 /* ALU_BGEU */, 1 /* OP1_RS1 */, 1 /* OP2_RS2 */,
+      0 /* WB_X */,  0 /* RF_X */,      0 /* MEM_X */,   2 /* PC_B_TARGET */
+  };
+  test_decode("bgeu", dut, bgeu_expected);
 }

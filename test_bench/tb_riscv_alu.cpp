@@ -23,7 +23,7 @@ void test_branch_flag(std::string test_name, uint32_t data1, uint32_t data2,
                       uint32_t expected) {
   Vriscv_alu* dut = new Vriscv_alu();
 
-  dut->exec_fun = 0; /* ALU_X */
+  dut->exec_fun = 11; /* ALU_BEQ */
   dut->data1 = data1;
   dut->data2 = data2;
   dut->eval();

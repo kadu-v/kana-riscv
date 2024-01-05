@@ -377,7 +377,7 @@ uint32_t jal(uint32_t rd, uint32_t imm) { return j_inst(imm, rd, OPCODE_JAL); }
 /* --------------------------------------------------------------------- *
     B type
  * ---------------------------------------------------------------------*/
-#define INST_B_MASK 0b00000000000000000000000001111111
+#define INST_B_MASK 0b00000000000000000111000001111111
 
 uint32_t b_inst(uint32_t imm, uint32_t rs2, uint32_t rs1, uint32_t funct3,
                 uint32_t opcode) {
@@ -407,4 +407,69 @@ uint32_t b_inst(uint32_t imm, uint32_t rs2, uint32_t rs1, uint32_t funct3,
 // if(x[rs1] == x[rs2]) then pc += sext(imm)
 uint32_t beq(uint32_t rs1, uint32_t rs2, uint32_t imm) {
   return b_inst(imm, rs2, rs1, FUNCT3_BEQ, OPCODE_BEQ);
+}
+
+/* bne */
+// clang-format off
+#define INST_BNE      0b00000000000000000001000001100011
+#define FUNCT3_BNE    0b001
+#define OPCODE_BNE    0b1100011
+// clang-format on
+
+// bne rs1, rs2, imm
+// if(x[rs1] != x[rs2]) then pc += sext(imm)
+uint32_t bne(uint32_t rs1, uint32_t rs2, uint32_t imm) {
+  return b_inst(imm, rs2, rs1, FUNCT3_BNE, OPCODE_BNE);
+}
+
+/* blt */
+// clang-format off
+#define INST_BLT      0b00000000000000000100000001100011
+#define FUNCT3_BLT    0b100
+#define OPCODE_BLT    0b1100011
+// clang-format on
+
+// blt rs1, rs2, imm
+// if(x[rs1] <s x[rs2]) then pc += sext(imm)
+uint32_t blt(uint32_t rs1, uint32_t rs2, uint32_t imm) {
+  return b_inst(imm, rs2, rs1, FUNCT3_BLT, OPCODE_BLT);
+}
+
+/* bge */
+// clang-format off
+#define INST_BGE      0b00000000000000000101000001100011
+#define FUNCT3_BGE    0b101
+#define OPCODE_BGE    0b1100011
+// clang-format on
+
+// bge rs1, rs2, imm
+// if(x[rs1] >=s x[rs2]) then pc += sext(imm)
+uint32_t bge(uint32_t rs1, uint32_t rs2, uint32_t imm) {
+  return b_inst(imm, rs2, rs1, FUNCT3_BGE, OPCODE_BGE);
+}
+
+/* bltu */
+// clang-format off
+#define INST_BLTU      0b00000000000000000110000001100011
+#define FUNCT3_BLTU    0b110
+#define OPCODE_BLTU    0b1100011
+// clang-format on
+
+// bltu rs1, rs2, imm
+// if(x[rs1] <u x[rs2]) then pc += sext(imm)
+uint32_t bltu(uint32_t rs1, uint32_t rs2, uint32_t imm) {
+  return b_inst(imm, rs2, rs1, FUNCT3_BLTU, OPCODE_BLTU);
+}
+
+/* bgeu */
+// clang-format off
+#define INST_BGEU      0b00000000000000000111000001100011
+#define FUNCT3_BGEU    0b111
+#define OPCODE_BGEU    0b1100011
+// clang-format on
+
+// bgeu rs1, rs2, imm
+// if(x[rs1] >=u x[rs2]) then pc += sext(imm)
+uint32_t bgeu(uint32_t rs1, uint32_t rs2, uint32_t imm) {
+  return b_inst(imm, rs2, rs1, FUNCT3_BGEU, OPCODE_BGEU);
 }

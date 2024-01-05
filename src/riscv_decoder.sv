@@ -39,7 +39,12 @@ module riscv_decoder #(
                   ((inst & `INST_I_MASK) == `INST_LW) ||
                   ((inst & `INST_S_MASK) == `INST_SW) ||
                   ((inst & `INST_J_MASK) == `INST_JAL) ||
-                  ((inst & `INST_B_MASK) == `INST_BEQ);
+                  ((inst & `INST_B_MASK) == `INST_BEQ) ||
+                  ((inst & `INST_B_MASK) == `INST_BNE) ||
+                  ((inst & `INST_B_MASK) == `INST_BLT) ||
+                  ((inst & `INST_B_MASK) == `INST_BGE) ||
+                  ((inst & `INST_B_MASK) == `INST_BLTU) ||
+                  ((inst & `INST_B_MASK) == `INST_BGEU) ;
 
   // if statement for alu
   always_comb begin
@@ -131,7 +136,7 @@ module riscv_decoder #(
       rf_wen   = RF_WRITE;
       mem_wen  = MEM_X;
       pc_sel   = PC_PLUS4;
-    end else if ((inst & `INST_I_MASK) == `INST_SLTI) begin  /* I type */
+    end else if ((inst & `INST_I_MASK) == `INST_SLTI) begin
       exec_fun = ALU_SLT;
       op1_sel  = OP1_RS1;
       op2_sel  = OP2_IMI;
@@ -139,7 +144,7 @@ module riscv_decoder #(
       rf_wen   = RF_WRITE;
       mem_wen  = MEM_X;
       pc_sel   = PC_PLUS4;
-    end else if ((inst & `INST_I_MASK) == `INST_SLTIU) begin  /* I type */
+    end else if ((inst & `INST_I_MASK) == `INST_SLTIU) begin
       exec_fun = ALU_SLTU;
       op1_sel  = OP1_RS1;
       op2_sel  = OP2_IMI;
@@ -147,7 +152,7 @@ module riscv_decoder #(
       rf_wen   = RF_WRITE;
       mem_wen  = MEM_X;
       pc_sel   = PC_PLUS4;
-    end else if ((inst & `INST_I_MASK) == `INST_XORI) begin  /* I type */
+    end else if ((inst & `INST_I_MASK) == `INST_XORI) begin
       exec_fun = ALU_XOR;
       op1_sel  = OP1_RS1;
       op2_sel  = OP2_IMI;
@@ -155,7 +160,7 @@ module riscv_decoder #(
       rf_wen   = RF_WRITE;
       mem_wen  = MEM_X;
       pc_sel   = PC_PLUS4;
-    end else if ((inst & `INST_I_MASK) == `INST_ORI) begin  /* I type */
+    end else if ((inst & `INST_I_MASK) == `INST_ORI) begin
       exec_fun = ALU_OR;
       op1_sel  = OP1_RS1;
       op2_sel  = OP2_IMI;
@@ -163,7 +168,7 @@ module riscv_decoder #(
       rf_wen   = RF_WRITE;
       mem_wen  = MEM_X;
       pc_sel   = PC_PLUS4;
-    end else if ((inst & `INST_I_MASK) == `INST_ANDI) begin  /* I type */
+    end else if ((inst & `INST_I_MASK) == `INST_ANDI) begin
       exec_fun = ALU_AND;
       op1_sel  = OP1_RS1;
       op2_sel  = OP2_IMI;
@@ -171,7 +176,7 @@ module riscv_decoder #(
       rf_wen   = RF_WRITE;
       mem_wen  = MEM_X;
       pc_sel   = PC_PLUS4;
-    end else if ((inst & `INST_I_MASK) == `INST_SLLI) begin  /* I type */
+    end else if ((inst & `INST_I_MASK) == `INST_SLLI) begin
       exec_fun = ALU_SLL;
       op1_sel  = OP1_RS1;
       op2_sel  = OP2_IMI;
@@ -179,7 +184,7 @@ module riscv_decoder #(
       rf_wen   = RF_WRITE;
       mem_wen  = MEM_X;
       pc_sel   = PC_PLUS4;
-    end else if ((inst & `INST_SRXI_MASK) == `INST_SRLI) begin  /* I type */
+    end else if ((inst & `INST_SRXI_MASK) == `INST_SRLI) begin
       exec_fun = ALU_SRL;
       op1_sel  = OP1_RS1;
       op2_sel  = OP2_IMI;
@@ -187,7 +192,7 @@ module riscv_decoder #(
       rf_wen   = RF_WRITE;
       mem_wen  = MEM_X;
       pc_sel   = PC_PLUS4;
-    end else if ((inst & `INST_SRXI_MASK) == `INST_SRAI) begin  /* I type */
+    end else if ((inst & `INST_SRXI_MASK) == `INST_SRAI) begin
       exec_fun = ALU_SRA;
       op1_sel  = OP1_RS1;
       op2_sel  = OP2_IMI;
@@ -220,7 +225,47 @@ module riscv_decoder #(
       mem_wen  = MEM_X;
       pc_sel   = PC_ALU;
     end else if ((inst & `INST_B_MASK) == `INST_BEQ) begin  /* B type*/
-      exec_fun = ALU_X;
+      exec_fun = ALU_BEQ;
+      op1_sel  = OP1_RS1;
+      op2_sel  = OP2_RS2;
+      wb_sel   = WB_X;
+      rf_wen   = RF_X;
+      mem_wen  = MEM_X;
+      pc_sel   = PC_B_TARGET;
+    end else if ((inst & `INST_B_MASK) == `INST_BNE) begin
+      exec_fun = ALU_BNE;
+      op1_sel  = OP1_RS1;
+      op2_sel  = OP2_RS2;
+      wb_sel   = WB_X;
+      rf_wen   = RF_X;
+      mem_wen  = MEM_X;
+      pc_sel   = PC_B_TARGET;
+    end else if ((inst & `INST_B_MASK) == `INST_BLT) begin
+      exec_fun = ALU_BLT;
+      op1_sel  = OP1_RS1;
+      op2_sel  = OP2_RS2;
+      wb_sel   = WB_X;
+      rf_wen   = RF_X;
+      mem_wen  = MEM_X;
+      pc_sel   = PC_B_TARGET;
+    end else if ((inst & `INST_B_MASK) == `INST_BGE) begin
+      exec_fun = ALU_BGE;
+      op1_sel  = OP1_RS1;
+      op2_sel  = OP2_RS2;
+      wb_sel   = WB_X;
+      rf_wen   = RF_X;
+      mem_wen  = MEM_X;
+      pc_sel   = PC_B_TARGET;
+    end else if ((inst & `INST_B_MASK) == `INST_BLTU) begin
+      exec_fun = ALU_BLTU;
+      op1_sel  = OP1_RS1;
+      op2_sel  = OP2_RS2;
+      wb_sel   = WB_X;
+      rf_wen   = RF_X;
+      mem_wen  = MEM_X;
+      pc_sel   = PC_B_TARGET;
+    end else if ((inst & `INST_B_MASK) == `INST_BGEU) begin
+      exec_fun = ALU_BGEU;
       op1_sel  = OP1_RS1;
       op2_sel  = OP2_RS2;
       wb_sel   = WB_X;

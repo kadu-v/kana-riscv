@@ -12,7 +12,13 @@ typedef enum {
   ALU_SRL  = 7,
   ALU_SRA  = 8,
   ALU_OR   = 9,
-  ALU_AND  = 10
+  ALU_AND  = 10,
+  ALU_BEQ = 11,
+  ALU_BNE = 12,
+  ALU_BLT = 13,
+  ALU_BGE = 14,
+  ALU_BLTU = 15,
+  ALU_BGEU = 16
 } EXEC_FUN;
 
 typedef enum {

@@ -56,10 +56,28 @@ module riscv_alu #(
   end
 
   always_comb begin
-    if (data1 == data2) begin
-      br_flag = 1;
-    end else begin
-      br_flag = 0;
-    end
+    case (exec_fun)
+      ALU_BEQ: begin
+        br_flag = data1 == data2;
+      end
+      ALU_BNE: begin
+        br_flag = data1 != data2;
+      end
+      ALU_BLT: begin
+        br_flag = signed_data1 < signed_data2;
+      end
+      ALU_BGE: begin
+        br_flag = signed_data1 >= signed_data2;
+      end
+      ALU_BLTU: begin
+        br_flag = data1 < data2;
+      end
+      ALU_BGEU: begin
+        br_flag = data1 >= data2;
+      end
+      default: begin
+        br_flag = 0;
+      end
+    endcase
   end
 endmodule
