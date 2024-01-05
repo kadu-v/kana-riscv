@@ -196,7 +196,112 @@ uint32_t addi(uint32_t rd, uint32_t rs1, uint32_t imm) {
   return i_inst(imm, rs1, FUNCT3_ADDI, rd, OPCODE_ADDI);
 }
 
-/* addi */
+/* slti */
+// clang-format off
+#define INST_SLTI      0b0000000000000000010000000010011
+#define FUNCT3_SLTI    0b010
+#define OPCODE_SLTI    0b0010011
+// clang-format on
+
+// slti rd, rs1, imm
+// x[rd] = x[rs1] <s sext(imm)
+uint32_t slti(uint32_t rd, uint32_t rs1, uint32_t imm) {
+  return i_inst(imm, rs1, FUNCT3_SLTI, rd, OPCODE_SLTI);
+}
+
+/* sltiu */
+// clang-format off
+#define INST_SLTIU      0b0000000000000000011000000010011
+#define FUNCT3_SLTIU    0b011
+#define OPCODE_SLTIU    0b0010011
+// clang-format on
+
+// sltiu rd, rs1, imm
+// x[rd] = x[rs1] <u sext(imm)
+uint32_t sltiu(uint32_t rd, uint32_t rs1, uint32_t imm) {
+  return i_inst(imm, rs1, FUNCT3_SLTIU, rd, OPCODE_SLTIU);
+}
+
+/* xori */
+// clang-format off
+#define INST_XORI      0b0000000000000000100000000010011
+#define FUNCT3_XORI    0b100
+#define OPCODE_XORI    0b0010011
+// clang-format on
+
+// xori rd, rs1, imm
+// x[rd] = x[rs1] ^ sext(imm)
+uint32_t xori(uint32_t rd, uint32_t rs1, uint32_t imm) {
+  return i_inst(imm, rs1, FUNCT3_XORI, rd, OPCODE_XORI);
+}
+
+/* ori */
+// clang-format off
+#define INST_ORI      0b0000000000000000110000000010011
+#define FUNCT3_ORI    0b110
+#define OPCODE_ORI    0b0010011
+// clang-format on
+
+// ori rd, rs1, imm
+// x[rd] = x[rs1] | sext(imm)
+uint32_t ori(uint32_t rd, uint32_t rs1, uint32_t imm) {
+  return i_inst(imm, rs1, FUNCT3_ORI, rd, OPCODE_ORI);
+}
+
+/* andi */
+// clang-format off
+#define INST_ANDI      0b0000000000000000111000000010011
+#define FUNCT3_ANDI    0b111
+#define OPCODE_ANDI    0b0010011
+// clang-format on
+
+// andi rd, rs1, imm
+// x[rd] = x[rs1] & sext(imm)
+uint32_t andi(uint32_t rd, uint32_t rs1, uint32_t imm) {
+  return i_inst(imm, rs1, FUNCT3_ANDI, rd, OPCODE_ANDI);
+}
+
+/* slli */
+// clang-format off
+#define INST_SLLI      0b0000000000000000001000000010011
+#define FUNCT3_SLLI    0b001
+#define OPCODE_SLLI    0b0010011
+// clang-format on
+
+// slli rd, rs1, imm
+// x[rd] = x[rs1] << imm[4:0]
+uint32_t slli(uint32_t rd, uint32_t rs1, uint32_t imm) {
+  return i_inst(imm, rs1, FUNCT3_SLLI, rd, OPCODE_SLLI);
+}
+
+/* srli */
+// clang-format off
+#define INST_SRLI      0b0000000000000000101000000010011
+#define FUNCT3_SRLI    0b101
+#define OPCODE_SRLI    0b0010011
+// clang-format on
+
+// srli rd, rs1, imm
+// x[rd] = x[rs1] >>u imm[4:0]
+uint32_t srli(uint32_t rd, uint32_t rs1, uint32_t imm) {
+  return i_inst(imm, rs1, FUNCT3_SRLI, rd, OPCODE_SRLI);
+}
+
+/* srai */
+// clang-format off
+#define INST_SRAI      0b0100000000000000101000000010011
+#define FUNCT3_SRAI    0b101
+#define OPCODE_SRAI    0b0010011
+// clang-format on
+
+// srai rd, rs1, imm
+// x[rd] = x[rs1] >>s imm[4:0]
+uint32_t srai(uint32_t rd, uint32_t rs1, uint32_t imm) {
+  uint32_t imm_i = 0b1000000000 + imm;
+  return i_inst(imm_i, rs1, FUNCT3_SRAI, rd, OPCODE_SRAI);
+}
+
+/* lw */
 // clang-format off
 #define INST_LW      0b0000000000000000010000000000011
 #define FUNCT3_LW    0b010

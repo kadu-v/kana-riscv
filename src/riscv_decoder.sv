@@ -28,6 +28,14 @@ module riscv_decoder #(
                   ((inst &`INST_R_MASK) == `INST_OR) ||
                   ((inst &`INST_R_MASK) == `INST_AND) ||
                   ((inst & `INST_I_MASK) == `INST_ADDI) ||
+                  ((inst & `INST_I_MASK) == `INST_SLTI) ||
+                  ((inst & `INST_I_MASK) == `INST_SLTIU) ||
+                  ((inst & `INST_I_MASK) == `INST_XORI) ||
+                  ((inst & `INST_I_MASK) == `INST_ORI) ||
+                  ((inst & `INST_I_MASK) == `INST_ANDI) ||
+                  ((inst & `INST_I_MASK) == `INST_SLLI) ||
+                  ((inst & `INST_SRXI_MASK) == `INST_SRLI) ||
+                  ((inst & `INST_SRXI_MASK) == `INST_SRAI) ||
                   ((inst & `INST_I_MASK) == `INST_LW) ||
                   ((inst & `INST_S_MASK) == `INST_SW) ||
                   ((inst & `INST_J_MASK) == `INST_JAL) ||
@@ -117,6 +125,70 @@ module riscv_decoder #(
       pc_sel   = PC_PLUS4;
     end else if ((inst & `INST_I_MASK) == `INST_ADDI) begin  /* I type */
       exec_fun = ALU_ADD;
+      op1_sel  = OP1_RS1;
+      op2_sel  = OP2_IMI;
+      wb_sel   = WB_ALU;
+      rf_wen   = RF_WRITE;
+      mem_wen  = MEM_X;
+      pc_sel   = PC_PLUS4;
+    end else if ((inst & `INST_I_MASK) == `INST_SLTI) begin  /* I type */
+      exec_fun = ALU_SLT;
+      op1_sel  = OP1_RS1;
+      op2_sel  = OP2_IMI;
+      wb_sel   = WB_ALU;
+      rf_wen   = RF_WRITE;
+      mem_wen  = MEM_X;
+      pc_sel   = PC_PLUS4;
+    end else if ((inst & `INST_I_MASK) == `INST_SLTIU) begin  /* I type */
+      exec_fun = ALU_SLTU;
+      op1_sel  = OP1_RS1;
+      op2_sel  = OP2_IMI;
+      wb_sel   = WB_ALU;
+      rf_wen   = RF_WRITE;
+      mem_wen  = MEM_X;
+      pc_sel   = PC_PLUS4;
+    end else if ((inst & `INST_I_MASK) == `INST_XORI) begin  /* I type */
+      exec_fun = ALU_XOR;
+      op1_sel  = OP1_RS1;
+      op2_sel  = OP2_IMI;
+      wb_sel   = WB_ALU;
+      rf_wen   = RF_WRITE;
+      mem_wen  = MEM_X;
+      pc_sel   = PC_PLUS4;
+    end else if ((inst & `INST_I_MASK) == `INST_ORI) begin  /* I type */
+      exec_fun = ALU_OR;
+      op1_sel  = OP1_RS1;
+      op2_sel  = OP2_IMI;
+      wb_sel   = WB_ALU;
+      rf_wen   = RF_WRITE;
+      mem_wen  = MEM_X;
+      pc_sel   = PC_PLUS4;
+    end else if ((inst & `INST_I_MASK) == `INST_ANDI) begin  /* I type */
+      exec_fun = ALU_AND;
+      op1_sel  = OP1_RS1;
+      op2_sel  = OP2_IMI;
+      wb_sel   = WB_ALU;
+      rf_wen   = RF_WRITE;
+      mem_wen  = MEM_X;
+      pc_sel   = PC_PLUS4;
+    end else if ((inst & `INST_I_MASK) == `INST_SLLI) begin  /* I type */
+      exec_fun = ALU_SLL;
+      op1_sel  = OP1_RS1;
+      op2_sel  = OP2_IMI;
+      wb_sel   = WB_ALU;
+      rf_wen   = RF_WRITE;
+      mem_wen  = MEM_X;
+      pc_sel   = PC_PLUS4;
+    end else if ((inst & `INST_SRXI_MASK) == `INST_SRLI) begin  /* I type */
+      exec_fun = ALU_SRL;
+      op1_sel  = OP1_RS1;
+      op2_sel  = OP2_IMI;
+      wb_sel   = WB_ALU;
+      rf_wen   = RF_WRITE;
+      mem_wen  = MEM_X;
+      pc_sel   = PC_PLUS4;
+    end else if ((inst & `INST_SRXI_MASK) == `INST_SRAI) begin  /* I type */
+      exec_fun = ALU_SRA;
       op1_sel  = OP1_RS1;
       op2_sel  = OP2_IMI;
       wb_sel   = WB_ALU;

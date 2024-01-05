@@ -52,6 +52,45 @@ void test_r_type_instruction(std::string test_name, uint32_t inst,
 }
 
 /* I type--------------------------------------------------------------------*/
+// x[4] = 100
+// x[5] = 200
+// x[6] = -100
+// x[7] = 0b1010101010
+// x[8] = 0b0101010101
+// x[9] = 0b1110101010
+// x[10] = 1
+// x[11] = 10
+// x[12] = 0b10000000000
+void test_i_type_instruction(std::string test_name, uint32_t inst,
+                             uint32_t expected) {
+  TopTester* tester = new TopTester(test_name);
+  tester->start();
+
+  // setup
+  tester->set_ram(0, inst);
+  tester->set_reg(4, 100);
+  tester->set_reg(5, 200);
+  tester->set_reg(6, -100);
+  tester->set_reg(7, 0b1010101010);
+  tester->set_reg(8, 0b0101010101);
+  tester->set_reg(9, 0b1110101010);
+  tester->set_reg(10, 0b1);
+  tester->set_reg(11, 10);
+  tester->set_reg(12, 0b10000000000);
+
+  // Step 1
+  tester->dut_->clk = 0;
+  tester->dut_->x_reset = 1;
+  tester->eval();
+
+  for (int i = 0; i < 10; i++) {
+    tester->dut_->clk = !tester->dut_->clk;
+    tester->eval();
+  }
+  tester->finish();
+  assert_eq(test_name, tester->get_reg(3), expected);
+}
+
 void test_addi(std::string test_name, uint32_t inst, uint32_t expected) {
   TopTester* tester = new TopTester(test_name);
   tester->start();
@@ -340,17 +379,31 @@ int main(int argc, char** argv) {
                           ixor(3, 8, 9), 0b1011111111);
   test_r_type_instruction("[srl] x[3] = 0b10000000000 >>u 10", srl(3, 12, 11),
                           0b1);
-  test_r_type_instruction("[sra] x[3] = 0b10000000000 >>s 10", srl(3, 12, 11),
+  test_r_type_instruction("[sra] x[3] = 0b10000000000 >>s 10", sra(3, 12, 11),
                           0b1);
   test_r_type_instruction("[or] x[3] = 0b1010101010 | 0b0101010101",
                           ior(3, 7, 8), 0b1111111111);
-  test_r_type_instruction("[and] x[3] = 0b1110101010 | 0b0101010101",
+  test_r_type_instruction("[and] x[3] = 0b1110101010 & 0b0101010101",
                           iand(3, 9, 8), 0b0100000000);
 
   /* I type */
-  // addi
-  test_addi("[addi] 10 + 100 = 110", addi(3, 2, 10), 110);
-  test_addi("[addi] -2047 + 100 = -1947", addi(3, 2, 0b100000000001), -1947);
+  test_i_type_instruction("[addi] x[3] = 100 + 10 = 110", addi(3, 4, 10), 110);
+  test_i_type_instruction("[addi] x[3] = 100 + -2047= -1947",
+                          addi(3, 4, 0b100000000001), -1947);
+  test_i_type_instruction("[slti] x[3] = 100 <s 200 = 1", slti(3, 4, 200), 1);
+  test_i_type_instruction("[sltiu] x[3] = 200 << 500 = 1", sltiu(3, 5, 500), 1);
+  test_i_type_instruction("[xori] x[3] = 0b0101010101 ^ 0b1110101010",
+                          xori(3, 8, 0b1110101010), 0b1011111111);
+  test_i_type_instruction("[ori] x[3] = 0b1010101010 | 0b0101010101",
+                          ori(3, 7, 0b0101010101), 0b1111111111);
+  test_i_type_instruction("[andi] x[3] = 0b1110101010 | 0b0101010101",
+                          andi(3, 9, 0b0101010101), 0b0100000000);
+  test_i_type_instruction("[slli] x[3] = 0b1 << 10", slli(3, 10, 10),
+                          0b10000000000);
+  test_i_type_instruction("[srli] x[3] = 0b10000000000 >>u 10", srli(3, 12, 10),
+                          0b1);
+  test_i_type_instruction("[srai] x[3] = 0b10000000000 >>s 10", srai(3, 12, 10),
+                          0b1);
   // lw
   test_lw("[lw] x[3] = sext(M[ x[0] + sext(10) ])", lw(3, 0, 10), 20);
   test_lw("[lw] x[3] = sext(M[ x[1] + sext(8) ])", lw(3, 1, 8), 20);

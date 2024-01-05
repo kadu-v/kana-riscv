@@ -152,6 +152,78 @@ int main(int argc, char** argv) {
   };
   test_decode("addi", dut, addi_expected);
 
+  // slti
+  dut->inst = slti(0b01 /* imm */, 0b10 /* rs1 */, 0b11 /* rd */);
+  dut->eval();
+  std::vector<uint32_t> slti_expected{
+      1 /* valid */,  4 /* ALU_SLT */,  1 /* OP1_RS1 */, 2 /* OP2_IMI */,
+      1 /* WB_ALU */, 1 /* RF_WRITE */, 0 /* MEM_X */,   0 /* PC_PLUS4 */
+  };
+  test_decode("slti", dut, slti_expected);
+
+  // sltiu
+  dut->inst = sltiu(0b01 /* imm */, 0b10 /* rs1 */, 0b11 /* rd */);
+  dut->eval();
+  std::vector<uint32_t> sltiu_expected{
+      1 /* valid */,  5 /* ALU_SLTU */, 1 /* OP1_RS1 */, 2 /* OP2_IMI */,
+      1 /* WB_ALU */, 1 /* RF_WRITE */, 0 /* MEM_X */,   0 /* PC_PLUS4 */
+  };
+  test_decode("sltiu", dut, sltiu_expected);
+
+  // xori
+  dut->inst = xori(0b01 /* imm */, 0b10 /* rs1 */, 0b11 /* rd */);
+  dut->eval();
+  std::vector<uint32_t> xori_expected{
+      1 /* valid */,  6 /* ALU_XOR */,  1 /* OP1_RS1 */, 2 /* OP2_IMI */,
+      1 /* WB_ALU */, 1 /* RF_WRITE */, 0 /* MEM_X */,   0 /* PC_PLUS4 */
+  };
+  test_decode("xori", dut, xori_expected);
+
+  // ori
+  dut->inst = ori(0b01 /* imm */, 0b10 /* rs1 */, 0b11 /* rd */);
+  dut->eval();
+  std::vector<uint32_t> ori_expected{
+      1 /* valid */,  9 /* ALU_OR */,   1 /* OP1_RS1 */, 2 /* OP2_IMI */,
+      1 /* WB_ALU */, 1 /* RF_WRITE */, 0 /* MEM_X */,   0 /* PC_PLUS4 */
+  };
+  test_decode("ori", dut, ori_expected);
+
+  // andi
+  dut->inst = andi(0b01 /* imm */, 0b10 /* rs1 */, 0b11 /* rd */);
+  dut->eval();
+  std::vector<uint32_t> andi_expected{
+      1 /* valid */,  10 /* ALU_AND */, 1 /* OP1_RS1 */, 2 /* OP2_IMI */,
+      1 /* WB_ALU */, 1 /* RF_WRITE */, 0 /* MEM_X */,   0 /* PC_PLUS4 */
+  };
+  test_decode("ori", dut, andi_expected);
+
+  // slli
+  dut->inst = slli(0b01 /* imm */, 0b10 /* rs1 */, 0b11 /* rd */);
+  dut->eval();
+  std::vector<uint32_t> slli_expected{
+      1 /* valid */,  3 /* ALU_SLL */,  1 /* OP1_RS1 */, 2 /* OP2_IMI */,
+      1 /* WB_ALU */, 1 /* RF_WRITE */, 0 /* MEM_X */,   0 /* PC_PLUS4 */
+  };
+  test_decode("slli", dut, slli_expected);
+
+  // srli
+  dut->inst = srli(0b01 /* imm */, 0b10 /* rs1 */, 0b11 /* rd */);
+  dut->eval();
+  std::vector<uint32_t> srli_expected{
+      1 /* valid */,  7 /* ALU_SRL */,  1 /* OP1_RS1 */, 2 /* OP2_IMI */,
+      1 /* WB_ALU */, 1 /* RF_WRITE */, 0 /* MEM_X */,   0 /* PC_PLUS4 */
+  };
+  test_decode("srli", dut, srli_expected);
+
+  // srai
+  dut->inst = srai(0b01 /* imm */, 0b10 /* rs1 */, 0b11 /* rd */);
+  dut->eval();
+  std::vector<uint32_t> srai_expected{
+      1 /* valid */,  8 /* ALU_SRA */,  1 /* OP1_RS1 */, 2 /* OP2_IMI */,
+      1 /* WB_ALU */, 1 /* RF_WRITE */, 0 /* MEM_X */,   0 /* PC_PLUS4 */
+  };
+  test_decode("srai", dut, srai_expected);
+
   // lw
   dut->inst = lw(0b01 /* imm */, 0b10 /* rs1 */, 0b11 /* rd */);
   dut->eval();
