@@ -1,13 +1,15 @@
 `include "riscv_constants.sv"
 
 
-module riscv_mux1 (
+module riscv_mux1 #(
+    parameter WORD_LENGTH = 32
+) (
     /* input */
-    input  OP1_SEL        op1_sel,
-    input  logic   [31:0] rs1_data,
-    input  logic   [31:0] pc,
-    /* output */
-    output logic   [31:0] dout
+    input  OP1_SEL                   op1_sel,
+    input  logic   [WORD_LENGTH-1:0] rs1_data,
+    input  logic   [WORD_LENGTH-1:0] pc,
+    /* out */
+    output logic   [WORD_LENGTH-1:0] dout
 );
 
   always_comb begin

@@ -1,18 +1,20 @@
 `include "riscv_defs.sv"
 `include "riscv_constants.sv"
 
-module riscv_decoder (
+module riscv_decoder #(
+    parameter WORD_LENGTH = 32
+) (
     /* input */
-    input  logic    [31:0] inst,
+    input  logic    [WORD_LENGTH-1:0] inst,
     /* output */
-    output logic           invalid_o,
-    output EXEC_FUN        exec_fun,
-    output OP1_SEL         op1_sel,
-    output OP2_SEL         op2_sel,
-    output WB_SEL          wb_sel,
-    output RF_WEN          rf_wen,
-    output MEM_WEN         mem_wen,
-    output PC_SEL          pc_sel
+    output logic                      invalid_o,
+    output EXEC_FUN                   exec_fun,
+    output OP1_SEL                    op1_sel,
+    output OP2_SEL                    op2_sel,
+    output WB_SEL                     wb_sel,
+    output RF_WEN                     rf_wen,
+    output MEM_WEN                    mem_wen,
+    output PC_SEL                     pc_sel
 );
   assign invalid_o = invalid_i;
   logic invalid_i = ((inst & `INST_R_MASK) == `INST_ADD) || 

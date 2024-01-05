@@ -1,11 +1,13 @@
-module riscv_extend (
+module riscv_extend #(
+    parameter WORD_LENGTH = 32
+) (
     /* input */
-    input  logic [31:0] inst,
+    input  logic [WORD_LENGTH-1:0] inst,
     /* output */
-    output logic [31:0] imm_i_sext,
-    output logic [31:0] imm_s_sext,
-    output logic [31:0] imm_j_sext,
-    output logic [31:0] imm_b_sext
+    output logic [WORD_LENGTH-1:0] imm_i_sext,
+    output logic [WORD_LENGTH-1:0] imm_s_sext,
+    output logic [WORD_LENGTH-1:0] imm_j_sext,
+    output logic [WORD_LENGTH-1:0] imm_b_sext
 );
 
   /* I type */
