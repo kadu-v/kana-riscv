@@ -473,3 +473,37 @@ uint32_t bltu(uint32_t rs1, uint32_t rs2, uint32_t imm) {
 uint32_t bgeu(uint32_t rs1, uint32_t rs2, uint32_t imm) {
   return b_inst(imm, rs2, rs1, FUNCT3_BGEU, OPCODE_BGEU);
 }
+
+/* --------------------------------------------------------------------- *
+    U type
+ * ---------------------------------------------------------------------*/
+#define INST_U_MASK 0b00000000000000000000000001111111
+
+uint32_t u_inst(uint32_t imm, uint32_t rd, uint32_t opcode) {
+  uint32_t inst = (imm << 12);
+  inst += (rd << 7);
+  inst += opcode;
+  return inst;
+}
+
+/* lui */
+// clang-format off
+#define INST_LUI      0b00000000000000000000000000110111
+#define OPCODE_LUI    0b0110111
+// clang-format on
+
+// lui rd, imm
+// x[rd] = sext(imm << 12)
+uint32_t lui(uint32_t rd, uint32_t imm) { return u_inst(imm, rd, OPCODE_LUI); }
+
+/* auipc */
+// clang-format off
+#define INST_AUIPC      0b00000000000000000000000000010111
+#define OPCODE_AUIPC    0b0010111
+// clang-format on
+
+// auipc rd, imm
+// x[rd] = pc + sext(imm << 12)
+uint32_t auipc(uint32_t rd, uint32_t imm) {
+  return u_inst(imm, rd, OPCODE_AUIPC);
+}

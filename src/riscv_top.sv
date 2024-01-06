@@ -41,6 +41,7 @@ module riscv_top (
   logic [31:0] imm_s_sext;
   logic [31:0] imm_j_sext;
   logic [31:0] imm_b_sext;
+  logic [31:0] imm_u_sext;
 
   /* mux1 */
   logic [31:0] mux1_dout;
@@ -121,7 +122,8 @@ module riscv_top (
       .imm_i_sext(imm_i_sext),
       .imm_s_sext(imm_s_sext),
       .imm_j_sext(imm_j_sext),
-      .imm_b_sext(imm_b_sext)
+      .imm_b_sext(imm_b_sext),
+      .imm_u_sext(imm_u_sext)
   );
 
   /* mux2 */
@@ -143,6 +145,7 @@ module riscv_top (
       .imm_i_sext(imm_i_sext),
       .imm_s_sext(imm_s_sext),
       .imm_j_sext(imm_j_sext),
+      .imm_u_sext(imm_u_sext),
       /* output */
       .dout      (mux2_dout)
   );

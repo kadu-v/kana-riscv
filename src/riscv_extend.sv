@@ -7,7 +7,8 @@ module riscv_extend #(
     output logic [WORD_LENGTH-1:0] imm_i_sext,
     output logic [WORD_LENGTH-1:0] imm_s_sext,
     output logic [WORD_LENGTH-1:0] imm_j_sext,
-    output logic [WORD_LENGTH-1:0] imm_b_sext
+    output logic [WORD_LENGTH-1:0] imm_b_sext,
+    output logic [WORD_LENGTH-1:0] imm_u_sext
 );
 
   /* I type */
@@ -31,4 +32,9 @@ module riscv_extend #(
   logic [11:0] imm_b;
   assign imm_b = {inst[31], inst[7], inst[30:25], inst[11:8]};
   assign imm_b_sext = {{19{imm_b[11]}}, imm_b, 1'b0};
+
+  /* U type */
+  logic [19:0] imm_u;
+  assign imm_u = inst[31:12];
+  assign imm_u_sext = {imm_u, {12{1'b0}}};
 endmodule

@@ -313,4 +313,25 @@ int main(int argc, char** argv) {
       0 /* WB_X */,  0 /* RF_X */,      0 /* MEM_X */,   2 /* PC_B_TARGET */
   };
   test_decode("bgeu", dut, bgeu_expected);
+
+  /* ---------------------------------------------------------------------
+  U type
+  ---------------------------------------------------------------------*/
+  // lui
+  dut->inst = lui(0b0 /* rd */, 0b01 /* imm */);
+  dut->eval();
+  std::vector<uint32_t> lui_expected{
+      1 /* valid */,  1 /* ALU_ADD */,  0 /* OP1_X */, 5 /* OP2_IMU */,
+      1 /* WB_ALU */, 1 /* RF_WRITE */, 0 /* MEM_X */, 0 /* PC_PLUS4 */
+  };
+  test_decode("lui", dut, lui_expected);
+
+  // auipc
+  dut->inst = auipc(0b1 /* rd */, 0b01 /* rs2 */);
+  dut->eval();
+  std::vector<uint32_t> auipc_expected{
+      1 /* valid */,  1 /* ALU_ADD */,  2 /* OP1_PC */, 5 /* OP2_IMU */,
+      1 /* WB_ALU */, 1 /* RF_WRITE */, 0 /* MEM_X */,  0 /* PC_PLUS4 */
+  };
+  test_decode("auipc", dut, auipc_expected);
 }

@@ -32,7 +32,8 @@ typedef enum {
   OP2_RS2 = 1,
   OP2_IMI = 2,  // I type
   OP2_IMS = 3,  // S type
-  OP2_IMJ = 4   // J type
+  OP2_IMJ = 4,  // J type
+  OP2_IMU = 5   // U type
 } OP2_SEL;
 
 typedef enum {

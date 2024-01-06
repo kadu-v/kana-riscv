@@ -60,6 +60,12 @@ int main(int argc, char** argv) {
   // dut->inst = 0b1_010101_00000_00000_000_1010_1_0000000;
   dut->inst = 0b10101010000000000000101010000000;
   dut->eval();
-  expected = 0b111111111111111111111101010110100;
+  expected = 0b11111111111111111111101010110100;
   assert_eq("[B type] negative value check", dut->imm_b_sext, expected);
+
+  /* B type*/
+  dut->inst = 0b10101010101010101010000001111111;
+  dut->eval();
+  expected = 0b10101010101010101010000000000000;
+  assert_eq("[U type] negative value check", dut->imm_u_sext, expected);
 }
