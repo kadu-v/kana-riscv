@@ -61,6 +61,10 @@ void test_r_type_instruction(std::string test_name, uint32_t inst,
 // x[10] = 1
 // x[11] = 10
 // x[12] = 0b10000000000
+// x[13] = 2
+// x[14] = 22
+// M[8] = expected
+// M[12] = 0b10101010_11010101
 void test_i_type_instruction(std::string test_name, uint32_t inst,
                              uint32_t expected) {
   TopTester* tester = new TopTester(test_name);
@@ -68,6 +72,8 @@ void test_i_type_instruction(std::string test_name, uint32_t inst,
 
   // setup
   tester->set_ram(0, inst);
+  tester->set_ram(8, expected);
+  tester->set_ram(12, 0b1010101011010101);
   tester->set_reg(4, 100);
   tester->set_reg(5, 200);
   tester->set_reg(6, -100);
@@ -77,6 +83,8 @@ void test_i_type_instruction(std::string test_name, uint32_t inst,
   tester->set_reg(10, 0b1);
   tester->set_reg(11, 10);
   tester->set_reg(12, 0b10000000000);
+  tester->set_reg(13, 2);
+  tester->set_reg(14, 20);
 
   // Step 1
   tester->dut_->clk = 0;
@@ -91,37 +99,12 @@ void test_i_type_instruction(std::string test_name, uint32_t inst,
   assert_eq(test_name, tester->get_reg(3), expected);
 }
 
-void test_lw(std::string test_name, uint32_t inst, uint32_t expected) {
-  TopTester* tester = new TopTester(test_name);
-  tester->start();
-
-  // setup
-  tester->set_ram(0, inst);
-  tester->set_ram(10, expected);
-  tester->set_reg(1, 2);
-  tester->set_reg(2, 22);
-
-  // Step 1
-  tester->dut_->clk = 0;  // Low
-  tester->dut_->x_reset = 1;
-  tester->eval();
-
-  tester->dut_->clk = !tester->dut_->clk;  // High
-  tester->eval();
-
-  tester->dut_->clk = !tester->dut_->clk;  // Low
-  tester->eval();
-
-  tester->finish();
-  assert_eq(test_name, tester->get_reg(3), expected);
-}
-
 /* S type--------------------------------------------------------------------*/
 // x[0] = expected
 // x[1] = 0
 // x[2] = 8
 // x[3] = 15
-// x[4] = 0b11111111_11111111_01010101
+// x[4] = 0b11111111_11111111_11010101
 void test_s_type_instruction(std::string test_name, uint32_t inst,
                              uint32_t expected) {
   TopTester* tester = new TopTester(test_name);
@@ -133,7 +116,7 @@ void test_s_type_instruction(std::string test_name, uint32_t inst,
   tester->set_reg(1, 0);
   tester->set_reg(2, 8);
   tester->set_reg(3, 15);
-  tester->set_reg(4, 0b111111111111111101010101);
+  tester->set_reg(4, 0b111111111111111111010101);
 
   // Step 1
   tester->dut_->clk = 0;  // Low
@@ -429,20 +412,30 @@ int main(int argc, char** argv) {
   test_i_type_instruction("[srai] x[3] = 0b10000000000 >>s 10", srai(3, 12, 10),
                           0b1);
   // lw
-  test_lw("[lw] x[3] = sext(M[ x[0] + sext(10) ])", lw(3, 0, 10), 20);
-  test_lw("[lw] x[3] = sext(M[ x[1] + sext(8) ])", lw(3, 1, 8), 20);
-  test_lw("[lw] x[3] = sext(M[ x[2] + sext(-12) ])",
-          lw(3, 2, 0b111111110100 /* -12 */), 20);
+  test_i_type_instruction("[lb] x[3] = sext(M[ x[13] + sext(10) ][7:0])",
+                          lb(3, 13, 10), 0b11111111111111111111111111010101);
+  test_i_type_instruction("[lh] x[3] = sext(M[ x[13] + sext(10) ][15:0])",
+                          lh(3, 13, 10), 0b11111111111111111010101011010101);
+  test_i_type_instruction("[lw] x[3] = sext(M[ x[0] + sext(8) ])", lw(3, 0, 8),
+                          20);
+  test_i_type_instruction("[lw] x[3] = sext(M[ x[13] + sext(6) ])",
+                          lw(3, 13, 6), 20);
+  test_i_type_instruction("[lw] x[3] = sext(M[ x[14] + sext(-12) ])",
+                          lw(3, 14, 0b111111110100 /* -12 */), 20);
+  test_i_type_instruction("[lbu] x[3] = M[ x[13] + sext(10) ][7:0]",
+                          lbu(3, 13, 10), 0b11010101);
+  test_i_type_instruction("[lhu] x[3] = M[ x[13] + sext(10) ][15:0]",
+                          lhu(3, 13, 10), 0b1010101011010101);
 
   /* S type */
   test_s_type_instruction("[sb] M[ x[3] + sext(2) ] = x[4][7:0]",
                           sb(3 /* rs1 (destination) */, 4 /* rs2 (source) */,
                              0b111111111011 /* imm (-5) */),
-                          0b01010101);
+                          0b11010101);
   test_s_type_instruction("[sh] M[ x[3] + sext(2) ] = x[4][15:0]",
                           sh(3 /* rs1 (destination) */, 4 /* rs2 (source) */,
                              0b111111111011 /* imm (-5) */),
-                          0b1111111101010101);
+                          0b1111111111010101);
   test_s_type_instruction(
       "[sw] M[ x[1] + sext(10) ] = x[0]",
       sw(1 /* rs1 (destination) */, 0 /* rs2 (source) */, 10 /* imm */), 11);

@@ -301,6 +301,32 @@ uint32_t srai(uint32_t rd, uint32_t rs1, uint32_t imm) {
   return i_inst(imm_i, rs1, FUNCT3_SRAI, rd, OPCODE_SRAI);
 }
 
+/* lb */
+// clang-format off
+#define INST_LB      0b0000000000000000010000000000011
+#define FUNCT3_LB    0b000
+#define OPCODE_LB    0b0000011
+// clang-format on
+
+// lb rd, rs1, imm
+// x[rd] = sext(M[ x[rs1] + sext(imm) ][7:0])
+uint32_t lb(uint32_t rd, uint32_t rs1, uint32_t imm_i) {
+  return i_inst(imm_i, rs1, FUNCT3_LB, rd, OPCODE_LB);
+}
+
+/* lh */
+// clang-format off
+#define INST_LH      0b0000000000000000010000000000011
+#define FUNCT3_LH    0b001
+#define OPCODE_LH    0b0000011
+// clang-format on
+
+// lh rd, rs1, imm
+// x[rd] = sext(M[ x[rs1] + sext(imm) ][15:0])
+uint32_t lh(uint32_t rd, uint32_t rs1, uint32_t imm_i) {
+  return i_inst(imm_i, rs1, FUNCT3_LH, rd, OPCODE_LH);
+}
+
 /* lw */
 // clang-format off
 #define INST_LW      0b0000000000000000010000000000011
@@ -309,9 +335,35 @@ uint32_t srai(uint32_t rd, uint32_t rs1, uint32_t imm) {
 // clang-format on
 
 // lw rd, rs1, imm
-// x[rd] = M[ x[rs1] + sext(imm) ]
+// x[rd] = sext(M[ x[rs1] + sext(imm) ])
 uint32_t lw(uint32_t rd, uint32_t rs1, uint32_t imm_i) {
   return i_inst(imm_i, rs1, FUNCT3_LW, rd, OPCODE_LW);
+}
+
+/* lbu */
+// clang-format off
+#define INST_LBU      0b0000000000000000010000000000011
+#define FUNCT3_LBU    0b100
+#define OPCODE_LBU    0b0000011
+// clang-format on
+
+// lbu rd, rs1, imm
+// x[rd] = M[ x[rs1] + sext(imm) ][7:0]
+uint32_t lbu(uint32_t rd, uint32_t rs1, uint32_t imm_i) {
+  return i_inst(imm_i, rs1, FUNCT3_LBU, rd, OPCODE_LBU);
+}
+
+/* lhu */
+// clang-format off
+#define INST_LHU      0b0000000000000000010000000000011
+#define FUNCT3_LHU    0b101
+#define OPCODE_LHU    0b0000011
+// clang-format on
+
+// lhu rd, rs1, imm
+// x[rd] = M[ x[rs1] + sext(imm) ][15:0]
+uint32_t lhu(uint32_t rd, uint32_t rs1, uint32_t imm_i) {
+  return i_inst(imm_i, rs1, FUNCT3_LHU, rd, OPCODE_LHU);
 }
 
 /* --------------------------------------------------------------------- *

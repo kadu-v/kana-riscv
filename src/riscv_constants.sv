@@ -60,9 +60,10 @@ typedef enum {
 } PC_SEL;
 
 typedef enum {
-  MASK_X = 0,
-  MASK_B = 1,
-  MASK_H = 2
-} RS2_MASK_SEL;
-
+  MASK_X      = 0,
+  MASK_B      = 1,
+  MASK_H      = 2,
+  MASK_B_SEXT = 3,
+  MASK_H_SEXT = 4
+} MASK_SEL;
 `endif
