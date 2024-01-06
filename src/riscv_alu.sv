@@ -49,6 +49,9 @@ module riscv_alu #(
       ALU_AND: begin
         alu_out = data1 & data2;
       end
+      ALU_JALR: begin
+        alu_out = (data1 + data2) & ~32'b1;
+      end
       default: begin
         alu_out = 0;
       end

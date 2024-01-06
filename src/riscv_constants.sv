@@ -18,7 +18,8 @@ typedef enum {
   ALU_BLT = 13,
   ALU_BGE = 14,
   ALU_BLTU = 15,
-  ALU_BGEU = 16
+  ALU_BGEU = 16,
+  ALU_JALR = 17
 } EXEC_FUN;
 
 typedef enum {

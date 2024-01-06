@@ -158,6 +158,16 @@ int main(int argc, char** argv) {
   /* ---------------------------------------------------------------------
     I type
    ---------------------------------------------------------------------*/
+  // jalr
+  dut->inst = jalr(0b01 /* imm */, 0b10 /* rs1 */, 0b11 /* rd */);
+  dut->eval();
+  std::vector<uint32_t> jalr_expected{1 /* valid */,   17 /* ALU_JALR */,
+                                      1 /* OP1_RS1 */, 2 /* OP2_IMI */,
+                                      3 /* WB_PC */,   1 /* RF_WRITE */,
+                                      0 /* MEM_X */,   1 /* PC_ALU */,
+                                      0 /* MASK_X */,  0 /* MASK_X */};
+  test_decode("jalr", dut, jalr_expected);
+
   // addi
   dut->inst = addi(0b01 /* imm */, 0b10 /* rs1 */, 0b11 /* rd */);
   dut->eval();

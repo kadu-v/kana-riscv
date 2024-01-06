@@ -29,6 +29,7 @@ module riscv_decoder #(
                   ((inst &`INST_R_MASK) == `INST_SRA) ||
                   ((inst &`INST_R_MASK) == `INST_OR) ||
                   ((inst &`INST_R_MASK) == `INST_AND) ||
+                  ((inst & `INST_I_MASK) == `INST_JALR) ||
                   ((inst & `INST_I_MASK) == `INST_ADDI) ||
                   ((inst & `INST_I_MASK) == `INST_SLTI) ||
                   ((inst & `INST_I_MASK) == `INST_SLTIU) ||
@@ -158,7 +159,17 @@ module riscv_decoder #(
       pc_sel       = PC_PLUS4;
       rs2_mask_sel = MASK_X;
       ram_mask_sel = MASK_X;
-    end else if ((inst & `INST_I_MASK) == `INST_ADDI) begin  /* I type */
+    end else if ((inst & `INST_I_MASK) == `INST_JALR) begin  /* I type */
+      exec_fun     = ALU_JALR;
+      op1_sel      = OP1_RS1;
+      op2_sel      = OP2_IMI;
+      wb_sel       = WB_PC;
+      rf_wen       = RF_WRITE;
+      mem_wen      = MEM_X;
+      pc_sel       = PC_ALU;
+      rs2_mask_sel = MASK_X;
+      ram_mask_sel = MASK_X;
+    end else if ((inst & `INST_I_MASK) == `INST_ADDI) begin
       exec_fun     = ALU_ADD;
       op1_sel      = OP1_RS1;
       op2_sel      = OP2_IMI;

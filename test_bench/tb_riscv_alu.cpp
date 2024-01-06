@@ -103,6 +103,10 @@ int main(int argc, char** argv) {
            10 /* ALU_AND */, 0b1110101010 /* data1 */, 0b0101010101 /* data2 */,
            0b0100000000 /* expected */);
 
+  // check jalr instruction
+  test_alu("ALU_JALR 10 + 21 == 30", 17 /* ALU_JALR */, 10 /* data1 */,
+           21 /* data2 */, 30 /* expected */);
+
   // check branch flag
   test_branch_flag("x[rs1] == x[rs2]", 1 /* data1 */, 1 /* data2 */,
                    1 /* expected */);

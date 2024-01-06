@@ -183,6 +183,19 @@ uint32_t i_inst(uint32_t imm, uint32_t rs1, uint32_t funct3, uint32_t rd,
   return inst;
 }
 
+/* jalr */
+// clang-format off
+#define INST_JALR      0b0000000000000000000000000010011
+#define FUNCT3_JALR    0b000
+#define OPCODE_JALR    0b1100111
+// clang-format on
+
+// jalr rd, rs1, imm
+// t = pc+4; pc = (x[rs1] + sext(imm)) & ~1; x[rd] = t
+uint32_t jalr(uint32_t rd, uint32_t rs1, uint32_t imm) {
+  return i_inst(imm, rs1, FUNCT3_JALR, rd, OPCODE_JALR);
+}
+
 /* addi */
 // clang-format off
 #define INST_ADDI      0b0000000000000000000000000010011

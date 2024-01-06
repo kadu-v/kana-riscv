@@ -99,6 +99,38 @@ void test_i_type_instruction(std::string test_name, uint32_t inst,
   assert_eq(test_name, tester->get_reg(3), expected);
 }
 
+// 0: jalr 3, 1, 8
+// 4: addi 2, 0, 10
+// 8: addi 3, 0, 20
+void test_jalr(std::string test_name) {
+  TopTester* tester = new TopTester(test_name);
+  tester->start();
+
+  // setup
+  tester->set_reg(1, 4);
+  tester->set_ram(0, jalr(4, 1, 4));
+  tester->set_ram(4, addi(2, 0, 10));
+  tester->set_ram(8, addi(3, 0, 20));
+
+  // Step 1
+  tester->dut_->clk = 0;  // Low
+  tester->dut_->x_reset = 1;
+  tester->eval();
+
+  for (int i = 0; i < 3; i++) {
+    tester->dut_->clk = !tester->dut_->clk;  // High
+    tester->eval();
+
+    tester->dut_->clk = !tester->dut_->clk;  // Low
+    tester->eval();
+  }
+
+  tester->finish();
+  assert_ne(test_name, tester->get_reg(2), 10);
+  assert_eq(test_name, tester->get_reg(3), 20);
+  assert_eq("[jalr] check x[4] = pc + 4", tester->get_reg(4), 4);
+}
+
 /* S type--------------------------------------------------------------------*/
 // x[0] = expected
 // x[1] = 0
@@ -161,6 +193,7 @@ void test_jal(std::string test_name) {
   }
 
   tester->finish();
+  assert_ne(test_name, tester->get_reg(2), 10);
   assert_eq(test_name, tester->get_reg(3), 20);
   assert_eq("[jal] check x[1] = pc + 4", tester->get_reg(1), 4);
 }
@@ -446,6 +479,7 @@ int main(int argc, char** argv) {
                           sw(3 /* rs1 (destination) */, 0 /* rs2 (source) */,
                              0b111111111011 /* imm (-5) */),
                           13);
+  test_jalr("[jalr] jalr 3, 1, 10");
 
   /* J type */
   // jal
