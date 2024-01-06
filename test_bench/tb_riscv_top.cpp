@@ -117,9 +117,13 @@ void test_lw(std::string test_name, uint32_t inst, uint32_t expected) {
 }
 
 /* S type--------------------------------------------------------------------*/
-// x[0] == expected
-// x[1] == 15
-void test_sw(std::string test_name, uint32_t inst, uint32_t expected) {
+// x[0] = expected
+// x[1] = 0
+// x[2] = 8
+// x[3] = 15
+// x[4] = 0b11111111_11111111_01010101
+void test_s_type_instruction(std::string test_name, uint32_t inst,
+                             uint32_t expected) {
   TopTester* tester = new TopTester(test_name);
   tester->start();
 
@@ -129,6 +133,7 @@ void test_sw(std::string test_name, uint32_t inst, uint32_t expected) {
   tester->set_reg(1, 0);
   tester->set_reg(2, 8);
   tester->set_reg(3, 15);
+  tester->set_reg(4, 0b111111111111111101010101);
 
   // Step 1
   tester->dut_->clk = 0;  // Low
@@ -430,18 +435,26 @@ int main(int argc, char** argv) {
           lw(3, 2, 0b111111110100 /* -12 */), 20);
 
   /* S type */
-  // sw
-  test_sw("[sw] M[ x[1] + sext(10) ] = x[0]",
-          sw(1 /* rs1 (destination) */, 0 /* rs2 (source) */, 10 /* imm */),
-          11);
-  test_sw("[sw] M[ x[2] + sext(2) ] = x[0]",
-          sw(2 /* rs1 (destination) */, 0 /* rs2 (source) */, 2 /* imm */), 12);
-  test_sw("[sw] M[ x[3] + sext(2) ] = x[0]",
-          sw(3 /* rs1 (destination) */, 0 /* rs2 (source) */,
-             0b111111111011 /* imm (-5) */),
-          13);
+  test_s_type_instruction("[sb] M[ x[3] + sext(2) ] = x[4][7:0]",
+                          sb(3 /* rs1 (destination) */, 4 /* rs2 (source) */,
+                             0b111111111011 /* imm (-5) */),
+                          0b01010101);
+  test_s_type_instruction("[sh] M[ x[3] + sext(2) ] = x[4][15:0]",
+                          sh(3 /* rs1 (destination) */, 4 /* rs2 (source) */,
+                             0b111111111011 /* imm (-5) */),
+                          0b1111111101010101);
+  test_s_type_instruction(
+      "[sw] M[ x[1] + sext(10) ] = x[0]",
+      sw(1 /* rs1 (destination) */, 0 /* rs2 (source) */, 10 /* imm */), 11);
+  test_s_type_instruction(
+      "[sw] M[ x[2] + sext(2) ] = x[0]",
+      sw(2 /* rs1 (destination) */, 0 /* rs2 (source) */, 2 /* imm */), 12);
+  test_s_type_instruction("[sw] M[ x[3] + sext(2) ] = x[0]",
+                          sw(3 /* rs1 (destination) */, 0 /* rs2 (source) */,
+                             0b111111111011 /* imm (-5) */),
+                          13);
 
-  /* S type */
+  /* J type */
   // jal
   test_jal("[jal] jal 1, 2; addi 2, 0, 10; addi 3, 0, 20");
 

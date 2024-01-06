@@ -7,7 +7,7 @@ OBJS        =
 TBDIR       = ./test_bench
 INCLUDE     = -I./src
 TARGETS     = $(patsubst %.sv, $(OBJDIR)/V%, $(SRCS))
-TRACE_FLAGS = --trace --trace-params --trace-structs --trace-underscore --trace-max-array 4096 --gate-stmts 1024
+TRACE_FLAGS = --trace --trace-params --trace-structs --trace-underscore --trace-max-array 4096 --gate-stmts 2048
 
 build: $(TARGETS)
 

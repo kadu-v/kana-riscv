@@ -330,6 +330,36 @@ uint32_t s_inst(uint32_t imm_s2, uint32_t rs2, uint32_t rs1, uint32_t funct3,
   return inst;
 }
 
+/* sb */
+// clang-format off
+#define INST_SB      0b0000000000000000001000000000011
+#define FUNCT3_SB    0b000
+#define OPCODE_SB    0b0100011
+// clang-format on
+
+// sb rs1, rs2, imm
+// M[ s[rs1] + sext(imm) ] = x[rs2][7:0]
+uint32_t sb(uint32_t rs1, uint32_t rs2, uint32_t imm) {
+  uint32_t imm_s2 = (imm) >> 5;
+  uint32_t imm_s1 = (imm & 0b11111);
+  return s_inst(imm_s2, rs2, rs1, FUNCT3_SB, imm_s1, OPCODE_SB);
+}
+
+/* sh */
+// clang-format off
+#define INST_SH      0b0000000000000000001000000000011
+#define FUNCT3_SH    0b001
+#define OPCODE_SH    0b0100011
+// clang-format on
+
+// sh rs1, rs2, imm
+// M[ s[rs1] + sext(imm) ] = x[rs2][15:0]
+uint32_t sh(uint32_t rs1, uint32_t rs2, uint32_t imm) {
+  uint32_t imm_s2 = (imm) >> 5;
+  uint32_t imm_s1 = (imm & 0b11111);
+  return s_inst(imm_s2, rs2, rs1, FUNCT3_SH, imm_s1, OPCODE_SH);
+}
+
 /* sw */
 // clang-format off
 #define INST_SW      0b0000000000000000010000000000011
@@ -339,9 +369,9 @@ uint32_t s_inst(uint32_t imm_s2, uint32_t rs2, uint32_t rs1, uint32_t funct3,
 
 // sw rs1, rs2, imm
 // M[ s[rs1] + sext(imm) ] = x[rs2]
-uint32_t sw(uint32_t rs1, uint32_t rs2, uint32_t imm_s) {
-  uint32_t imm_s2 = (imm_s) >> 5;
-  uint32_t imm_s1 = (imm_s & 0b11111);
+uint32_t sw(uint32_t rs1, uint32_t rs2, uint32_t imm) {
+  uint32_t imm_s2 = (imm) >> 5;
+  uint32_t imm_s1 = (imm & 0b11111);
   return s_inst(imm_s2, rs2, rs1, FUNCT3_SW, imm_s1, OPCODE_SW);
 }
 

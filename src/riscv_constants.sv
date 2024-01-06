@@ -59,4 +59,10 @@ typedef enum {
   PC_B_TARGET = 2
 } PC_SEL;
 
+typedef enum {
+  MASK_X = 0,
+  MASK_B = 1,
+  MASK_H = 2
+} RS2_MASK_SEL;
+
 `endif
