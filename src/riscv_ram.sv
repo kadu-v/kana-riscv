@@ -1,7 +1,7 @@
 module riscv_ram #(
     parameter WORD_LENGTH = 32,
     parameter ADDR_LENGTH = 5,
-    parameter NUM_MEM = 200
+    parameter NUM_MEM = 4096
 ) (
     input  logic                   clk,
     /* port for instruction */

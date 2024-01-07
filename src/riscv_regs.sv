@@ -18,8 +18,10 @@ module riscv_regs #(
   assign read_data1 = regs[read_addr1];
   assign read_data2 = regs[read_addr2];
   always_ff @(posedge clk) begin
-    if (write_en) begin
+    if (write_en && write_addr != 0) begin
       regs[write_addr] <= data;
+    end else begin
+      regs[0] <= 0;
     end
   end
 endmodule

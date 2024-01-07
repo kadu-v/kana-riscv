@@ -405,6 +405,31 @@ void integration_test3(std::string test_name) {
   assert_eq(test_name, tester->get_ram(100), 25);
 }
 
+void test_regression(std::string test_name, std::string filename) {
+  TopTester* tester =
+      new TopTester(std::format("[regression test] {}", test_name));
+  std::cout << "[regression test]" << std::endl;
+
+  tester->start();
+  tester->set_insts_from_file(filename);
+
+  // Step 1
+  tester->dut_->clk = 0;  // Low
+  tester->dut_->x_reset = 1;
+  tester->eval();
+
+  for (int i = 0; i < 1000000; i++) {
+    tester->dut_->clk = !tester->dut_->clk;  // High
+    tester->eval();
+
+    tester->dut_->clk = !tester->dut_->clk;  // Low
+    tester->eval();
+  }
+  tester->finish();
+  assert_eq(test_name, tester->get_reg(3), 1);
+  assert_ne(test_name, tester->get_reg(3), 2);
+}
+
 int main(int argc, char** argv) {
   Verilated::commandArgs(argc, argv);
 
@@ -512,4 +537,6 @@ int main(int argc, char** argv) {
   integration_test2("[integration test2] addi, addi, beq, addi, addi");
   integration_test3(
       "[integration test] add, sub, slt, or, and, addi, lw, sw, jal, beq");
+
+  test_regression("addi 3, 0, 1", "./boot.bin");
 }

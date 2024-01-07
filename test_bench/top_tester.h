@@ -1,8 +1,10 @@
 #include <stdint.h>
+#include <stdio.h>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
 #include <algorithm>  // std::replace
+#include <fstream>
 #include <iostream>
 #include <string>
 
@@ -42,6 +44,10 @@ class TopTester {
     uint32_t inst3 = (dut_->riscv_top__DOT__ram__DOT__mem[addr + 3] << 24);
     return inst3 + inst2 + inst1 + inst0;
   }
+  void set_byte_ram(uint32_t addr, char inst) {
+    dut_->riscv_top__DOT__ram__DOT__mem[addr] = inst;
+  }
+
   void eval() {
     dut_->eval();
     tfp_->dump(cnt_);
@@ -56,5 +62,28 @@ class TopTester {
   void finish() {
     dut_->final();
     tfp_->close();
+  }
+  void set_insts_from_file(std::string filename) {
+    std::ifstream ifs(filename, std::ios::binary);
+
+    ifs.seekg(0, std::ios::end);
+    long long int size = ifs.tellg();
+    ifs.seekg(0);
+
+    if (size < 0) {
+      std::cout << "Not find file: " << filename << std::endl;
+      return;
+    }
+
+    char* data = new char[size];
+    ifs.read(data, size);
+
+    for (int i = 0; i < size; i++) {
+      this->set_byte_ram(i, data[i]);
+    }
+    std::cout << "size: " << size << std::endl;
+    std::cout << "Completely set instruction to ram from " << filename
+              << std::endl;
+    delete data;
   }
 };
