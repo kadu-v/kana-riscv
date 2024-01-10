@@ -28,6 +28,7 @@ module riscv_pc #(
     end else if (pc_sel == PC_B_TARGET && br_flag) begin
       pc <= pc + imm_b_sext;
     end else if (pc_sel == PC_ECALL_TARGET) begin
+      $finish;
       pc <= mtvec_addr;
     end else begin
       pc <= pc + PC_OFFSET;

@@ -55,7 +55,7 @@ RUN apt-get install -y autoconf automake autotools-dev curl python3 libmpc-dev \
     && git clone --recursive https://github.com/riscv/riscv-gnu-toolchain \
     && git clone --recursive https://github.com/riscv/riscv-opcodes.git \
     && cd riscv-gnu-toolchain \
-    && ./configure --prefix=${RISCV} --with-arch=rv32gc --with-abi=ilp32d # for 32-bit toolchain \
+    && ./configure --prefix=${RISCV} --enable-multilib \
     && make
 
 RUN wget https://github.com/chipsalliance/verible/releases/download/v0.0-3483-ga4d61b11/verible-v0.0-3483-ga4d61b11-linux-static-arm64.tar.gz \

@@ -69,7 +69,7 @@ class TopTester {
     dut_->final();
     tfp_->close();
   }
-  void set_insts_from_file(std::string filename) {
+  int set_insts_from_file(std::string filename) {
     std::ifstream ifs(filename, std::ios::binary);
 
     ifs.seekg(0, std::ios::end);
@@ -78,7 +78,7 @@ class TopTester {
 
     if (size < 0) {
       std::cout << "Not find file: " << filename << std::endl;
-      return;
+      return 0;
     }
 
     char* data = new char[size];
@@ -91,5 +91,6 @@ class TopTester {
     std::cout << "Completely set instruction to ram from " << filename
               << std::endl;
     delete data;
+    return 1;
   }
 };

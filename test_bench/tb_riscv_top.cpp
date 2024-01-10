@@ -467,7 +467,7 @@ void test_regression(std::string test_name, std::string filename) {
   tester->dut_->x_reset = 1;
   tester->eval();
 
-  for (int i = 0; i < 1000000; i++) {
+  for (int i = 0; i < 100000; i++) {
     tester->dut_->clk = !tester->dut_->clk;  // High
     tester->eval();
 
@@ -609,5 +609,5 @@ int main(int argc, char** argv) {
   integration_test3(
       "[integration test] add, sub, slt, or, and, addi, lw, sw, jal, beq");
 
-  // test_regression("addi 3, 0, 1", "./boot.bin");
+  test_regression("addi 3, 0, 1", "./boo1.bin");
 }

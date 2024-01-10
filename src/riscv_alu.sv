@@ -41,7 +41,7 @@ module riscv_alu #(
         alu_out = (data1 >> data2[4:0]);
       end
       ALU_SRA: begin
-        alu_out = (signed_data1 >> data2[4:0]);
+        alu_out = (signed_data1 >>> data2[4:0]);
       end
       ALU_OR: begin
         alu_out = data1 | data2;
