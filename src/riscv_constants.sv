@@ -25,7 +25,8 @@ typedef enum {
 typedef enum {
   OP1_X   = 0,
   OP1_RS1 = 1,
-  OP1_PC  = 2
+  OP1_PC  = 2,
+  OP1_IMZ = 3   // CSR instructions
 } OP1_SEL;
 
 typedef enum {
@@ -41,7 +42,8 @@ typedef enum {
   WB_X   = 0,
   WB_ALU = 1,
   WB_MEM = 2,
-  WB_PC  = 3
+  WB_PC  = 3,
+  WB_CSR = 4
 } WB_SEL;
 
 typedef enum logic {
@@ -55,9 +57,10 @@ typedef enum logic {
 } RF_WEN;
 
 typedef enum {
-  PC_PLUS4    = 0,
-  PC_ALU      = 1,
-  PC_B_TARGET = 2
+  PC_PLUS4        = 0,
+  PC_ALU          = 1,
+  PC_B_TARGET     = 2,
+  PC_ECALL_TARGET = 3
 } PC_SEL;
 
 typedef enum {
@@ -67,4 +70,17 @@ typedef enum {
   MASK_B_SEXT = 3,
   MASK_H_SEXT = 4
 } MASK_SEL;
+
+typedef enum {
+  CSR_X = 0,
+  CSR_W = 1,
+  CSR_S = 2,
+  CSR_C = 3,
+  CSR_E = 4   // ecall instruction
+} CSR_FUN;
+
+typedef enum logic {
+  CSR_WEN_X = 0,
+  CSR_WRITE = 1
+} CSR_WEN;
 `endif

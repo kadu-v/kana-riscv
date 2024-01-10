@@ -8,6 +8,7 @@ module riscv_wb_mux #(
     input  logic  [WORD_LENGTH-1:0] alu_out,
     input  logic  [WORD_LENGTH-1:0] data,
     input  logic  [WORD_LENGTH-1:0] pc_plus4,
+    input  logic  [WORD_LENGTH-1:0] csr_dout,
     /* output */
     output logic  [WORD_LENGTH-1:0] dout
 );
@@ -19,6 +20,9 @@ module riscv_wb_mux #(
       end
       WB_PC: begin
         dout = pc_plus4;
+      end
+      WB_CSR: begin
+        dout = csr_dout;
       end
       default: begin
         dout = alu_out;

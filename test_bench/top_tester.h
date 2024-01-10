@@ -27,6 +27,12 @@ class TopTester {
   uint32_t get_reg(uint32_t addr) {
     return dut_->riscv_top__DOT__regs__DOT__regs[addr];
   }
+  void set_csr_reg(uint32_t addr, uint32_t val) {
+    dut_->riscv_top__DOT__csr_regs__DOT__regs[addr] = val;
+  }
+  uint32_t get_csr_reg(uint32_t addr) {
+    return dut_->riscv_top__DOT__csr_regs__DOT__regs[addr];
+  }
   void set_ram(uint32_t addr, uint32_t inst) {
     dut_->riscv_top__DOT__ram__DOT__mem[addr + 0] =
         ((inst & 0b00000000000000000000000011111111) >> 0);

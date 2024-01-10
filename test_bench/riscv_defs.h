@@ -302,7 +302,7 @@ uint32_t srli(uint32_t rd, uint32_t rs1, uint32_t imm) {
 
 /* srai */
 // clang-format off
-#define INST_SRAI      0b0100000000000000101000000010011
+#define INST_SRAI      0b01000000000000000101000000010011
 #define FUNCT3_SRAI    0b101
 #define OPCODE_SRAI    0b0010011
 // clang-format on
@@ -310,7 +310,7 @@ uint32_t srli(uint32_t rd, uint32_t rs1, uint32_t imm) {
 // srai rd, rs1, imm
 // x[rd] = x[rs1] >>s imm[4:0]
 uint32_t srai(uint32_t rd, uint32_t rs1, uint32_t imm) {
-  uint32_t imm_i = 0b1000000000 + imm;
+  uint32_t imm_i = 0b10000000000 + imm;
   return i_inst(imm_i, rs1, FUNCT3_SRAI, rd, OPCODE_SRAI);
 }
 
@@ -378,6 +378,92 @@ uint32_t lbu(uint32_t rd, uint32_t rs1, uint32_t imm_i) {
 uint32_t lhu(uint32_t rd, uint32_t rs1, uint32_t imm_i) {
   return i_inst(imm_i, rs1, FUNCT3_LHU, rd, OPCODE_LHU);
 }
+
+/* csrrw */
+// clang-format off
+#define INST_CSRRW      0b0000000000000000001000001110011
+#define FUNCT3_CSRRW    0b001
+#define OPCODE_CSRRW    0b1110011
+// clang-format on
+
+// csrrw rd, csr, rs1
+// t = CSRs[csr]; CSRs[csr] = x[rs1]; x[rd] = t
+uint32_t csrrw(uint32_t rd, uint32_t csr, uint32_t rs1) {
+  return i_inst(csr, rs1, FUNCT3_CSRRW, rd, OPCODE_CSRRW);
+}
+
+/* csrrwi */
+// clang-format off
+#define INST_CSRRWI      0b0000000000000000101000001110011
+#define FUNCT3_CSRRWI    0b101
+#define OPCODE_CSRRWI    0b1110011
+// clang-format on
+
+// csrrwi rd, csr, zimm[4:0]
+// x[rd] = CSRs[csr]; CSRs[csr] = zimm
+uint32_t csrrwi(uint32_t rd, uint32_t csr, uint32_t zimm) {
+  return i_inst(csr, zimm, FUNCT3_CSRRWI, rd, OPCODE_CSRRWI);
+}
+
+/* csrrs */
+// clang-format off
+#define INST_CSRRS      0b0000000000000000010000001110011
+#define FUNCT3_CSRRS    0b010
+#define OPCODE_CSRRS    0b1110011
+// clang-format on
+
+// csrrs rd, csr, rs1
+// t = CSRs[csr]; CSRs[csr] = t | x[rs1]; x[rd] = t
+uint32_t csrrs(uint32_t rd, uint32_t csr, uint32_t rs1) {
+  return i_inst(csr, rs1, FUNCT3_CSRRS, rd, OPCODE_CSRRS);
+}
+
+/* csrrsi */
+// clang-format off
+#define INST_CSRRSI      0b0000000000000000010000001110011
+#define FUNCT3_CSRRSI    0b110
+#define OPCODE_CSRRSI    0b1110011
+// clang-format on
+
+// csrrsi rd, csr, rs1
+// t = CSRs[csr]; CSRs[csr] = t | zimm; x[rd] = t
+uint32_t csrrsi(uint32_t rd, uint32_t csr, uint32_t zimm) {
+  return i_inst(csr, zimm, FUNCT3_CSRRSI, rd, OPCODE_CSRRSI);
+}
+
+/* csrrc */
+// clang-format off
+#define INST_CSRRC      0b0000000000000000010000001110011
+#define FUNCT3_CSRRC    0b011
+#define OPCODE_CSRRC    0b1110011
+// clang-format on
+
+// csrrc rd, csr, rs1
+// t = CSRs[csr]; CSRs[csr] = t & ~x[rs1]; x[rd] = t
+uint32_t csrrc(uint32_t rd, uint32_t csr, uint32_t rs1) {
+  return i_inst(csr, rs1, FUNCT3_CSRRC, rd, OPCODE_CSRRC);
+}
+
+/* csrrci */
+// clang-format off
+#define INST_CSRRCI      0b0000000000000000010000001110011
+#define FUNCT3_CSRRCI    0b111
+#define OPCODE_CSRRCI    0b1110011
+// clang-format on
+
+// csrrci rd, csr, rs1
+// t = CSRs[csr]; CSRs[csr] = t & ~zimm; x[rd] = t
+uint32_t csrrci(uint32_t rd, uint32_t csr, uint32_t zimm) {
+  return i_inst(csr, zimm, FUNCT3_CSRRCI, rd, OPCODE_CSRRCI);
+}
+
+/* ecall */
+// clang-format off
+#define INST_ECALL      0b0000000000000000000000001110011
+#define OPCODE_ECALL    0b1110011
+// clang-format on
+
+uint32_t ecall() { return INST_ECALL; }
 
 /* --------------------------------------------------------------------- *
     S type
