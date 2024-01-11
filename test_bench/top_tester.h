@@ -62,7 +62,6 @@ class TopTester {
     std::replace(test_name_.begin(), test_name_.end(), ' ', '_');
     Verilated::traceEverOn(true);
     dut_->trace(tfp_, 1000);
-    std::cout << std::format("./vcds/{}.vcd", test_name_) << std::endl;
     tfp_->open(std::format("./vcds/{}.vcd", test_name_).c_str());
   }
   void finish() {
@@ -87,9 +86,6 @@ class TopTester {
     for (int i = 0; i < size; i++) {
       this->set_byte_ram(i, data[i]);
     }
-    std::cout << "size: " << size << std::endl;
-    std::cout << "Completely set instruction to ram from " << filename
-              << std::endl;
     delete data;
     return 1;
   }

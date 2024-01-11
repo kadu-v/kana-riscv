@@ -1,4 +1,7 @@
+#include <gtest/gtest.h>
+#include <stdint.h>
 #include <verilated.h>
+#include <verilated_vcd_c.h>
 
 #include <iostream>
 
@@ -8,10 +11,7 @@
 
 int time_counter = 0;
 
-int main(int argc, char** argv) {
-  Verilated::commandArgs(argc, argv);
-
-  // Instantiate DUT
+TEST(WBMUX, ALU) {
   Vriscv_wb_mux* dut = new Vriscv_wb_mux();
 
   dut->wb_sel = 1;  // WB_ALU
@@ -19,19 +19,28 @@ int main(int argc, char** argv) {
   dut->data = 200;
   dut->pc_plus4 = 300;
   dut->eval();
-  assert_eq("[wb_mux] check WB_ALU", dut->dout, 100);
+  EXPECT_EQ(dut->dout, 100);
+}
+
+TEST(WBMUX, MEM) {
+  // Instantiate DUT
+  Vriscv_wb_mux* dut = new Vriscv_wb_mux();
 
   dut->wb_sel = 2;  // WB_MEM
   dut->alu_out = 100;
   dut->data = 200;
   dut->pc_plus4 = 300;
   dut->eval();
-  assert_eq("[wb_mux] check WB_MEM", dut->dout, 200);
+  EXPECT_EQ(dut->dout, 200);
+}
+
+TEST(WBMUX, PC) {
+  Vriscv_wb_mux* dut = new Vriscv_wb_mux();
 
   dut->wb_sel = 3;  // WB_PC
   dut->alu_out = 100;
   dut->data = 200;
   dut->pc_plus4 = 300;
   dut->eval();
-  assert_eq("[wb_mux] check WB_PC", dut->dout, 300);
+  EXPECT_EQ(dut->dout, 300);
 }

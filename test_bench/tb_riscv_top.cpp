@@ -609,5 +609,5 @@ int main(int argc, char** argv) {
   integration_test3(
       "[integration test] add, sub, slt, or, and, addi, lw, sw, jal, beq");
 
-  test_regression("addi 3, 0, 1", "./boo1.bin");
+  test_regression("addi 3, 0, 1", "./boot.bin");
 }

@@ -1,4 +1,7 @@
+#include <gtest/gtest.h>
+#include <stdint.h>
 #include <verilated.h>
+#include <verilated_vcd_c.h>
 
 #include <format>
 #include <iostream>
@@ -7,9 +10,7 @@
 #include "assert.h"
 #include "riscv_defs.h"
 
-int main(int argc, char** argv) {
-  Verilated::commandArgs(argc, argv);
-
+TEST(REGS, PEEK_POKE) {
   // Instantiate DUT
   Vriscv_regs* dut = new Vriscv_regs();
 
@@ -40,8 +41,6 @@ int main(int argc, char** argv) {
     dut->write_en = 1;
     dut->clk = 1;  // High
     dut->eval();
-    std::string test_name = std::format(
-        "[reg files] check write data: addr: {}, data: {}", addr[i], data[i]);
-    assert_eq(test_name, dut->read_data1, data[i]);
+    EXPECT_EQ(dut->read_data1, data[i]);
   }
 }
