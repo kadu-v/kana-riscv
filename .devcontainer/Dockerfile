@@ -22,7 +22,8 @@ RUN apt-get update && \
     patch \
     git \
     make \
-    libtcmalloc-minimal4
+    libtcmalloc-minimal4 \
+    cmake
 
 # Clean Up
 RUN	apt-get autoremove -y \
@@ -45,10 +46,9 @@ RUN apt-get update \
     && ln -s /usr/bin/gcc-13 /usr/bin/gcc \
     && ln -s /usr/bin/g++-13 /usr/bin/g++
 
-# Install risconf
+# Install rsicv-gnutoolchain
 ENV RISCV /opt/riscv
 ENV PATH $RISCV/bin:$PATH
-RUN pip3 install git+https://github.com/riscv/riscof.git
 RUN apt-get install -y autoconf automake autotools-dev curl python3 libmpc-dev \
     libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool \
     patchutils bc zlib1g-dev libexpat-dev \
@@ -58,6 +58,14 @@ RUN apt-get install -y autoconf automake autotools-dev curl python3 libmpc-dev \
     && ./configure --prefix=${RISCV} --enable-multilib \
     && make
 
+# Install verible
 RUN wget https://github.com/chipsalliance/verible/releases/download/v0.0-3483-ga4d61b11/verible-v0.0-3483-ga4d61b11-linux-static-arm64.tar.gz \
     && tar -zxvf verible-v0.0-3483-ga4d61b11-linux-static-arm64.tar.gz \
     && cp -r ./verible-v0.0-3483-ga4d61b11/bin/* /usr/local/bin/
+
+# Install googletest
+RUN git clone https://github.com/google/googletest.git \
+    && mkdir -p ./googletest/build \
+    && cd /googletest/build \
+    && cmake .. \
+    && make -j8 \
