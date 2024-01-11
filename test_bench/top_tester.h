@@ -53,7 +53,6 @@ class TopTester {
   void set_byte_ram(uint32_t addr, char inst) {
     dut_->riscv_top__DOT__ram__DOT__mem[addr] = inst;
   }
-
   void eval() {
     dut_->eval();
     tfp_->dump(cnt_);
@@ -63,6 +62,7 @@ class TopTester {
     std::replace(test_name_.begin(), test_name_.end(), ' ', '_');
     Verilated::traceEverOn(true);
     dut_->trace(tfp_, 1000);
+    std::cout << std::format("./vcds/{}.vcd", test_name_) << std::endl;
     tfp_->open(std::format("./vcds/{}.vcd", test_name_).c_str());
   }
   void finish() {

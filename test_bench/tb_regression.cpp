@@ -1,3 +1,4 @@
+#include <gtest/gtest.h>
 #include <stdint.h>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
@@ -27,7 +28,7 @@ int main(int argc, char** argv) {
   tester->dut_->x_reset = 1;
 
   int cnt = 0;
-  while (!Verilated::gotFinish() && cnt < 10000) {
+  while (cnt < 10000) {
     cnt++;
     tester->dut_->clk = !tester->dut_->clk;  // High
     tester->eval();
