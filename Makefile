@@ -15,7 +15,7 @@ RISCVTESTS_BIN_DIR = ./target/bin
 RISCVTESTS_SRC     = $(filter-out $(wildcard $(RISCVTESTS_SRC_DIR)/*.dump), $(wildcard $(RISCVTESTS_SRC_DIR)/rv32ui-p*))
 RISCVTESTS_BIN     = $(patsubst $(RISCVTESTS_SRC_DIR)/%, $(RISCVTESTS_BIN_DIR)/%.bin, $(RISCVTESTS_SRC))
 VERILATOR_OBJS     = $(TARGET_DIR)/verilated.o $(TARGET_DIR)/verilated_vcd_c.o 
-TEST_SRCS          = $(TARGET_DIR)/tb_riscv_alu_google.cpp $(TARGET_DIR)/tb_riscv_regs_google.cpp $(TARGET_DIR)/tb_riscv_extend_google.cpp $(TARGET_DIR)/tb_riscv_wb_mux_google.cpp
+TEST_SRCS          = $(TARGET_DIR)/tb_riscv_alu_google.cpp $(TARGET_DIR)/tb_riscv_regs_google.cpp $(TARGET_DIR)/tb_riscv_extend_google.cpp $(TARGET_DIR)/tb_riscv_wb_mux_google.cpp $(TARGET_DIR)/tb_riscv_decoder_google.cpp
 TEST_BIN           = $(patsubst $(TARGET_DIR)/%_google.cpp, $(TARGET_DIR)/%_google, $(TEST_SRCS))
 GOOGLE_TEST_LIBS   = -lgtest_main -lgtest -lpthread 
 VERILATOR_CXX_OPTIONS = -MMD \
@@ -78,6 +78,7 @@ riscv-tests: $(TBDIR)/tb_regression.cpp $(TARGET_DIR)/Vriscv_top__ALL.a $(VERILA
     -I/usr/share/verilator/include/ \
     -I$(TARGET_DIR) \
  	$(VERILATOR_CXX_OPTIONS)
+	$(TARGET_DIR)/tb_regression
 
 $(RISCVTESTS_BIN_DIR)/%.bin: $(RISCVTESTS_SRC_DIR)/%
 	riscv64-unknown-elf-objcopy -O binary $< $@
