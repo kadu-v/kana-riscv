@@ -1,3 +1,4 @@
+#include <gtest/gtest.h>
 #include <stdint.h>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
@@ -48,7 +49,7 @@ void test_r_type_instruction(std::string test_name, uint32_t inst,
     tester->eval();
   }
   tester->finish();
-  assert_eq(test_name, tester->get_reg(3), expected);
+  EXPECT_EQ(tester->get_reg(3), expected);
 }
 
 /* I type--------------------------------------------------------------------*/
@@ -96,7 +97,7 @@ void test_i_type_instruction(std::string test_name, uint32_t inst,
     tester->eval();
   }
   tester->finish();
-  assert_eq(test_name, tester->get_reg(3), expected);
+  EXPECT_EQ(tester->get_reg(3), expected);
 }
 
 // 0: jalr 3, 1, 8
@@ -126,9 +127,9 @@ void test_jalr(std::string test_name) {
   }
 
   tester->finish();
-  assert_ne(test_name, tester->get_reg(2), 10);
-  assert_eq(test_name, tester->get_reg(3), 20);
-  assert_eq("[jalr] check x[4] = pc + 4", tester->get_reg(4), 4);
+  EXPECT_NE(tester->get_reg(2), 10);
+  EXPECT_EQ(tester->get_reg(3), 20);
+  EXPECT_EQ(tester->get_reg(4), 4);
 }
 
 // CSRs[10] = 10
@@ -153,8 +154,8 @@ void test_csr_type_instruction(std::string test_name, uint32_t inst,
     tester->eval();
   }
   tester->finish();
-  assert_eq(test_name, tester->get_reg(3), expected);
-  assert_eq(test_name, tester->get_csr_reg(10), csr_expected);
+  EXPECT_EQ(tester->get_reg(3), expected);
+  EXPECT_EQ(tester->get_csr_reg(10), csr_expected);
 }
 
 void test_ecall_instruction() {
@@ -176,8 +177,8 @@ void test_ecall_instruction() {
     tester->eval();
   }
   tester->finish();
-  assert_eq("[ecall] x[3] = 20", tester->get_reg(3), 20);
-  assert_eq("[ecall]", tester->get_csr_reg(0x342), 11);
+  EXPECT_EQ(tester->get_reg(3), 20);
+  EXPECT_EQ(tester->get_csr_reg(0x342), 11);
 }
 
 /* S type--------------------------------------------------------------------*/
@@ -212,7 +213,7 @@ void test_s_type_instruction(std::string test_name, uint32_t inst,
     tester->eval();
   }
   tester->finish();
-  assert_eq(test_name, tester->get_ram(10), expected);
+  EXPECT_EQ(tester->get_ram(10), expected);
 }
 
 /* J type--------------------------------------------------------------------*/
@@ -242,9 +243,9 @@ void test_jal(std::string test_name) {
   }
 
   tester->finish();
-  assert_ne(test_name, tester->get_reg(2), 10);
-  assert_eq(test_name, tester->get_reg(3), 20);
-  assert_eq("[jal] check x[1] = pc + 4", tester->get_reg(1), 4);
+  EXPECT_NE(tester->get_reg(2), 10);
+  EXPECT_EQ(tester->get_reg(3), 20);
+  EXPECT_EQ(tester->get_reg(1), 4);
 }
 
 /* B type--------------------------------------------------------------------*/
@@ -280,7 +281,7 @@ void test_b_type_instruction(std::string test_name, uint32_t inst) {
   }
 
   tester->finish();
-  assert_eq(test_name, tester->get_reg(5), 20);
+  EXPECT_EQ(tester->get_reg(5), 20);
 }
 
 /* U type--------------------------------------------------------------------*/
@@ -313,7 +314,7 @@ void test_u_type_instruction(std::string test_name, uint32_t inst,
   }
 
   tester->finish();
-  assert_eq(test_name, tester->get_reg(3), expected);
+  EXPECT_EQ(tester->get_reg(3), expected);
 }
 
 /* integration　test 1
@@ -348,7 +349,7 @@ void integration_test1(std::string test_name) {
   }
 
   tester->finish();
-  assert_eq(test_name, tester->get_reg(2), 30);
+  EXPECT_EQ(tester->get_reg(2), 30);
 }
 
 /* integration　test 2 -------------------------------------------------------*/
@@ -382,8 +383,8 @@ void integration_test2(std::string test_name) {
   }
 
   tester->finish();
-  assert_eq(test_name, tester->get_reg(1), 0);
-  assert_eq(test_name, tester->get_reg(2), 200);
+  EXPECT_EQ(tester->get_reg(1), 0);
+  EXPECT_EQ(tester->get_reg(2), 200);
 }
 
 /* integration　test 3 -------------------------------------------------------*/
@@ -451,13 +452,12 @@ void integration_test3(std::string test_name) {
   }
 
   tester->finish();
-  assert_eq(test_name, tester->get_ram(100), 25);
+  EXPECT_EQ(tester->get_ram(100), 25);
 }
 
 void test_regression(std::string test_name, std::string filename) {
   TopTester* tester =
       new TopTester(std::format("[regression test] {}", test_name));
-  std::cout << "[regression test]" << std::endl;
 
   tester->start();
   tester->set_insts_from_file(filename);
@@ -475,65 +475,140 @@ void test_regression(std::string test_name, std::string filename) {
     tester->eval();
   }
   tester->finish();
-  assert_eq(test_name, tester->get_reg(3), 1);
-  assert_ne(test_name, tester->get_reg(3), 2);
+  EXPECT_NE(tester->get_reg(3), 1);
+  EXPECT_EQ(tester->get_reg(3), 51);
 }
 
-int main(int argc, char** argv) {
-  Verilated::commandArgs(argc, argv);
-
-  /* R type*/
+/* ---------------------------------------------------------------------
+R type
+---------------------------------------------------------------------*/
+TEST(TOP, ADD) {
   test_r_type_instruction("[add] x[3] = 100 + 200", add(3, 4, 5), 300);
+}
+
+TEST(TOP, SUB) {
   test_r_type_instruction("[sub] x[3] = 100 - 200", sub(3, 4, 5), -100);
+}
+
+TEST(TOP, SLL) {
   test_r_type_instruction("[sll] x[3] = 0b1 << 10", sll(3, 10, 11),
                           0b10000000000);
+}
+
+TEST(TOP, SLT) {
   test_r_type_instruction("[slt] x[3] = -100 <s 200", slt(3, 6, 5), 1);
+}
+
+TEST(TOP, SLTU) {
   test_r_type_instruction("[sltu] x[3] = 100 <u 200", sltu(3, 4, 5), 1);
+}
+
+TEST(TOP, XOR) {
   test_r_type_instruction("[xor] x[3] = 0b0101010101 ^ 0b1110101010",
                           ixor(3, 8, 9), 0b1011111111);
+}
+
+TEST(TOP, SRL) {
   test_r_type_instruction("[srl] x[3] = 0b10000000000 >>u 10", srl(3, 12, 11),
                           0b1);
+}
+
+TEST(TOP, SRA) {
   test_r_type_instruction("[sra] x[3] = 0b10000000000 >>s 10", sra(3, 12, 11),
                           0b1);
+}
+
+TEST(TOP, OR) {
   test_r_type_instruction("[or] x[3] = 0b1010101010 | 0b0101010101",
                           ior(3, 7, 8), 0b1111111111);
+}
+
+TEST(TOP, AND) {
   test_r_type_instruction("[and] x[3] = 0b1110101010 & 0b0101010101",
                           iand(3, 9, 8), 0b0100000000);
+}
 
-  /* I type */
+/* ---------------------------------------------------------------------
+I type
+---------------------------------------------------------------------*/
+
+TEST(TOP, ADDI1) {
   test_i_type_instruction("[addi] x[3] = 100 + 10 = 110", addi(3, 4, 10), 110);
+}
+
+TEST(TOP, ADDI2) {
   test_i_type_instruction("[addi] x[3] = 100 + -2047= -1947",
                           addi(3, 4, 0b100000000001), -1947);
+}
+
+TEST(TOP, SLTI) {
   test_i_type_instruction("[slti] x[3] = 100 <s 200 = 1", slti(3, 4, 200), 1);
+}
+
+TEST(TOP, SLTIU) {
   test_i_type_instruction("[sltiu] x[3] = 200 << 500 = 1", sltiu(3, 5, 500), 1);
+}
+
+TEST(TOP, XORI) {
   test_i_type_instruction("[xori] x[3] = 0b0101010101 ^ 0b1110101010",
                           xori(3, 8, 0b1110101010), 0b1011111111);
+}
+
+TEST(TOP, ORI) {
   test_i_type_instruction("[ori] x[3] = 0b1010101010 | 0b0101010101",
                           ori(3, 7, 0b0101010101), 0b1111111111);
+}
+
+TEST(TOP, ANDI) {
   test_i_type_instruction("[andi] x[3] = 0b1110101010 | 0b0101010101",
                           andi(3, 9, 0b0101010101), 0b0100000000);
+}
+
+TEST(TOP, SLLI) {
   test_i_type_instruction("[slli] x[3] = 0b1 << 10", slli(3, 10, 10),
                           0b10000000000);
+}
+
+TEST(TOP, SRLI) {
   test_i_type_instruction("[srli] x[3] = 0b10000000000 >>u 10", srli(3, 12, 10),
                           0b1);
+}
+
+TEST(TOP, SRAI) {
   test_i_type_instruction("[srai] x[3] = 0b10000000000 >>s 10", srai(3, 12, 10),
                           0b1);
-  // lw
+}
+
+TEST(TOP, LB) {
   test_i_type_instruction("[lb] x[3] = sext(M[ x[13] + sext(10) ][7:0])",
                           lb(3, 13, 10), 0b11111111111111111111111111010101);
+}
+
+TEST(TOP, LH) {
   test_i_type_instruction("[lh] x[3] = sext(M[ x[13] + sext(10) ][15:0])",
                           lh(3, 13, 10), 0b11111111111111111010101011010101);
+}
+
+TEST(TOP, LW) {
   test_i_type_instruction("[lw] x[3] = sext(M[ x[0] + sext(8) ])", lw(3, 0, 8),
                           20);
   test_i_type_instruction("[lw] x[3] = sext(M[ x[13] + sext(6) ])",
                           lw(3, 13, 6), 20);
   test_i_type_instruction("[lw] x[3] = sext(M[ x[14] + sext(-12) ])",
                           lw(3, 14, 0b111111110100 /* -12 */), 20);
+}
+
+TEST(TOP, LBU) {
   test_i_type_instruction("[lbu] x[3] = M[ x[13] + sext(10) ][7:0]",
                           lbu(3, 13, 10), 0b11010101);
+}
+
+TEST(TOP, LHU) {
   test_i_type_instruction("[lhu] x[3] = M[ x[13] + sext(10) ][15:0]",
                           lhu(3, 13, 10), 0b1010101011010101);
+}
 
+TEST(TOP, CSR) {
   test_csr_type_instruction("[csrrw] t=CSRs[10]; CSRs[10]=x[8]; x[3]=t",
                             csrrw(3, 10, 8), 10, 9);
   test_csr_type_instruction("[csrrwi] x[3] = CSRs[10]; CSRs[10] = 100",
@@ -554,17 +629,29 @@ int main(int argc, char** argv) {
   test_csr_type_instruction(
       "[csrrci] t = CSRs[10]; CSRs[10] = t & ~zimm; x[3] = t", csrrci(3, 10, 8),
       10, 2);
-  test_ecall_instruction();
+}
 
-  /* S type */
+TEST(TOP, ECALL) { test_ecall_instruction(); }
+
+/* ---------------------------------------------------------------------
+S type
+---------------------------------------------------------------------*/
+
+TEST(TOP, SB) {
   test_s_type_instruction("[sb] M[ x[3] + sext(2) ] = x[4][7:0]",
                           sb(3 /* rs1 (destination) */, 4 /* rs2 (source) */,
                              0b111111111011 /* imm (-5) */),
                           0b11010101);
+}
+
+TEST(TOP, SH) {
   test_s_type_instruction("[sh] M[ x[3] + sext(2) ] = x[4][15:0]",
                           sh(3 /* rs1 (destination) */, 4 /* rs2 (source) */,
                              0b111111111011 /* imm (-5) */),
                           0b1111111111010101);
+}
+
+TEST(TOP, SW) {
   test_s_type_instruction(
       "[sw] M[ x[1] + sext(10) ] = x[0]",
       sw(1 /* rs1 (destination) */, 0 /* rs2 (source) */, 10 /* imm */), 11);
@@ -575,39 +662,66 @@ int main(int argc, char** argv) {
                           sw(3 /* rs1 (destination) */, 0 /* rs2 (source) */,
                              0b111111111011 /* imm (-5) */),
                           13);
-  test_jalr("[jalr] jalr 3, 1, 10");
+}
 
-  /* J type */
-  // jal
-  test_jal("[jal] jal 1, 2; addi 2, 0, 10; addi 3, 0, 20");
+TEST(TOP, JALR) { test_jalr("[jalr] jalr 3, 1, 10"); }
 
-  /* B type */
+/* ---------------------------------------------------------------------
+J type
+---------------------------------------------------------------------*/
+TEST(TOP, JAL) { test_jal("[jal] jal 1, 2; addi 2, 0, 10; addi 3, 0, 20"); }
+
+/* ---------------------------------------------------------------------
+B type
+---------------------------------------------------------------------*/
+TEST(TOP, BEQ) {
   test_b_type_instruction("[beq] beq 1, 2, 8; jal 10, 8; addi 3, 0, 20",
                           beq(1, 2, 8));
+}
+
+TEST(TOP, BNE) {
   test_b_type_instruction("[bne] bne 1, 3, 8; jal 10, 8; addi 3, 0, 20",
                           bne(1, 3, 8));
+}
+
+TEST(TOP, BLT) {
   test_b_type_instruction("[blt] blt 1, 3, 8; jal 10, 8; addi 3, 0, 20",
                           blt(1, 3, 8));
+}
+
+TEST(TOP, BGE) {
   test_b_type_instruction("[bge] bge 3, 1, 8; jal 10, 8; addi 3, 0, 20",
                           bge(3, 1, 8));
+
   test_b_type_instruction("[bge] bge 2, 1, 8; jal 10, 8; addi 3, 0, 20",
                           bge(2, 1, 8));
+}
+
+TEST(TOP, BLTU) {
   test_b_type_instruction("[bltu] bltu 1, 3, 8; jal 10, 8; addi 3, 0, 20",
                           bltu(1, 3, 8));
+}
+
+TEST(TOP, BGEU) {
   test_b_type_instruction("[bgeu] bgeu 3, 2, 8; jal 10, 8; addi 3, 0, 20",
                           bgeu(3, 2, 8));
+}
 
-  /* U type */
+TEST(TOP, LUI) {
   test_u_type_instruction("[lui] lui 3, 0b1010", lui(3, 0b1010),
                           0b00000000000000001010000000000000);
+}
+
+TEST(TOP, AUIPC) {
   test_u_type_instruction("[auipc] auipc 3, 0b1010", auipc(3, 0b1010),
                           0b00000000000000001010000000000000 + 8);
+}
 
-  /* integration test */
+TEST(TOP, INTEGRATION) {
   integration_test1("[integration test1] add, addi, lw, sw");
   integration_test2("[integration test2] addi, addi, beq, addi, addi");
   integration_test3(
       "[integration test] add, sub, slt, or, and, addi, lw, sw, jal, beq");
-
-  test_regression("addi 3, 0, 1", "./boot.bin");
 }
+
+TEST(TOP, REGRESSION) { test_regression("regression", "./boot.bin"); }
