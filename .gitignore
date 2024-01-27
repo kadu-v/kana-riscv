@@ -2,3 +2,4 @@
 *.vcd
 *.bin
 target/
+_build/

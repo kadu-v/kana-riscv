@@ -35,8 +35,6 @@ VERILATOR_CXX_OPTIONS = -MMD \
 						-Wno-shadow \
 						-std=c++20 
 
-# g++  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TRACE=1 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-sign-compare -Wno-uninitialized -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -Wno-shadow     -std=c++20  -Os -c -o verilated_vcd_c.o /usr/share/verilator/include/verilated_vcd_c.cpp
-
 $(shell mkdir -p $(TARGET_DIR))
 $(shell mkdir -p $(RISCVTESTS_BIN_DIR))
 $(shell mkdir -p $(VCD_DIR))

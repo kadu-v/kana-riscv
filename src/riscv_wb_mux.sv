@@ -1,5 +1,7 @@
 `include "riscv_constants.sv"
 
+`default_nettype none
+
 module riscv_wb_mux #(
     parameter WORD_LENGTH = 32
 ) (
