@@ -68,4 +68,5 @@ RUN git clone https://github.com/google/googletest.git \
     && mkdir -p ./googletest/build \
     && cd /googletest/build \
     && cmake .. \
-    && make -j8 
+    && make -j8 \
+    && make install

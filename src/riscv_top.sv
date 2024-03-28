@@ -100,15 +100,16 @@ module riscv_top (
 
   /* ram */
   riscv_ram ram (
-      .clk     (clk),
+      .clk         (clk),
       /* port for instruction */
-      .pc      (pc_out),
-      .inst    (inst),
+      .pc          (pc_out),
+      .inst        (inst),
       /* port for data */
-      .addr    (alu_dout),
-      .write_en(mem_wen),
-      .wdata   (mask1_out),
-      .dout    (ram_dout)
+      .addr        (alu_dout),
+      .write_en    (mem_wen),
+      .wdata       (mask1_out),
+      .ram_mask_sel(rs2_mask_sel),
+      .dout        (ram_dout)
   );
 
   /* decoder */
