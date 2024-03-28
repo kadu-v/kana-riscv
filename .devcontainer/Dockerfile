@@ -47,7 +47,7 @@ RUN apt-get update \
     && ln -s /usr/bin/g++-13 /usr/bin/g++
 
 # Install rsicv-gnutoolchain
-ENV RISCV /opt/riscv
+ENV RISCV /opt/riscv64
 ENV PATH $RISCV/bin:$PATH
 RUN apt-get install -y autoconf automake autotools-dev curl python3 libmpc-dev \
     libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool \
@@ -68,4 +68,4 @@ RUN git clone https://github.com/google/googletest.git \
     && mkdir -p ./googletest/build \
     && cd /googletest/build \
     && cmake .. \
-    && make -j8 \
+    && make -j8 
