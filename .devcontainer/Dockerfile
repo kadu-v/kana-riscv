@@ -23,7 +23,26 @@ RUN apt-get update && \
     git \
     make \
     libtcmalloc-minimal4 \
-    cmake
+    cmake \
+    autoconf \
+    automake \
+    autotools-dev \
+    curl \
+    python3 \
+    libmpc-dev \
+    libmpfr-dev \
+    libgmp-dev \
+    gawk \
+    build-essential \
+    bison \
+    flex \
+    texinfo \
+    gperf \
+    libtool \
+    patchutils \
+    bc \
+    zlib1g-dev \
+    libexpat-dev 
 
 # Clean Up
 RUN	apt-get autoremove -y \
@@ -41,17 +60,15 @@ RUN apt-get update \
     && add-apt-repository ppa:ubuntu-toolchain-r/test
 RUN apt-get update \
     && apt-get install -y gcc-13 g++-13 \
-    && rm -rf /usr/bin/gcc \
-    && rm -rf /usr/bin/g++ \
+    && unlink /usr/bin/gcc \
+    && unlink /usr/bin/g++ \
     && ln -s /usr/bin/gcc-13 /usr/bin/gcc \
     && ln -s /usr/bin/g++-13 /usr/bin/g++
 
 # Install rsicv-gnutoolchain
 ENV RISCV /opt/riscv64
 ENV PATH $RISCV/bin:$PATH
-RUN apt-get install -y autoconf automake autotools-dev curl python3 libmpc-dev \
-    libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool \
-    patchutils bc zlib1g-dev libexpat-dev \
+RUN apt-get update \
     && git clone --recursive https://github.com/riscv/riscv-gnu-toolchain \
     && git clone --recursive https://github.com/riscv/riscv-opcodes.git \
     && cd riscv-gnu-toolchain \

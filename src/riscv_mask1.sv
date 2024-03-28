@@ -1,6 +1,8 @@
 `include "riscv_defs.sv"
 `include "riscv_constants.sv"
 
+`default_nettype none
+
 module riscv_mask1 #(
     parameter WORD_LENGTH = 32
 ) (

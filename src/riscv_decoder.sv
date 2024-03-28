@@ -1,6 +1,8 @@
 `include "riscv_defs.sv"
 `include "riscv_constants.sv"
 
+`default_nettype none
+
 module riscv_decoder #(
     parameter WORD_LENGTH = 32
 ) (
@@ -21,7 +23,8 @@ module riscv_decoder #(
     output CSR_WEN                    csr_wen
 );
   assign invalid_o = invalid_i;
-  logic invalid_i = ((inst & `INST_R_MASK) == `INST_ADD) || 
+  logic invalid_i;
+  assign invalid_i = ((inst & `INST_R_MASK) == `INST_ADD) || 
                   ((inst & `INST_R_MASK) == `INST_SUB) || 
                   ((inst & `INST_R_MASK) == `INST_SLL) || 
                   ((inst &`INST_R_MASK) == `INST_SLT) ||

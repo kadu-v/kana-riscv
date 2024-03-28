@@ -1,5 +1,7 @@
 `include "riscv_constants.sv"
 
+`default_nettype none
+
 module riscv_pc #(
     parameter WORD_LENGTH = 32,
     parameter PC_OFFSET   = 4

@@ -1,0 +1,19 @@
+[Platform]
+name = "Kindy Analog Pocket Riscv-Core"
+image = "./assets/platform-image.png"
+short_name = "kriscv"
+category = ""
+description = ""
+info = "assets/info.txt"
+
+[Build]
+version = "0.0.1"
+
+[Author]
+name = "kadu-v"
+icon = "./assets/icon.jpg"
+url = "https://github.com/kadu-v/kana-riscv"
+
+[Hardware]
+video_width = 320
+video_height = 240

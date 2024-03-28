@@ -1,5 +1,7 @@
 `include "riscv_constants.sv"
 
+`default_nettype none
+
 module riscv_csr_alu #(
     parameter WORD_LENGTH = 32
 ) (

@@ -1,3 +1,5 @@
+`default_nettype none
+
 module riscv_extend #(
     parameter WORD_LENGTH = 32
 ) (

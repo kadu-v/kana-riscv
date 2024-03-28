@@ -1,17 +1,22 @@
-`include "riscv_decoder.sv"
-`include "riscv_alu.sv"
-`include "riscv_regs.sv"
-`include "riscv_constants.sv"
-`include "riscv_mux1.sv"
-`include "riscv_mux2.sv"
-`include "riscv_mask1.sv"
-`include "riscv_mask2.sv"
-`include "riscv_csr_regs.sv"
-`include "riscv_csr_alu.sv"
+// `include "riscv_decoder.sv"
+// `include "riscv_alu.sv"
+// `include "riscv_regs.sv"
+// `include "riscv_constants.sv"
+// `include "riscv_mux1.sv"
+// `include "riscv_mux2.sv"
+// `include "riscv_mask1.sv"
+// `include "riscv_mask2.sv"
+// `include "riscv_csr_regs.sv"
+// `include "riscv_csr_alu.sv"
+
+`default_nettype none
 
 module riscv_top (
+    /* input */
     input logic clk,
-    input logic x_reset
+    input logic x_reset,
+    /* outpu */
+    output logic debug
 );
 
   /* pc */
@@ -142,7 +147,9 @@ module riscv_top (
       .write_addr(rd_addr),
       /* output */
       .read_data1(rs1_data),
-      .read_data2(rs2_data)
+      .read_data2(rs2_data),
+      /* debug */
+      .debug(debug)
   );
 
   /* extend */
