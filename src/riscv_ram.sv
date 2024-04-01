@@ -4,7 +4,7 @@
 module riscv_ram #(
     parameter WORD_LENGTH = 32,
     parameter ADDR_LENGTH = 5,
-    parameter NUM_MEM = 128
+    parameter NUM_MEM = 1024 * 4
 ) (
     input  logic                      clk,
     /* port for instruction */
@@ -70,8 +70,8 @@ module riscv_ram #(
     end
   end
 
-  // initial begin
-  //   $readmemb("/home/kaduv/Documents/fpga/kana-riscv/src/test.txt", mem);
-  //   // $readmemb("./src/test.txt", mem);
-  // end 
+  initial begin
+    $readmemb("assets/test.txt", mem);
+    // $readmemb("./src/test.txt", mem);
+  end 
 endmodule
