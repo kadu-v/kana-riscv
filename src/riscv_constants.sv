@@ -48,7 +48,7 @@ typedef enum {
   WB_CSR = 4
 } WB_SEL;
 
-typedef enum {
+typedef enum logic {
   MEM_X     = 0,
   MEM_WRITE = 1
 } MEM_WEN;
