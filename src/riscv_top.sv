@@ -1,13 +1,14 @@
-// `include "riscv_decoder.sv"
-// `include "riscv_alu.sv"
-// `include "riscv_regs.sv"
-// `include "riscv_constants.sv"
-// `include "riscv_mux1.sv"
-// `include "riscv_mux2.sv"
-// `include "riscv_mask1.sv"
-// `include "riscv_mask2.sv"
-// `include "riscv_csr_regs.sv"
-// `include "riscv_csr_alu.sv"
+`include "riscv_decoder.sv"
+`include "riscv_alu.sv"
+`include "riscv_regs.sv"
+`include "riscv_constants.sv"
+`include "riscv_mux1.sv"
+`include "riscv_mux2.sv"
+`include "riscv_mask1.sv"
+`include "riscv_mask2.sv"
+`include "riscv_csr_regs.sv"
+`include "riscv_csr_alu.sv"
+// `include "riscv_ram.sv"
 
 `default_nettype none
 
@@ -149,7 +150,7 @@ module riscv_top (
       .read_data1(rs1_data),
       .read_data2(rs2_data),
       /* debug */
-      .debug(debug)
+      .debug     (debug)
   );
 
   /* extend */
@@ -168,19 +169,19 @@ module riscv_top (
   /* mask1 */
   riscv_mask1 mask1 (
       /* input */
-      .rs2_data(rs2_data),
+      .rs2_data    (rs2_data),
       .rs2_mask_sel(rs2_mask_sel),
       /* output */
-      .mask_out(mask1_out)
+      .mask_out    (mask1_out)
   );
 
   /* mask2 */
   riscv_mask2 mask2 (
       /* input */
-      .ram_data(ram_dout),
+      .ram_data    (ram_dout),
       .ram_mask_sel(ram_mask_sel),
       /* output */
-      .mask_out(mask2_out)
+      .mask_out    (mask2_out)
   );
 
   /* mux2 */

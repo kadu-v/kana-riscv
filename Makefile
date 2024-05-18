@@ -1,5 +1,5 @@
 SRC_DIR               = ./src
-SRCS                  = riscv_decoder.sv riscv_regs.sv riscv_alu.sv riscv_wb_mux.sv riscv_extend.sv riscv_ram.sv  riscv_top.sv
+SRCS                  = riscv_decoder.sv riscv_regs.sv riscv_alu.sv riscv_wb_mux.sv riscv_extend.sv riscv_ram.sv  riscv_top.sv riscv_ram.v
 TB_DIR                = ./test_bench
 INCLUDE               = -I./src -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd 
 TARGET_DIR            = ./target

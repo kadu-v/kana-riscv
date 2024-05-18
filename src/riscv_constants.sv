@@ -81,7 +81,7 @@ typedef enum {
   CSR_E = 4   // ecall instruction
 } CSR_FUN;
 
-typedef enum {
+typedef enum logic {
   CSR_WEN_X = 0,
   CSR_WRITE = 1
 } CSR_WEN;

@@ -29,9 +29,8 @@ module riscv_regs #(
   always_ff @(posedge clk) begin
     if (write_en == RF_WRITE && write_addr != 0) begin
       regs[write_addr] <= data;
-      regs[3] <= 1;
     end else begin
-      regs[0] <= 0;
+      regs[0] <= 0; // The zero register is hardwired to zero
     end
   end
 endmodule
