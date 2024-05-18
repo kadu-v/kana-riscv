@@ -20,7 +20,7 @@ module riscv_ram #(
     input  MASK_SEL                   ram_mask_sel,
     output logic    [WORD_LENGTH-1:0] dout
 );
-  // // Instruction memory
+  // Instruction memory
   // riscv_rom rom (
   //     /* input */
   //     .clk  (clk),
@@ -53,7 +53,7 @@ module riscv_ram #(
   //     .dout        (dummy)
   // );
 
-  logic [7:0] mem[NUM_MEM];
+  logic [7:0] mem[NUM_MEM-1:0];
   assign inst = {mem[pc+3], mem[pc+2], mem[pc+1], mem[pc]};
   assign dout = {mem[addr+3], mem[addr+2], mem[addr+1], mem[addr]};
 
