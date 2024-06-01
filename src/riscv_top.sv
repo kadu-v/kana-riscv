@@ -20,6 +20,10 @@ module riscv_top (
     output logic debug
 );
 
+  /* clk3 */
+  // クロックを3分周する
+  logic clk3;
+
   /* pc */
   logic    [31:0] pc_plus4;
   logic    [31:0] pc_out;
@@ -89,10 +93,18 @@ module riscv_top (
   /* wb mux */
   logic [31:0] wb_mux_dout;
 
+
+  /* clk3 */
+  riscv_clk_gen clk_gen (
+     .clk_i(clk),
+     .x_reset(x_reset), // x_reset がhighになった，つぎの立ち上がりエッジでclk3がhighになる
+     .clk_o(clk3)
+  );
+
   /* pc */
   riscv_pc pc (
       /* input */
-      .clk       (clk),
+      .clk       (clk3),
       .x_reset   (x_reset),
       .pc_sel    (pc_sel),
       .alu_out   (alu_dout),
@@ -106,7 +118,9 @@ module riscv_top (
 
   /* ram */
   riscv_ram ram (
-      .clk         (clk),
+      .clk          (clk),
+      .clk3         (clk3),
+      .x_reset      (x_reset),
       /* port for instruction */
       .pc          (pc_out),
       .inst        (inst),
@@ -140,7 +154,7 @@ module riscv_top (
   /* register files*/
   riscv_regs regs (
       /* input */
-      .clk       (clk),
+      .clk       (clk3),
       .write_en  (rf_wen),
       .read_addr1(rs1_addr),
       .read_addr2(rs2_addr),
@@ -222,7 +236,7 @@ module riscv_top (
   /* csr_regs */
   riscv_csr_regs csr_regs (
       /* input */
-      .clk         (clk),
+      .clk         (clk3),
       .csr_write_en(csr_wen),
       .csr_addr    (csr_addr),
       .csr_data    (csr_alu_out),
