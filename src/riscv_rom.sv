@@ -1,8 +1,11 @@
-`default_nettype none
+// `ifndef RISCV_ROM
+// `define RISCV_ROM
+
+// `default_nettype none
 
 module riscv_rom #(
     parameter WORD_LENGTH = 32,
-    parameter NUM_MEM = 16384
+    parameter NUM_MEM = 10
 ) (
     input  logic                      clk,
     /* port for instruction */
@@ -11,4 +14,10 @@ module riscv_rom #(
 );
   logic [7:0] mem[NUM_MEM-1:0];
   assign inst = {mem[pc+3], mem[pc+2], mem[pc+1], mem[pc]};
+
+  initial begin
+    // $readmemh("assets/test.hex", mem);
+    $readmemb("assets/test.txt", mem);
+  end 
 endmodule
+// `endif

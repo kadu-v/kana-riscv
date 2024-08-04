@@ -1,4 +1,8 @@
-`default_nettype none
+// `ifndef RISCV_CLK_GEN
+// `define RISCV_CLK_GEN
+
+
+// `default_nettype none
 module riscv_clk_gen #(
     parameter DIV = 3
 ) (
@@ -23,3 +27,4 @@ module riscv_clk_gen #(
         end
     end
 endmodule
+// `endif

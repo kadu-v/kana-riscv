@@ -1,6 +1,9 @@
-`include "riscv_constants.sv"
+// `ifndef RISCV_PC
+// `define RISCV_PC
 
-`default_nettype none
+// `include "riscv_constants.sv"
+
+// `default_nettype none
 
 module riscv_pc #(
     parameter WORD_LENGTH = 32,
@@ -36,3 +39,4 @@ module riscv_pc #(
     end
   end
 endmodule
+// `endif

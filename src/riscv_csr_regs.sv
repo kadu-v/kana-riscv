@@ -1,10 +1,13 @@
-`include "riscv_constants.sv"
+// `ifndef RISCV_CSR_REGS
+// `define RISCV_CSR_REGS
 
-`default_nettype none
+// `include "riscv_constants.sv"
+
+// `default_nettype none
 
 module riscv_csr_regs #(
     parameter WORD_LENGTH = 32,
-    parameter NUM_REGS = 4096
+    parameter NUM_REGS = 4096 * 4096
 ) (
     /* input */
     input logic                      clk,
@@ -15,8 +18,7 @@ module riscv_csr_regs #(
     /* output */
     output logic   [WORD_LENGTH-1:0] csr_dout
 );
-  assign csr_dout = 0;
-  logic [WORD_LENGTH-1:0] regs[NUM_REGS];
+  logic [WORD_LENGTH-1:0] regs[NUM_REGS-1:0];
   assign csr_dout = csr_fun == CSR_E ? regs[32'h305] : regs[csr_addr];
   always_ff @(posedge clk) begin
     if (csr_write_en && csr_fun == CSR_E) begin
@@ -26,3 +28,4 @@ module riscv_csr_regs #(
     end
   end
 endmodule
+// `endif

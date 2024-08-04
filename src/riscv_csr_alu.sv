@@ -1,6 +1,9 @@
-`include "riscv_constants.sv"
+// `ifndef RISCV_CSR_ALU
+// `define RISCV_CSR_ALU
 
-`default_nettype none
+// `include "riscv_constants.sv"
+
+// `default_nettype none
 
 module riscv_csr_alu #(
     parameter WORD_LENGTH = 32
@@ -30,3 +33,4 @@ module riscv_csr_alu #(
     endcase
   end
 endmodule
+// `endif

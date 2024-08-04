@@ -1,13 +1,13 @@
-`include "riscv_decoder.sv"
-`include "riscv_alu.sv"
-`include "riscv_regs.sv"
-`include "riscv_constants.sv"
-`include "riscv_mux1.sv"
-`include "riscv_mux2.sv"
-`include "riscv_mask1.sv"
-`include "riscv_mask2.sv"
-`include "riscv_csr_regs.sv"
-`include "riscv_csr_alu.sv"
+// `include "riscv_decoder.sv"
+// `include "riscv_alu.sv"
+// `include "riscv_regs.sv"
+// `include "riscv_constants.sv"
+// `include "riscv_mux1.sv"
+// `include "riscv_mux2.sv"
+// `include "riscv_mask1.sv"
+// `include "riscv_mask2.sv"
+// `include "riscv_csr_regs.sv"
+// `include "riscv_csr_alu.sv"
 // `include "riscv_ram.sv"
 
 `default_nettype none
@@ -17,9 +17,9 @@ module riscv_top (
     input logic clk,
     input logic x_reset,
     /* outpu */
-    output logic debug
+    output logic [31:0] debug
 );
-
+    assign debug = pc_out;
   /* clk3 */
   // クロックを3分周する
   logic clk3;
@@ -162,9 +162,7 @@ module riscv_top (
       .write_addr(rd_addr),
       /* output */
       .read_data1(rs1_data),
-      .read_data2(rs2_data),
-      /* debug */
-      .debug     (debug)
+      .read_data2(rs2_data)
   );
 
   /* extend */
@@ -234,7 +232,10 @@ module riscv_top (
   );
 
   /* csr_regs */
-  riscv_csr_regs csr_regs (
+  riscv_csr_regs #(
+        .WORD_LENGTH(32),
+        .NUM_REGS(4096)
+  ) csr_regs  (
       /* input */
       .clk         (clk3),
       .csr_write_en(csr_wen),

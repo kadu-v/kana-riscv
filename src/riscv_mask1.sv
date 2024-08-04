@@ -1,7 +1,10 @@
-`include "riscv_defs.sv"
-`include "riscv_constants.sv"
+// `ifndef RISCV_MASK1
+// `define RISCV_MASK1
 
-`default_nettype none
+// `include "riscv_defs.sv"
+// `include "riscv_constants.sv"
+
+// `default_nettype none
 
 module riscv_mask1 #(
     parameter WORD_LENGTH = 32
@@ -34,3 +37,4 @@ module riscv_mask1 #(
     endcase
   end
 endmodule
+// `endif

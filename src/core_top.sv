@@ -255,19 +255,19 @@ assign bridge_endian_little = 0;
 
 // cart is unused, so set all level translators accordingly
 // directions are 0:IN, 1:OUT
-assign cart_tran_bank3 = 8'hzz;
-assign cart_tran_bank3_dir = 1'b0;
-assign cart_tran_bank2 = 8'hzz;
-assign cart_tran_bank2_dir = 1'b0;
-assign cart_tran_bank1 = 8'hzz;
-assign cart_tran_bank1_dir = 1'b0;
-assign cart_tran_bank0 = 4'hf;
+assign cart_tran_bank3 =  debug[7:0]; // 8bit
+assign cart_tran_bank3_dir = 1'b1; 
+assign cart_tran_bank2 =  8'b0; // 8bit
+assign cart_tran_bank2_dir = 1'b1;
+assign cart_tran_bank1 = 8'b0; // 8bit
+assign cart_tran_bank1_dir = 1'b1;
+assign cart_tran_bank0 = {clk_out, clk_out, clk_out, clk_out}; // 4bit
 assign cart_tran_bank0_dir = 1'b1;
-assign cart_tran_pin30 = 1'b0;      // reset or cs2, we let the hw control it by itself
-assign cart_tran_pin30_dir = 1'bz;
-assign cart_pin30_pwroff_reset = 1'b0;  // hardware can control this
-assign cart_tran_pin31 = 1'bz;      // input
-assign cart_tran_pin31_dir = 1'b0;  // input
+assign cart_tran_pin30 = clk_out;      // reset or cs2, we let the hw control it by itself
+assign cart_tran_pin30_dir = 1'b1;
+assign cart_pin30_pwroff_reset = 1'b1;  // hardware can control this
+assign cart_tran_pin31 = clk_out;      // input
+assign cart_tran_pin31_dir = 1'b1;  // input
 
 // link port is unused, set to input only to be safe
 // each bit may be bidirectional in some applications
@@ -328,7 +328,7 @@ assign aux_scl = 1'bZ;
 assign vpll_feed = 1'bZ;
 
 logic [3:0] cnt;
-logic debug;
+logic [31:0] debug;
 
 riscv_top riscv_cpu(
     .clk(clk_74a),
@@ -336,9 +336,29 @@ riscv_top riscv_cpu(
     .debug(debug)
 );
 
+// clock divider for 1mhz 
+// Parameter to define the division factor
+// The division factor is (74.25 MHz / 2 MHz) = 37.125
+// We use an integer approximation and adjust the logic to compensate
+localparam integer DIV_FACTOR = 37;
+// Counter to count the number of input clock cycles
+integer counter;
+logic clk_out;
+always @(posedge clk_74a) begin
+    if (!reset_n) begin
+        counter <= 0;
+        clk_out <= 0;
+    end else begin
+        if (counter == DIV_FACTOR - 1) begin
+            counter <= 0;
+            clk_out <= ~clk_out;  // Toggle the output clock
+        end else begin
+            counter <= counter + 1;
+        end
+    end
+end
 
-// for bridge write data, we just broadcast it to all bus devices
-// for bridge read data, we have to mux it
+
 // add your own devices here
 always @(*) begin
     casex(bridge_addr)

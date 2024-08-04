@@ -1,7 +1,10 @@
-`include "riscv_defs.sv"
-`include "riscv_constants.sv"
+// `ifndef RISCV_DECODER
+// `define RISCV_DECODER
 
-`default_nettype none
+// `include "riscv_defs.sv"
+// `include "riscv_constants.sv"
+
+// `default_nettype none
 
 module riscv_decoder #(
     parameter WORD_LENGTH = 32
@@ -614,3 +617,4 @@ module riscv_decoder #(
     end
   end
 endmodule
+// `endif

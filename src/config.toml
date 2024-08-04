@@ -17,3 +17,4 @@ url = "https://github.com/kadu-v/kana-riscv"
 [Hardware]
 video_width = 320
 video_height = 240
+power_cartridge_port = true

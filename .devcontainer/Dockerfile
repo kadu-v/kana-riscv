@@ -1,9 +1,3 @@
-################################################################################
-# SPDX-License-Identifier: MIT
-# SPDX-FileType: SOURCE
-# SPDX-FileCopyrightText: (c) 2022, Marcus Andrade
-################################################################################
-
 FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND noninteractive

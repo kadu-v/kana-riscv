@@ -1,4 +1,7 @@
-`default_nettype none
+// `ifndef RISCV_EXTEND
+// `define RISCV_EXTEND
+
+// `default_nettype none
 
 module riscv_extend #(
     parameter WORD_LENGTH = 32
@@ -47,3 +50,4 @@ module riscv_extend #(
   assign imm_z = inst[19:15];
   assign imm_z_uext = {{27{1'b0}}, imm_z};
 endmodule
+// `endif

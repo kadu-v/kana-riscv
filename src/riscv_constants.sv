@@ -1,7 +1,7 @@
-`ifndef RISCV_CONSTANTS
-`define RISCV_CONSTANTS
+// `ifndef RISCV_CONSTANTS
+// `define RISCV_CONSTANTS
 
-`default_nettype none
+// `default_nettype none
 
 typedef enum {
   ALU_X    = 0,
@@ -48,7 +48,7 @@ typedef enum {
   WB_CSR = 4
 } WB_SEL;
 
-typedef enum logic {
+typedef enum {
   MEM_X     = 0,
   MEM_WRITE = 1
 } MEM_WEN;
@@ -81,8 +81,8 @@ typedef enum {
   CSR_E = 4   // ecall instruction
 } CSR_FUN;
 
-typedef enum logic {
+typedef enum {
   CSR_WEN_X = 0,
   CSR_WRITE = 1
 } CSR_WEN;
-`endif
+// `endif

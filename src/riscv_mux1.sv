@@ -1,6 +1,9 @@
-`include "riscv_constants.sv"
+// `ifndef RISCV_MUX1
+// `define RISCV_MUX1
 
-`default_nettype none
+// `include "riscv_constants.sv"
+
+// `default_nettype none
 
 module riscv_mux1 #(
     parameter WORD_LENGTH = 32
@@ -31,3 +34,4 @@ module riscv_mux1 #(
     endcase
   end
 endmodule
+// `endif

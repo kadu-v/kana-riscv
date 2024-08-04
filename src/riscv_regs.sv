@@ -1,6 +1,9 @@
-`include "riscv_constants.sv"
+// `ifndef RISCV_REGS
+// `define RISCV_REGS
 
-`default_nettype none
+// `include "riscv_constants.sv"
+
+// `default_nettype none
 
 module riscv_regs #(
     parameter WORD_LENGTH = 32,
@@ -16,15 +19,11 @@ module riscv_regs #(
     input  logic [ADDR_LENGTH-1:0] write_addr,
     /* output */
     output logic [WORD_LENGTH-1:0] read_data1,
-    output logic [WORD_LENGTH-1:0] read_data2,
-    /* debug */
-    output logic debug
+    output logic [WORD_LENGTH-1:0] read_data2
 );
-  logic [WORD_LENGTH-1:0] regs[NUM_REGS];
+  logic [WORD_LENGTH-1:0] regs[NUM_REGS-1:0];
   assign read_data1 = regs[read_addr1];
   assign read_data2 = regs[read_addr2];
-
-  assign debug = regs[3][0];
 
   always_ff @(posedge clk) begin
     if (write_en == RF_WRITE && write_addr != 0) begin
@@ -34,3 +33,4 @@ module riscv_regs #(
     end
   end
 endmodule
+// `endif
