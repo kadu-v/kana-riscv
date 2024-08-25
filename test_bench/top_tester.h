@@ -40,30 +40,53 @@ public:
   }
   void set_rom(uint32_t addr, uint32_t inst)
   {
-    dut_->riscv_top__DOT__ram__DOT__rom__DOT__mem[addr + 0] =
+    dut_->riscv_top__DOT__ram__DOT__mem[addr + 0] =
         ((inst & 0b00000000000000000000000011111111) >> 0);
-    dut_->riscv_top__DOT__ram__DOT__rom__DOT__mem[addr + 1] =
+    dut_->riscv_top__DOT__ram__DOT__mem[addr + 1] =
         ((inst & 0b00000000000000001111111100000000) >> 8);
-    dut_->riscv_top__DOT__ram__DOT__rom__DOT__mem[addr + 2] =
+    dut_->riscv_top__DOT__ram__DOT__mem[addr + 2] =
         ((inst & 0b00000000111111110000000000000000) >> 16);
-    dut_->riscv_top__DOT__ram__DOT__rom__DOT__mem[addr + 3] =
+    dut_->riscv_top__DOT__ram__DOT__mem[addr + 3] =
         ((inst & 0b11111111000000000000000000000000) >> 24);
   }
-  uint32_t get_rom(uint32_t addr)
-  {
-    uint32_t inst0 = dut_->riscv_top__DOT__ram__DOT__rom__DOT__mem[addr + 0];
-    uint32_t inst1 = (dut_->riscv_top__DOT__ram__DOT__rom__DOT__mem[addr + 1] << 8);
-    uint32_t inst2 = (dut_->riscv_top__DOT__ram__DOT__rom__DOT__mem[addr + 2] << 16);
-    uint32_t inst3 = (dut_->riscv_top__DOT__ram__DOT__rom__DOT__mem[addr + 3] << 24);
-    return inst3 + inst2 + inst1 + inst0;
-  }
+  // uint32_t get_rom(uint32_t addr)
+  // {
+  //   uint32_t inst0 = dut_->riscv_top__DOT__ram__DOT__rom__DOT__mem[addr + 0];
+  //   uint32_t inst1 = (dut_->riscv_top__DOT__ram__DOT__rom__DOT__mem[addr + 1] << 8);
+  //   uint32_t inst2 = (dut_->riscv_top__DOT__ram__DOT__rom__DOT__mem[addr + 2] << 16);
+  //   uint32_t inst3 = (dut_->riscv_top__DOT__ram__DOT__rom__DOT__mem[addr + 3] << 24);
+  //   return inst3 + inst2 + inst1 + inst0;
+  // }
+  // void set_byte_rom(uint32_t addr, char inst)
+  // {
+  //   dut_->riscv_top__DOT__ram__DOT__rom__DOT__mem[addr] = inst;
+  // }
   void set_byte_rom(uint32_t addr, char inst)
   {
     dut_->riscv_top__DOT__ram__DOT__rom__DOT__mem[addr] = inst;
   }
-  // void set_byte_rom(uint32_t addr, char inst)
+  void set_ram(uint32_t addr, uint32_t inst)
+  {
+    dut_->riscv_top__DOT__ram__DOT__mem[addr + 0] =
+        ((inst & 0b00000000000000000000000011111111) >> 0);
+    dut_->riscv_top__DOT__ram__DOT__mem[addr + 1] =
+        ((inst & 0b00000000000000001111111100000000) >> 8);
+    dut_->riscv_top__DOT__ram__DOT__mem[addr + 2] =
+        ((inst & 0b00000000111111110000000000000000) >> 16);
+    dut_->riscv_top__DOT__ram__DOT__mem[addr + 3] =
+        ((inst & 0b11111111000000000000000000000000) >> 24);
+  }
+  uint32_t get_ram(uint32_t addr)
+  {
+    uint32_t inst0 = dut_->riscv_top__DOT__ram__DOT__mem[addr + 0];
+    uint32_t inst1 = (dut_->riscv_top__DOT__ram__DOT__mem[addr + 1] << 8);
+    uint32_t inst2 = (dut_->riscv_top__DOT__ram__DOT__mem[addr + 2] << 16);
+    uint32_t inst3 = (dut_->riscv_top__DOT__ram__DOT__mem[addr + 3] << 24);
+    return inst3 + inst2 + inst1 + inst0;
+  }
+  // void set_byte_ram(uint32_t addr, char inst)
   // {
-  //   dut_->riscv_top__DOT__ram__DOT__mem[addr] = inst;
+  //   dut_->riscv_top__DOT__ram__DOT__bram__DOT__mem[addr] = inst;
   // }
   void set_ram(uint32_t addr, uint32_t inst)
   {
