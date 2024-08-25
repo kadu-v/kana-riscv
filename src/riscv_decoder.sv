@@ -20,7 +20,8 @@ module riscv_decoder #(
     output MASK_SEL                   rs2_mask_sel,
     output MASK_SEL                   ram_mask_sel,
     output CSR_FUN                    csr_fun,
-    output CSR_WEN                    csr_wen
+    output CSR_WEN                    csr_wen,
+    output logic                      jmp_flag
 );
   assign invalid_o = invalid_i;
   logic invalid_i;
@@ -68,7 +69,8 @@ module riscv_decoder #(
                   ((inst & `INST_I_MASK) == `INST_CSRRSI) ||
                   ((inst & `INST_I_MASK) == `INST_CSRRC) ||
                   ((inst & `INST_I_MASK) == `INST_CSRRCI);
-
+  assign jmp_flag = ((inst & `INST_J_MASK) == `INST_JAL) || 
+                    ((inst & `INST_I_MASK) == `INST_JALR);
   // if statement for alu
   always_comb begin
     if ((inst & `INST_R_MASK) == `INST_ADD) begin  /* R type */

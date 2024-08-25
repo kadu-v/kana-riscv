@@ -53,7 +53,7 @@ typedef enum logic {
   MEM_WRITE = 1
 } MEM_WEN;
 
-typedef enum {
+typedef enum logic {
   RF_X     = 0,
   RF_WRITE = 1
 } RF_WEN;
@@ -85,4 +85,6 @@ typedef enum logic {
   CSR_WEN_X = 0,
   CSR_WRITE = 1
 } CSR_WEN;
+
+
 `endif

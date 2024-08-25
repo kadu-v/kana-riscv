@@ -11,7 +11,7 @@ module riscv_pc #(
     input  logic                    x_reset,
     input  PC_SEL                   pc_sel,
     input  logic  [WORD_LENGTH-1:0] alu_out,
-    input  logic  [WORD_LENGTH-1:0] imm_b_sext,
+    input  logic  [WORD_LENGTH-1:0] br_target,
     input  logic                    br_flag,
     input  logic  [WORD_LENGTH-1:0] mtvec_addr,
     /* output */
@@ -28,7 +28,7 @@ module riscv_pc #(
     end else if (pc_sel == PC_ALU) begin
       pc <= alu_out;
     end else if (pc_sel == PC_B_TARGET && br_flag) begin
-      pc <= pc + imm_b_sext;
+      pc <= br_target;
     end else if (pc_sel == PC_ECALL_TARGET) begin
       pc <= mtvec_addr;
     end else begin
